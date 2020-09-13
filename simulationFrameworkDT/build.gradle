@@ -61,7 +61,7 @@ dependencies {
 	//Spring
 	implementation group: 'com.oracle.ojdbc', name:'ojdbc8', version:'19.3.0.0'
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-ws', version: '1.1.8.RELEASE'
-	implementation group: 'com.google.gradle', name: 'osdetector-gradle-plugin', version: '1.6.2'
+	implementation group: 'com.google.gradle', name: 'osdetector-gradle-plugin', verson: '1.6.2'
 	implementation group: 'org.json', name: 'json', version: '20090211'
 }
 
