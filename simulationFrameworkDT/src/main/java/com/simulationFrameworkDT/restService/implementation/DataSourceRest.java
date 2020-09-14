@@ -1,5 +1,7 @@
 package com.simulationFrameworkDT.restService.implementation;
 
+
+import java.sql.Date;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,11 @@ public class DataSourceRest implements IDataSourceRest{
 		return sim.getDataSource().findAllPlanVersions();
 	}
 	
+	@GetMapping("/datagrams")
+	public String[] getFileNames() {
+		return dataSource.getFileNames();
+	}
+	
 	@GetMapping("/planversions")
 	public ArrayList<SITMPlanVersion> findAllPlanVersions() {
 		return dataSource.findAllPlanVersions();
@@ -40,6 +47,17 @@ public class DataSourceRest implements IDataSourceRest{
 	@GetMapping("/calendars")
 	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(long planVersionId) {
 		return dataSource.findAllCalendarsByPlanVersion(planVersionId);
+	}
+	
+	@GetMapping("/dates")
+	public ArrayList<Date> findDatesByPlanVersion(long planVersionId) {
+		
+		ArrayList<SITMCalendar> calendars = dataSource.findAllCalendarsByPlanVersion(planVersionId);
+		ArrayList<Date> dates = new ArrayList<>();
+
+		dates.add(calendars.get(0).getOperationDay());
+		dates.add(calendars.get(calendars.size() - 1).getOperationDay());
+		return dates;
 	}
 
 	@GetMapping("/lines")

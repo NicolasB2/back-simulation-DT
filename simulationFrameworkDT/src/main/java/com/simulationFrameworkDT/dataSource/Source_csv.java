@@ -98,7 +98,7 @@ public class Source_csv implements IDateSource {
 	@Override
 	public ArrayList<SITMPlanVersion> findAllPlanVersions() {
 
-		String path = new File("DataCSV/planversions.csv").getAbsolutePath();
+		String path = new File("dataCSV/planversions.csv").getAbsolutePath();
 		ArrayList<SITMPlanVersion> plans = new ArrayList<>();
 		BufferedReader br;
 
@@ -135,7 +135,7 @@ public class Source_csv implements IDateSource {
 	@Override
 	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(long planVersionId) {
 
-		String path = new File("DataCSV/calendar.csv").getAbsolutePath();
+		String path = new File("dataCSV/calendar.csv").getAbsolutePath();
 		ArrayList<SITMCalendar> calendars = new ArrayList<>();
 
 		BufferedReader br;
@@ -180,7 +180,7 @@ public class Source_csv implements IDateSource {
 	@Override
 	public ArrayList<SITMLine> findAllLinesByPlanVersion(long planVersionId) {
 
-		String path = new File("DataCSV/lines.csv").getAbsolutePath();
+		String path = new File("dataCSV/lines.csv").getAbsolutePath();
 		ArrayList<SITMLine> lines = new ArrayList<>();
 
 		BufferedReader br;
@@ -220,7 +220,7 @@ public class Source_csv implements IDateSource {
 	public ArrayList<SITMStop> findAllStopsByPlanVersion(long planVersionId) {
 
 		ArrayList<SITMStop> stops = new ArrayList<>();
-		String path = new File("DataCSV/stops.csv").getAbsolutePath();
+		String path = new File("dataCSV/stops.csv").getAbsolutePath();
 
 		BufferedReader br;
 
@@ -280,7 +280,7 @@ public class Source_csv implements IDateSource {
 
 	public ArrayList<SITMLineStop> findAllLineStopByPlanVersion(long planVersionId) {
 
-		String path = new File("DataCSV/linestops.csv").getAbsolutePath();
+		String path = new File("dataCSV/linestops.csv").getAbsolutePath();
 		ArrayList<SITMLineStop> lineStops = new ArrayList<>();
 
 		BufferedReader br;

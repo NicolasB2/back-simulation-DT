@@ -19,43 +19,50 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Service
-@Getter @Setter
-public class DataSourceSystem implements IDateSource, Serializable{
-	
+@Getter
+@Setter
+public class DataSourceSystem implements IDateSource, Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	public final static String FILE_CSV = "FileCSV";
 	public final static String DATA_BASE = "DataBase";
 
 	private String type;
-	
+
 	@Autowired
 	public Source_db source_db;
 	public Source_csv source_csv;
 
 	public DataSourceSystem() {
-		initializeCsv(new File("../datagrams.csv"), ",");	
+		initializeCsv(new File("../datagrams.csv"), ",");
 	}
-	
+
+	public String[] getFileNames() {
+		File f = new File("datagrams");
+		String[] pathnames = f.list();
+		return pathnames;
+	}
+
 	public void initializeCsv(File sourceFile, String split) {
 		this.type = FILE_CSV;
 		source_csv = new Source_csv(sourceFile, split);
 		setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
 	}
-	
+
 	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int lineId) {
-		if(source_csv!=null) {
+		if (source_csv != null) {
 			source_csv.setColumnNumberForSimulationVariables(clock, longitude, latitude, busId, lineId);
 		}
 	}
-	
+
 	public void setHeaders(HashMap<String, Integer> headers) {
-		if(source_csv!=null) {
+		if (source_csv != null) {
 			source_csv.setHeaders(headers);
 		}
 	}
-	
-	@Override 
+
+	@Override
 	public String[] getHeaders() {
 
 		switch (type) {
@@ -68,8 +75,8 @@ public class DataSourceSystem implements IDateSource, Serializable{
 		}
 		return null;
 	}
-	
-	public HashMap<String,String> getLastRow(){
+
+	public HashMap<String, String> getLastRow() {
 		switch (type) {
 		case FILE_CSV:
 			return source_csv.getLastRow();
@@ -77,7 +84,7 @@ public class DataSourceSystem implements IDateSource, Serializable{
 		case DATA_BASE:
 			return source_db.getLastRow();
 		}
-		
+
 		return null;
 	}
 
@@ -91,7 +98,7 @@ public class DataSourceSystem implements IDateSource, Serializable{
 		case DATA_BASE:
 			return source_db.findAllPlanVersions();
 		}
-		
+
 		return null;
 	}
 
@@ -105,7 +112,7 @@ public class DataSourceSystem implements IDateSource, Serializable{
 		case DATA_BASE:
 			return source_db.findAllCalendarsByPlanVersion(planVersionId);
 		}
-		
+
 		return null;
 	}
 
@@ -119,7 +126,7 @@ public class DataSourceSystem implements IDateSource, Serializable{
 		case DATA_BASE:
 			return source_db.findAllLinesByPlanVersion(planVersionId);
 		}
-		
+
 		return null;
 	}
 
@@ -128,18 +135,19 @@ public class DataSourceSystem implements IDateSource, Serializable{
 
 		switch (type) {
 		case FILE_CSV:
-			return source_csv.findAllStopsByLine(planVersionId,lineId);
+			return source_csv.findAllStopsByLine(planVersionId, lineId);
 
 		case DATA_BASE:
-			return source_db.findAllStopsByLine(planVersionId,lineId);
+			return source_db.findAllStopsByLine(planVersionId, lineId);
 		}
-		
+
 		return null;
 	}
 
 	@Override
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Date initialDate, Date lastDate, long lineId){
-		
+	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Date initialDate, Date lastDate,
+			long lineId) {
+
 		switch (type) {
 		case FILE_CSV:
 			return source_csv.findAllOperationalTravelsByRange(initialDate, lastDate, lineId);
@@ -147,7 +155,7 @@ public class DataSourceSystem implements IDateSource, Serializable{
 		case DATA_BASE:
 			return source_db.findAllOperationalTravelsByRange(initialDate, lastDate, lineId);
 		}
-		
+
 		return null;
 	}
 }
