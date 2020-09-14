@@ -42,7 +42,6 @@ public class SimulationMain {
 		System.out.println("calendars ========================================================================================================================================\n");
 		ArrayList<SITMCalendar> calendars = sm.getDateByPlanVersion(261);
 		for (int i = 0; i < calendars.size(); i++) {System.out.println(calendars.get(i));}
-		sm.setDates(calendars.get(0).getOperationDay(), calendars.get(calendars.size()-1).getOperationDay());
 		System.out.println();
 		
 		
@@ -60,16 +59,12 @@ public class SimulationMain {
 	}
 
 	public static void startTest(SimController sm) throws ParseException {
-		
-		ArrayList<SITMCalendar> calendars = sm.getDateByPlanVersion(261);
-		sm.setDates(calendars.get(0).getOperationDay(), calendars.get(calendars.size()-1).getOperationDay());
-		
+				
 		System.out.println("Events =================================================\n");
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date init = new Date(dateFormat.parse("2019-06-20 18:00:08").getTime());
 		Date last = new Date(dateFormat.parse("2019-06-20 18:10:00").getTime());
 		
-		sm.setDates(init, last);
-		sm.start(131);
+		sm.start(init,last,131);
 	}
 }

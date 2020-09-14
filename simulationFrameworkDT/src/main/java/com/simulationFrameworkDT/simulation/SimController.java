@@ -42,8 +42,6 @@ public class SimController{
 
 	// variables
 	private int speed;
-	private Date initialDate;
-	private Date lastDate;
 
 	@Autowired
 	public SimController(DataSourceSystem dataSource) {
@@ -83,11 +81,6 @@ public class SimController{
 		this.targetSystem = new TargetSystem();
 	}
 	
-	public void setDates(Date initialDate,Date lastDate) {
-		this.initialDate = initialDate;
-		this.lastDate = lastDate;
-	}
-	
 	public void setHeaders(HashMap<String, Integer> headers) {
 		dataSource.setHeaders(headers);
 		//variables.addHeaders(headers);
@@ -121,13 +114,17 @@ public class SimController{
 		return dataSource.getLastRow();
 	}
 	
-	public void start(long lineId) {
+	public ArrayList<Event> getNextEvent(Date initialDate, Date lastDate, long lineId){
+		return eventProvirderController.getNextEvent(initialDate,lastDate,lineId);
+	}
+	
+	public void start(Date initialDate, Date lastDate, long lineId) {
 		
 		if(executionThread.isPause()) {
 			executionThread.setPause(false);
 			System.out.println("=======> simulation resumed");
 		}else {
-			executionThread.setLineId(lineId);
+			executionThread.setVariables(initialDate, lastDate, lineId);
 			executionThread.start();
 			System.out.println("=======> simulation started");
 		}	
@@ -187,21 +184,6 @@ public class SimController{
 		this.clock.setClockRate(Clock.ONE_TO_SIXTY);
 		System.out.println("=======> set One To Sixty Speed");
 	}
-
-	public ArrayList<Event> getNextEvents(long lineId){
-		
-		Date nextDate = new Date(initialDate.getTime()+clock.getClockRate());
-		ArrayList<Event> events = new ArrayList<>();
-		
-		if(nextDate.getTime()>lastDate.getTime()) {
-			events = null;
-		}else {
-			events = eventProvirderController.getNextEvent(initialDate,nextDate,lineId);
-			getClock().getNextTick(nextDate);
-			initialDate = nextDate;
-		}
-		return events;
-	}
 	
 }
 
@@ -210,41 +192,68 @@ public class SimController{
 class ExecutionThread extends Thread {
 
 	private long lineId;
+	private Date lastDate;
+	private Date initialDate;
 	private SimController simController;
+	
 	private volatile boolean pause = false;
 	private volatile boolean killed = false;
-
-	public ExecutionThread(SimController simController) {
-		this.simController = simController;
-	}
-
+	
 	public void kill() {
 		pause = true;
 		killed = true;
 	}
+	
+	public ExecutionThread(SimController simController) {
+		this.simController = simController;
+	}
 
+	public void setVariables(Date initialDate,Date lastDate, long lineId) {
+		this.initialDate = initialDate;
+		this.lastDate = lastDate;
+		this.lineId = lineId;
+	}
+
+	public ArrayList<Event> getNextEvents(){
+		
+		Date nextDate = new Date(initialDate.getTime()+simController.getClock().getClockRate());
+		ArrayList<Event> events = new ArrayList<>();
+		
+		if(nextDate.getTime()>lastDate.getTime()) {
+			kill();
+		}else {
+			events = simController.getNextEvent(initialDate, nextDate, lineId);
+			simController.getClock().getNextTick(nextDate);
+			initialDate = nextDate;
+		}
+		return events;
+	}
+	
+	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 		while (!killed) {
 			while (!pause) {
 				try {
 
-					ArrayList<Event> events = simController.getNextEvents(lineId);
+					ArrayList<Event> events = getNextEvents();
 									
 					if(events==null) {
 						
-						pause = true;
-						killed = true;
+						kill();
 						System.out.println("=======> simulation finished");
 						
 					}else if (!events.isEmpty()) {			
 
+						System.out.println(initialDate.toGMTString());
+						
 						for (int i = 0; i < events.size(); i++) {
 							simController.getEventProcessorController().processEvent(events.get(i),simController.getTargetSystem());
 						}
 						
 						simController.getVariables().updateAllValues(simController.getLastRow());
 
+						System.out.println();
 						sleep(simController.getSpeed());
 					}
 					

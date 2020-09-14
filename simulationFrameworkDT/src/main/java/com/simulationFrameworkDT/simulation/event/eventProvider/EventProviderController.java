@@ -16,9 +16,9 @@ public class EventProviderController {
 		eventGenerator = new EventGenerator();
 	}
 
-	public ArrayList<Event> getNextEvent(Date initialDate, Date lastDate, long lineID){
+	public ArrayList<Event> getNextEvent(Date initialDate, Date lastDate, long lineId){
 		
-		ArrayList<Event> events = eventFecher.allFetch(initialDate, lastDate, lineID);
+		ArrayList<Event> events = eventFecher.allFetch(initialDate, lastDate, lineId);
 		Event eventGenerated = eventGenerator.generate();
 
 		if (eventGenerated != null) {
