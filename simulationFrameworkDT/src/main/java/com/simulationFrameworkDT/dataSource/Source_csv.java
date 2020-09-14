@@ -365,6 +365,7 @@ public class Source_csv implements IDateSource {
 				
 				while(initialDate.getTime()>date) {
 					text = br.readLine();
+					
 					if(text!=null && text!="") {
 						data = text.split(this.split);
 						date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
@@ -377,12 +378,15 @@ public class Source_csv implements IDateSource {
 					
 					Long opertravelId = System.currentTimeMillis();
 					Long busId = Long.parseLong(data[systemDirectory.get("busId")]);
-					String gPS_X = data[systemDirectory.get("longitude")];
-					String gPS_Y = data[systemDirectory.get("latitude")];
-					Date eventDate = new Date(date);
+					double longitudeLng = Long.parseLong(data[systemDirectory.get("longitude")]);
+					double latitudeLng = Long.parseLong(data[systemDirectory.get("latitude")]);
+					String longitude = longitudeLng / 10000000 + "";
+					String latitude = latitudeLng  / 10000000+ "";
 					
-					if(data[7].equals(lineId+"")) {
-						SITMOperationalTravels op = new SITMOperationalTravels(opertravelId, busId, lineId, gPS_X, gPS_Y, eventDate);
+					Date eventDate = new Date(date);
+
+					if(data[7].equals(lineId+"") && longitudeLng!=-1 && latitudeLng!=-1) {
+						SITMOperationalTravels op = new SITMOperationalTravels(opertravelId, busId, lineId, longitude, latitude, eventDate);
 						operationaTravels.add(op);
 					}
 					
