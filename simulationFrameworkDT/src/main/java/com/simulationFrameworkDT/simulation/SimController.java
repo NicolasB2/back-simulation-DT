@@ -41,9 +41,7 @@ public class SimController{
 	private ExecutionThread executionThread;
 
 	// variables
-	private volatile int speed;
-	private long lineID;
-	private long planVersionID;
+	private int speed;
 	private Date initialDate;
 	private Date lastDate;
 
@@ -53,8 +51,6 @@ public class SimController{
 		this.dataSource=dataSource;
 
 		// set default variables
-		lineID = 140;
-		planVersionID = 261;
 		speed = Clock.NORMAL;
 
 		// upload system state
@@ -73,26 +69,18 @@ public class SimController{
 		eventProvirderController.setDataSource(dataSource);
 	}
 
-	public void initialize_DB() {
+	public void initializeDB() {
 		dataSource = new DataSourceSystem();
 		eventProvirderController.setDataSource(dataSource);
 	}
 	
-	public void initialize_SCV(File sourceFile, String split) {
+	public void initializeSCV(File sourceFile, String split) {
 		dataSource = new DataSourceSystem(sourceFile, split);
 		eventProvirderController.setDataSource(dataSource);
 	}
 	
 	public void initialize_TargetSystem() {
 		this.targetSystem = new TargetSystem();
-	}
-	
-	public void setPlanVersionID(long planVersionID) {
-		this.planVersionID = planVersionID;
-	}
-	
-	public void setLineId(long lineID) {
-		this.lineID = lineID;
 	}
 	
 	public void setDates(Date initialDate,Date lastDate) {
@@ -117,28 +105,29 @@ public class SimController{
 		return dataSource.findAllCalendarsByPlanVersion(planVersionID);
 	}
 	
-	public ArrayList<SITMLine> getLinesByPlanVersion() {
-		return dataSource.findAllLinesByPlanVersion(planVersionID);
+	public ArrayList<SITMLine> getLinesByPlanVersion(long planVersionId) {
+		return dataSource.findAllLinesByPlanVersion(planVersionId);
 	}
 	
-	public ArrayList<SITMStop> getStopsByLine(){
-		return dataSource.findAllStopsByLine(this.planVersionID, this.lineID);
+	public ArrayList<SITMStop> getStopsByLine(long planVersionId, long lineId){
+		return dataSource.findAllStopsByLine(planVersionId, lineId);
 	}
 	
-	public ArrayList<SITMBus> getBusesByLine(){
-		return targetSystem.filterBusesByLineId(this.lineID);
+	public ArrayList<SITMBus> getBusesByLine(long lineId){
+		return targetSystem.filterBusesByLineId(lineId);
 	}
 
 	public HashMap<String,String> getLastRow(){
 		return dataSource.getLastRow();
 	}
 	
-	public void start() {
+	public void start(long lineId) {
 		
 		if(executionThread.isPause()) {
 			executionThread.setPause(false);
 			System.out.println("=======> simulation resumed");
 		}else {
+			executionThread.setLineId(lineId);
 			executionThread.start();
 			System.out.println("=======> simulation started");
 		}	
@@ -199,7 +188,7 @@ public class SimController{
 		System.out.println("=======> set One To Sixty Speed");
 	}
 
-	public ArrayList<Event> getNextEvents(){
+	public ArrayList<Event> getNextEvents(long lineId){
 		
 		Date nextDate = new Date(initialDate.getTime()+clock.getClockRate());
 		ArrayList<Event> events = new ArrayList<>();
@@ -207,25 +196,23 @@ public class SimController{
 		if(nextDate.getTime()>lastDate.getTime()) {
 			events = null;
 		}else {
-			events = eventProvirderController.getNextEvent(initialDate,nextDate,lineID);
+			events = eventProvirderController.getNextEvent(initialDate,nextDate,lineId);
 			getClock().getNextTick(nextDate);
 			initialDate = nextDate;
 		}
 		return events;
 	}
 	
-	public HashMap<String, String> getLastVariables(){
-		return null;
-	}
 }
 
 @Getter
 @Setter
 class ExecutionThread extends Thread {
 
+	private long lineId;
+	private SimController simController;
 	private volatile boolean pause = false;
 	private volatile boolean killed = false;
-	private SimController simController;
 
 	public ExecutionThread(SimController simController) {
 		this.simController = simController;
@@ -242,7 +229,7 @@ class ExecutionThread extends Thread {
 			while (!pause) {
 				try {
 
-					ArrayList<Event> events = simController.getNextEvents();
+					ArrayList<Event> events = simController.getNextEvents(lineId);
 									
 					if(events==null) {
 						

@@ -11,19 +11,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.simulationFrameworkDT.simulation.SimController;
-import com.simulationFrameworkDT.simulation.event.Event;
-import com.simulationFrameworkDT.simulation.event.EventType;
 import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
 import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
 import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
 
-public class simulationMain {
+public class SimulationMain {
 
 	public static void main(String[] args) throws IOException, ParseException {
 		
 		SimController sm = new SimController(null);
-		sm.initialize_SCV(new File("../datagrams.csv"), ",");
+		sm.initializeSCV(new File("../datagrams.csv"), ",");
 		sm.setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
 		dataTest(sm);
 		startTest(sm);
@@ -38,7 +36,6 @@ public class simulationMain {
 		System.out.println("plan Versions ========================================================================================================================================\n");
 		ArrayList<SITMPlanVersion> planversions = sm.getPlanVersions();
 		for (int i = 0; i < planversions.size(); i++) {System.out.println(planversions.get(i));}
-		sm.setPlanVersionID(261);
 		System.out.println();
 		
 		
@@ -50,9 +47,8 @@ public class simulationMain {
 		
 		
 		System.out.println("lines =========================================================================================================================================\n");
-		ArrayList<SITMLine> lines = sm.getLinesByPlanVersion();
+		ArrayList<SITMLine> lines = sm.getLinesByPlanVersion(261);
 		for (int i = 0; i < lines.size(); i++) {System.out.println(lines.get(i));}
-		sm.setLineId(131);
 		System.out.println();
 		
 		
@@ -65,10 +61,8 @@ public class simulationMain {
 
 	public static void startTest(SimController sm) throws ParseException {
 		
-		sm.setPlanVersionID(261);
 		ArrayList<SITMCalendar> calendars = sm.getDateByPlanVersion(261);
 		sm.setDates(calendars.get(0).getOperationDay(), calendars.get(calendars.size()-1).getOperationDay());
-		sm.setLineId(131);
 		
 		System.out.println("Events =================================================\n");
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -76,21 +70,6 @@ public class simulationMain {
 		Date last = new Date(dateFormat.parse("2019-06-20 18:10:00").getTime());
 		
 		sm.setDates(init, last);
-		ArrayList<Event> events = sm.getNextEvents();
-		
-		while(events!=null) {
-			
-			for (int i = 0; i < events.size(); i++){
-				if(events.get(i).getType().equals(EventType.POSICIONAMIENTO_GPS)) {
-					System.out.println("BusId:"+events.get(i).getContext().get("busId")+" "+
-							"longitude:"+events.get(i).getContext().get("longitude")+" "+
-							"latitude:"+events.get(i).getContext().get("latitude"));
-				}
-			}
-			
-			System.out.println();
-			events = sm.getNextEvents();
-		}
-
+		sm.start(131);
 	}
 }
