@@ -1,6 +1,5 @@
 package com.simulationFrameworkDT.simulation;
 
-import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,8 +40,6 @@ public class SimController{
 
 	public SimController() {
 
-		this.dataSource=dataSource;
-
 		// set default variables
 		speed = Clock.NORMAL;
 
@@ -62,15 +59,20 @@ public class SimController{
 		eventProvirderController.setDataSource(dataSource);
 	}
 
-	public void initializeDB() {
-		dataSource = new DataSourceSystem();
-		eventProvirderController.setDataSource(dataSource);
-	}
+//	public void initializeDB() {
+//		dataSource = new DataSourceSystem();
+//		eventProvirderController.setDataSource(dataSource);
+//	}
 	
-	public void initializeSCV(File sourceFile, String split) {
-		dataSource = new DataSourceSystem();
-		dataSource.initializeCsv(sourceFile, split);
-		eventProvirderController.setDataSource(dataSource);
+//	public void initializeSCV(File sourceFile, String split) {
+//		dataSource = new DataSourceSystem();
+//		dataSource.initializeCsv(sourceFile, split);
+//		eventProvirderController.setDataSource(dataSource);
+//	}
+	
+	public void setDataSource(DataSourceSystem dataSource) {
+		this.dataSource = dataSource;
+		this.eventProvirderController.setDataSource(dataSource);
 	}
 	
 	public void initialize_TargetSystem() {
