@@ -39,6 +39,11 @@ public class DataSourceRest implements IDataSourceRest{
 		return dataSource.getFileNames();
 	}
 	
+	@GetMapping("/settype")
+	public void setSourceType(String type) {
+		dataSource.setType(type);
+	}
+	
 	@GetMapping("/planversions")
 	public ArrayList<SITMPlanVersion> findAllPlanVersions() {
 		return dataSource.findAllPlanVersions();

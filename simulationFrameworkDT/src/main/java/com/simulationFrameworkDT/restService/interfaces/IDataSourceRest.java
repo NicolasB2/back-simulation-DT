@@ -10,6 +10,7 @@ import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
 public interface IDataSourceRest {
 
 	public String[] getFileNames();
+	public void setSourceType(String type);
 	public ArrayList<SITMPlanVersion> findAllPlanVersions() ;
 	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(long planVersionId);
 	public ArrayList<SITMLine> findAllLinesByPlanVersion(long planVersionId);
