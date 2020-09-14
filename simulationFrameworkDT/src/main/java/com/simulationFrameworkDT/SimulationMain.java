@@ -23,6 +23,7 @@ public class SimulationMain {
 		SimController sm = new SimController(null);
 		sm.initializeSCV(new File("../datagrams.csv"), ",");
 		sm.setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
+		
 		dataTest(sm);
 		startTest(sm);
 		
@@ -40,7 +41,7 @@ public class SimulationMain {
 		
 		
 		System.out.println("calendars ========================================================================================================================================\n");
-		ArrayList<SITMCalendar> calendars = sm.getDateByPlanVersion(261);
+		ArrayList<SITMCalendar> calendars = sm.getCalendarsByPlanVersion(261);
 		for (int i = 0; i < calendars.size(); i++) {System.out.println(calendars.get(i));}
 		System.out.println();
 		
@@ -63,7 +64,7 @@ public class SimulationMain {
 		System.out.println("Events =================================================\n");
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date init = new Date(dateFormat.parse("2019-06-20 18:00:08").getTime());
-		Date last = new Date(dateFormat.parse("2019-06-20 18:10:00").getTime());
+		Date last = new Date(dateFormat.parse("2019-06-20 18:30:00").getTime());
 		
 		sm.start(init,last,131);
 	}

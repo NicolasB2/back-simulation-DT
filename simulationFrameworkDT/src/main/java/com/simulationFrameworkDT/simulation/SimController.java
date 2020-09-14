@@ -15,10 +15,6 @@ import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderCon
 import com.simulationFrameworkDT.simulation.variableState.VariableController;
 import com.simulationFrameworkDT.systemState.TargetSystem;
 import com.simulationFrameworkDT.systemState.factorySITM.SITMBus;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,7 +24,7 @@ import lombok.Setter;
 public class SimController{
 
 	// external packages
-	private DataSourceSystem dataSource;
+	@Autowired private DataSourceSystem dataSource;
 	private TargetSystem targetSystem;
 
 	// simulation package
@@ -43,8 +39,7 @@ public class SimController{
 	// variables
 	private int speed;
 
-	@Autowired
-	public SimController(DataSourceSystem dataSource) {
+	public SimController() {
 
 		this.dataSource=dataSource;
 
@@ -73,7 +68,8 @@ public class SimController{
 	}
 	
 	public void initializeSCV(File sourceFile, String split) {
-		dataSource = new DataSourceSystem(sourceFile, split);
+		dataSource = new DataSourceSystem();
+		dataSource.initializeCsv(sourceFile, split);
 		eventProvirderController.setDataSource(dataSource);
 	}
 	
@@ -83,29 +79,12 @@ public class SimController{
 	
 	public void setHeaders(HashMap<String, Integer> headers) {
 		dataSource.setHeaders(headers);
-		//variables.addHeaders(headers);
 	}
 	
-	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busID, int lineID) {
-		dataSource.setColumnNumberForSimulationVariables(clock, longitude, latitude, busID, lineID);
+	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int lineId) {
+		dataSource.setColumnNumberForSimulationVariables(clock, longitude, latitude, busId, lineId);
 	}
-	
-	public ArrayList<SITMPlanVersion> getPlanVersions() {
-		return dataSource.findAllPlanVersions();
-	}
-	
-	public ArrayList<SITMCalendar> getDateByPlanVersion(long planVersionID) {
-		return dataSource.findAllCalendarsByPlanVersion(planVersionID);
-	}
-	
-	public ArrayList<SITMLine> getLinesByPlanVersion(long planVersionId) {
-		return dataSource.findAllLinesByPlanVersion(planVersionId);
-	}
-	
-	public ArrayList<SITMStop> getStopsByLine(long planVersionId, long lineId){
-		return dataSource.findAllStopsByLine(planVersionId, lineId);
-	}
-	
+		
 	public ArrayList<SITMBus> getBusesByLine(long lineId){
 		return targetSystem.filterBusesByLineId(lineId);
 	}

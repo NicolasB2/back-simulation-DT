@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
@@ -18,8 +18,7 @@ import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
 import lombok.Getter;
 import lombok.Setter;
 
-
-@Component
+@Service
 @Getter @Setter
 public class DataSourceSystem implements IDateSource, Serializable{
 	
@@ -35,12 +34,13 @@ public class DataSourceSystem implements IDateSource, Serializable{
 	public Source_csv source_csv;
 
 	public DataSourceSystem() {
-		this.type = DATA_BASE;
+		initializeCsv(new File("../datagrams.csv"), ",");	
 	}
 	
-	public DataSourceSystem(File sourceFile, String split) {
+	public void initializeCsv(File sourceFile, String split) {
 		this.type = FILE_CSV;
 		source_csv = new Source_csv(sourceFile, split);
+		setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
 	}
 	
 	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int lineId) {
