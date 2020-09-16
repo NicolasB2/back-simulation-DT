@@ -1,31 +1,30 @@
 package com.simulationFrameworkDT.project;
 
+import java.io.Serializable;
 import java.sql.Date;
+
+import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class Project {
+public class Project implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	private String name;
-	/**
-	 * DataSource selected, FILE_CSV or DATA_BASE. Public string in DataSourceSystem.class
-	 */
-	private String dSelected;
-	private String bdName;
-	private long planVersionId;
 	private Date initialDate;
 	private Date finalDate;
+	private long planVersionId;
 	
-	public Project(String name, String dSelected, String bdName, long planVersion, Date initialDate, Date finalDate) {
-		super();
+	private DataSourceSystem dataSource;
+	
+	public Project(String name, Date initialDate, Date finalDate, long planVersionId) {
 		this.name = name;
-		this.dSelected = dSelected;
-		this.bdName = bdName;
-		this.planVersionId = planVersion;
 		this.initialDate = initialDate;
 		this.finalDate = finalDate;
+		this.planVersionId = planVersionId;
 	}
-	
 }
