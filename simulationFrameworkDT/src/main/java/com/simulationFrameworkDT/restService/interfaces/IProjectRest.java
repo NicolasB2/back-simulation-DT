@@ -1,7 +1,6 @@
 package com.simulationFrameworkDT.restService.interfaces;
 
 import java.sql.Date;
-import java.util.ArrayList;
 
 import com.simulationFrameworkDT.project.Project;
 
@@ -15,5 +14,5 @@ public interface IProjectRest {
 	
 	public Project loadProject(String name);
 	
-	public ArrayList<String> getProjectsNames();
+	public String[] getProjectsNames();
 }

@@ -2,7 +2,6 @@ package com.simulationFrameworkDT.restService.implementation;
 
 import java.io.File;
 import java.sql.Date;
-import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,7 +26,7 @@ public class ProjectRest implements IProjectRest {
 	@Autowired
 	private DataSourceSystem dataSource;
 	
-	@PostMapping("/saveOracle")
+	@PostMapping("/save/oracle")
 	public void saveProjectOracle(String name, Date initialDate, Date finalDate, long planVersionId) {
 		Project project = new Project(name, initialDate, finalDate, planVersionId);
 		dataSource.setType(DataSourceSystem.FILE_CSV);
@@ -35,7 +34,7 @@ public class ProjectRest implements IProjectRest {
 		projectController.saveProject(project);
 	}
 
-	@PostMapping("/saveCsv")
+	@PostMapping("/save/csv")
 	public void saveProjectScvOnServer(String fileName, String name, Date initialDate, Date finalDate, long planVersionId) {
 		Project project = new Project(name, initialDate, finalDate, planVersionId);
 		dataSource.setType(DataSourceSystem.FILE_CSV);
@@ -44,13 +43,13 @@ public class ProjectRest implements IProjectRest {
 		projectController.saveProject(project);
 	}
 
-	@PostMapping("/loadProject")
+	@PostMapping("/load/project")
 	public Project loadProject(String name) {
 		return projectController.loadProject(name);
 	}
 
 	@GetMapping("/names")
-	public ArrayList<String> getProjectsNames() {
+	public String[] getProjectsNames() {
 		return projectController.getProjectsNames();
 	}
 
