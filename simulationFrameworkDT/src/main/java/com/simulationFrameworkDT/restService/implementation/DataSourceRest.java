@@ -5,10 +5,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,26 +30,20 @@ public class DataSourceRest implements IDataSourceRest{
 		return dataSource.getFileNames();
 	}
 	
-	@PutMapping("/settype")
-	public void setSourceType(String type) {
-		dataSource.setType(type);
-	}
-	
 	@GetMapping("/planversions")
 	public ArrayList<SITMPlanVersion> findAllPlanVersions(String type) {
-		System.out.println(type);
-		return dataSource.findAllPlanVersions();
+		return dataSource.findAllPlanVersions(type);
 	}
 
 	@GetMapping("/calendars")
-	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(long planVersionId) {
-		return dataSource.findAllCalendarsByPlanVersion(planVersionId);
+	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(String type, long planVersionId) {
+		return dataSource.findAllCalendarsByPlanVersion(type, planVersionId);
 	}
 	
 	@GetMapping("/dates")
-	public ArrayList<Date> findDatesByPlanVersion(long planVersionId) {
+	public ArrayList<Date> findDatesByPlanVersion(String type, long planVersionId) {
 		
-		ArrayList<SITMCalendar> calendars = dataSource.findAllCalendarsByPlanVersion(planVersionId);
+		ArrayList<SITMCalendar> calendars = dataSource.findAllCalendarsByPlanVersion(type, planVersionId);
 		ArrayList<Date> dates = new ArrayList<>();
 
 		dates.add(calendars.get(0).getOperationDay());
@@ -60,13 +52,13 @@ public class DataSourceRest implements IDataSourceRest{
 	}
 
 	@GetMapping("/lines")
-	public ArrayList<SITMLine> findAllLinesByPlanVersion(long planVersionId) {
-		return dataSource.findAllLinesByPlanVersion(planVersionId);
+	public ArrayList<SITMLine> findAllLinesByPlanVersion(String type, long planVersionId) {
+		return dataSource.findAllLinesByPlanVersion(type, planVersionId);
 	}
 
 	@GetMapping("/stops")
-	public ArrayList<SITMStop> findAllStopsByLine(long planVersionId, long lineId) {
-		return dataSource.findAllStopsByLine(planVersionId, lineId);
+	public ArrayList<SITMStop> findAllStopsByLine(String type, long planVersionId, long lineId) {
+		return dataSource.findAllStopsByLine(type, planVersionId, lineId);
 	}
 
 }

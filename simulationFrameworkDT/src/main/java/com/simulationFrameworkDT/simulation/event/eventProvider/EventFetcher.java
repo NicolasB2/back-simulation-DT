@@ -20,8 +20,7 @@ public class EventFetcher {
 
 	public ArrayList<Event> allFetch(Date initialDate, Date lastDate, long lineId) {
 
-		ArrayList<SITMOperationalTravels> operationaTravels = dataSource.findAllOperationalTravelsByRange(initialDate,
-				lastDate, lineId);
+		ArrayList<SITMOperationalTravels> operationaTravels = dataSource.findAllOperationalTravelsByRange(DataSourceSystem.FILE_CSV, initialDate, lastDate, lineId);
 		ArrayList<Event> eventlist = new ArrayList<>();
 
 		for (int i = 0; i < operationaTravels.size(); i++) {

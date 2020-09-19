@@ -22,7 +22,7 @@ public class SimulationMain {
 	public static void main(String[] args) throws IOException, ParseException {
 		
 		DataSourceSystem ds = new DataSourceSystem();
-		ds.initializeCsv(new File("../datagrams.csv"), ",");
+		ds.initializeCsv(new File("datagrams/datagrams.csv"), ",");
 		ds.setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
 		dataTest(ds);
 		startTest(ds);
@@ -35,25 +35,25 @@ public class SimulationMain {
 	public static <T> void dataTest(DataSourceSystem ds){
 		
 		System.out.println("plan Versions ========================================================================================================================================\n");
-		ArrayList<SITMPlanVersion> planversions = ds.findAllPlanVersions();
+		ArrayList<SITMPlanVersion> planversions = ds.findAllPlanVersions(DataSourceSystem.FILE_CSV);
 		for (int i = 0; i < planversions.size(); i++) {System.out.println(planversions.get(i));}
 		System.out.println();
 		
 		
 		System.out.println("calendars ========================================================================================================================================\n");
-		ArrayList<SITMCalendar> calendars = ds.findAllCalendarsByPlanVersion(261);
+		ArrayList<SITMCalendar> calendars = ds.findAllCalendarsByPlanVersion(DataSourceSystem.FILE_CSV,261);
 		for (int i = 0; i < calendars.size(); i++) {System.out.println(calendars.get(i));}
 		System.out.println();
 		
 		
 		System.out.println("lines =========================================================================================================================================\n");
-		ArrayList<SITMLine> lines = ds.findAllLinesByPlanVersion(261);
+		ArrayList<SITMLine> lines = ds.findAllLinesByPlanVersion(DataSourceSystem.FILE_CSV,261);
 		for (int i = 0; i < lines.size(); i++) {System.out.println(lines.get(i));}
 		System.out.println();
 		
 		
 		System.out.println("Stops ========================================================================================================================================\n");
-		ArrayList<SITMStop> stops = ds.findAllStopsByLine(261, 131);
+		ArrayList<SITMStop> stops = ds.findAllStopsByLine(DataSourceSystem.FILE_CSV,261, 131);
 		for (int i = 0; i < stops.size(); i++) {System.out.println(stops.get(i));}
 		System.out.println();
 		

@@ -91,8 +91,8 @@ public class SimController{
 		return targetSystem.filterBusesByLineId(lineId);
 	}
 
-	public HashMap<String,String> getLastRow(){
-		return dataSource.getLastRow();
+	public HashMap<String,String> getLastRow(String type){
+		return dataSource.getLastRow(type);
 	}
 	
 	public ArrayList<Event> getNextEvent(Date initialDate, Date lastDate, long lineId){
@@ -232,7 +232,7 @@ class ExecutionThread extends Thread {
 							simController.getEventProcessorController().processEvent(events.get(i),simController.getTargetSystem());
 						}
 						
-						simController.getVariables().updateAllValues(simController.getLastRow());
+						simController.getVariables().updateAllValues(simController.getLastRow(DataSourceSystem.FILE_CSV));
 
 						System.out.println();
 						sleep(simController.getSpeed());

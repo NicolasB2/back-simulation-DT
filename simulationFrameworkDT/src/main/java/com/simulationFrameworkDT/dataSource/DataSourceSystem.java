@@ -1,7 +1,6 @@
 package com.simulationFrameworkDT.dataSource;
 
 import java.io.File;
-import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,14 +20,10 @@ import lombok.Setter;
 @Service
 @Getter
 @Setter
-public class DataSourceSystem implements IDateSource, Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class DataSourceSystem {
 
 	public final static String FILE_CSV = "FileCSV";
 	public final static String DATA_BASE = "DataBase";
-
-	private String type;
 
 	@Autowired
 	public Source_db source_db;
@@ -45,7 +40,6 @@ public class DataSourceSystem implements IDateSource, Serializable {
 	}
 
 	public void initializeCsv(File sourceFile, String split) {
-		this.type = FILE_CSV;
 		source_csv = new Source_csv(sourceFile, split);
 		setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
 	}
@@ -62,8 +56,7 @@ public class DataSourceSystem implements IDateSource, Serializable {
 		}
 	}
 
-	@Override
-	public String[] getHeaders() {
+	public String[] getHeaders(String type) {
 
 		switch (type) {
 		case FILE_CSV:
@@ -76,7 +69,7 @@ public class DataSourceSystem implements IDateSource, Serializable {
 		return null;
 	}
 
-	public HashMap<String, String> getLastRow() {
+	public HashMap<String, String> getLastRow(String type) {
 		switch (type) {
 		case FILE_CSV:
 			return source_csv.getLastRow();
@@ -88,8 +81,7 @@ public class DataSourceSystem implements IDateSource, Serializable {
 		return null;
 	}
 
-	@Override
-	public ArrayList<SITMPlanVersion> findAllPlanVersions() {
+	public ArrayList<SITMPlanVersion> findAllPlanVersions(String type) {
 
 		switch (type) {
 		case FILE_CSV:
@@ -102,8 +94,7 @@ public class DataSourceSystem implements IDateSource, Serializable {
 		return null;
 	}
 
-	@Override
-	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(long planVersionId) {
+	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(String type, long planVersionId) {
 
 		switch (type) {
 		case FILE_CSV:
@@ -116,8 +107,7 @@ public class DataSourceSystem implements IDateSource, Serializable {
 		return null;
 	}
 
-	@Override
-	public ArrayList<SITMLine> findAllLinesByPlanVersion(long planVersionId) {
+	public ArrayList<SITMLine> findAllLinesByPlanVersion(String type, long planVersionId) {
 
 		switch (type) {
 		case FILE_CSV:
@@ -130,8 +120,7 @@ public class DataSourceSystem implements IDateSource, Serializable {
 		return null;
 	}
 
-	@Override
-	public ArrayList<SITMStop> findAllStopsByLine(long planVersionId, long lineId) {
+	public ArrayList<SITMStop> findAllStopsByLine(String type, long planVersionId, long lineId) {
 
 		switch (type) {
 		case FILE_CSV:
@@ -144,9 +133,7 @@ public class DataSourceSystem implements IDateSource, Serializable {
 		return null;
 	}
 
-	@Override
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Date initialDate, Date lastDate,
-			long lineId) {
+	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(String type, Date initialDate, Date lastDate, long lineId) {
 
 		switch (type) {
 		case FILE_CSV:
