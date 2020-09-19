@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,7 +38,8 @@ public class DataSourceRest implements IDataSourceRest{
 	}
 	
 	@GetMapping("/planversions")
-	public ArrayList<SITMPlanVersion> findAllPlanVersions() {
+	public ArrayList<SITMPlanVersion> findAllPlanVersions(String type) {
+		System.out.println(type);
 		return dataSource.findAllPlanVersions();
 	}
 

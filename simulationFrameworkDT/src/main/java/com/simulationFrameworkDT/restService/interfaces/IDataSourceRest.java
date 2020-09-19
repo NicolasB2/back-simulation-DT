@@ -11,7 +11,7 @@ public interface IDataSourceRest {
 
 	public String[] getFileNames();
 	public void setSourceType(String type);
-	public ArrayList<SITMPlanVersion> findAllPlanVersions() ;
+	public ArrayList<SITMPlanVersion> findAllPlanVersions(String type) ;
 	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(long planVersionId);
 	public ArrayList<SITMLine> findAllLinesByPlanVersion(long planVersionId);
 	public ArrayList<SITMStop> findAllStopsByLine(long planVersionID,long lineId);
