@@ -1,9 +1,9 @@
 package com.simulationFrameworkDT.simulation.event.eventProvider;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.project.Project;
 import com.simulationFrameworkDT.simulation.event.Event;
 
 public class EventProviderController {
@@ -16,9 +16,9 @@ public class EventProviderController {
 		eventGenerator = new EventGenerator();
 	}
 
-	public ArrayList<Event> getNextEvent(Date initialDate, Date lastDate, long lineId){
+	public ArrayList<Event> getNextEvent(long lineId, Project project){
 		
-		ArrayList<Event> events = eventFecher.allFetch(initialDate, lastDate, lineId);
+		ArrayList<Event> events = eventFecher.allFetch(lineId, project);
 		Event eventGenerated = eventGenerator.generate();
 
 		if (eventGenerated != null) {

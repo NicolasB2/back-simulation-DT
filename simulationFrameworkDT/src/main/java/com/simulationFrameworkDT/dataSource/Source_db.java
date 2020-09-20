@@ -62,7 +62,6 @@ public class Source_db implements IDateSource {
 		}
 	}
 
-	@Override
 	public String[] getHeaders() {
 
 		String[] headers = new String[10];
@@ -80,11 +79,50 @@ public class Source_db implements IDateSource {
 		return headers;
 	}
 	
-	@Override
 	public HashMap<String,String> getLastRow(){
 		return null;
 	}
 
+	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Date initialDate, Date lastDate, long lineId){
+		
+		ArrayList<SITMOperationalTravels> returnAnswer = new ArrayList<SITMOperationalTravels>();
+		
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+		DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+		
+		if(initialDate.toString().equals(lastDate.toString())) {
+			
+			
+			String date = dateFormat.format(initialDate);
+
+			try {
+				
+				long startHour = (hourFormat.parse(hourFormat.format(initialDate)).getTime()-18000000)/1000;
+				System.out.println(startHour);
+				
+				long endHour = (hourFormat.parse(hourFormat.format(lastDate)).getTime()-18000000)/1000;
+				System.out.println(endHour);
+				
+				System.out.println(date);
+			
+				for (SITMOperationalTravels element : operationalTravelsRepository.findAllOPDay(date, startHour, endHour)) {
+					returnAnswer.add(element);
+				}	
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			
+		}else {
+			for (SITMOperationalTravels element : operationalTravelsRepository.findAllOP("01/08/19","01/08/19")) {
+				returnAnswer.add(element);
+			}
+		}
+		
+		return returnAnswer;
+	}
+	
 	@Override
 	public ArrayList<SITMPlanVersion> findAllPlanVersions() {
 
@@ -129,48 +167,6 @@ public class Source_db implements IDateSource {
 		for (SITMStop element : stopRepository.findAllStopsbyLineId(planVersionId, lineId)) {
 			returnAnswer.add(element);
 		}
-
-		return returnAnswer;
-	}
-
-	@Override
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Date initialDate, Date lastDate, long lineId){
-		
-		ArrayList<SITMOperationalTravels> returnAnswer = new ArrayList<SITMOperationalTravels>();
-		
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
-		DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
-		
-		if(initialDate.toString().equals(lastDate.toString())) {
-			
-			
-			String date = dateFormat.format(initialDate);
-
-			try {
-				
-				long startHour = (hourFormat.parse(hourFormat.format(initialDate)).getTime()-18000000)/1000;
-				System.out.println(startHour);
-				
-				long endHour = (hourFormat.parse(hourFormat.format(lastDate)).getTime()-18000000)/1000;
-				System.out.println(endHour);
-				
-				System.out.println(date);
-			
-				for (SITMOperationalTravels element : operationalTravelsRepository.findAllOPDay(date, startHour, endHour)) {
-					returnAnswer.add(element);
-				}	
-
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-			
-			
-		}else {
-			for (SITMOperationalTravels element : operationalTravelsRepository.findAllOP("01/08/19","01/08/19")) {
-				returnAnswer.add(element);
-			}
-		}
-		
 
 		return returnAnswer;
 	}

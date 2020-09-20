@@ -8,7 +8,7 @@ public interface IProjectRest {
 
 	public void saveProjectOracle(String name, Date initialDate, Date finalDate, long planVersionId);
 	
-	public void saveProjectScvOnServer(String fileName,String name, Date initialDate, Date finalDate, long planVersionId);
+	public void saveProjectScvOnServer(String name, Date initialDate, Date finalDate, long planVersionId, String fileName, String split);
 	
 	//public void saveProjectScvByFile(String name, Date initialDate, Date finalDate, long planVersionId);
 	

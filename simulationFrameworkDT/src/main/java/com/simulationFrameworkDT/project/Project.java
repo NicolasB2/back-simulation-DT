@@ -3,8 +3,6 @@ package com.simulationFrameworkDT.project;
 import java.io.Serializable;
 import java.sql.Date;
 
-import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +17,10 @@ public class Project implements Serializable{
 	private Date finalDate;
 	private long planVersionId;
 	
-	private DataSourceSystem dataSource;
+	//DataSourceSystem
+	private String fileName;
+	private String split;
+	private int filePosition;
 	
 	public Project(String name, Date initialDate, Date finalDate, long planVersionId) {
 		this.name = name;
@@ -27,4 +28,16 @@ public class Project implements Serializable{
 		this.finalDate = finalDate;
 		this.planVersionId = planVersionId;
 	}
+
+	public Project(String name, Date initialDate, Date finalDate, long planVersionId, String fileName, String split, int filePosition) {
+		this.name = name;
+		this.initialDate = initialDate;
+		this.finalDate = finalDate;
+		this.planVersionId = planVersionId;
+		this.fileName = fileName;
+		this.split = split;
+		this.filePosition = filePosition;
+	}
+	
+	
 }

@@ -29,15 +29,13 @@ public class ProjectRest implements IProjectRest {
 	@PostMapping("/save/oracle")
 	public void saveProjectOracle(String name, Date initialDate, Date finalDate, long planVersionId) {
 		Project project = new Project(name, initialDate, finalDate, planVersionId);
-		project.setDataSource(dataSource);
 		projectController.saveProject(project);
 	}
 
 	@PostMapping("/save/csv")
-	public void saveProjectScvOnServer(String fileName, String name, Date initialDate, Date finalDate, long planVersionId) {
-		Project project = new Project(name, initialDate, finalDate, planVersionId);
+	public void saveProjectScvOnServer(String name, Date initialDate, Date finalDate, long planVersionId, String fileName, String split) {
+		Project project = new Project(name, initialDate, finalDate, planVersionId, fileName, split, 1);
 		dataSource.initializeCsv(new File(fileName), ",");
-		project.setDataSource(dataSource);
 		projectController.saveProject(project);
 	}
 

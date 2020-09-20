@@ -1,10 +1,10 @@
 package com.simulationFrameworkDT.simulation.event.eventProvider;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.project.Project;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.EventType;
 import com.simulationFrameworkDT.systemState.factorySITM.SITMOperationalTravels;
@@ -18,9 +18,9 @@ public class EventFetcher {
 
 	private DataSourceSystem dataSource;
 
-	public ArrayList<Event> allFetch(Date initialDate, Date lastDate, long lineId) {
+	public ArrayList<Event> allFetch(long lineId, Project project) {
 
-		ArrayList<SITMOperationalTravels> operationaTravels = dataSource.findAllOperationalTravelsByRange(DataSourceSystem.FILE_CSV, initialDate, lastDate, lineId);
+		ArrayList<SITMOperationalTravels> operationaTravels = dataSource.findAllOperationalTravelsByRange(DataSourceSystem.FILE_CSV,lineId, project);
 		ArrayList<Event> eventlist = new ArrayList<>();
 
 		for (int i = 0; i < operationaTravels.size(); i++) {
