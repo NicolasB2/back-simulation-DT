@@ -33,8 +33,8 @@ public class ProjectRest implements IProjectRest {
 	}
 
 	@PostMapping("/save/csv")
-	public void saveProjectScvOnServer(String name, Date initialDate, Date finalDate, long planVersionId, String fileName, String split) {
-		Project project = new Project(name, initialDate, finalDate, planVersionId, fileName, split, 1);
+	public void saveProjectScvOnServer(String name, Date initialDate, Date finalDate, long planVersionId, String fileName) {
+		Project project = new Project(name, initialDate, finalDate, planVersionId, fileName, ",", 1);
 		dataSource.initializeCsv(new File(fileName), ",");
 		projectController.saveProject(project);
 	}

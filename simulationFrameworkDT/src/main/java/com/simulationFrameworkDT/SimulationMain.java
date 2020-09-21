@@ -72,8 +72,6 @@ public class SimulationMain {
 	}
 	
 	public static void startTest() throws ParseException{
-		
-		System.out.println("Events =================================================\n");
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
 		sm.setProjectController(new ProjectController());
