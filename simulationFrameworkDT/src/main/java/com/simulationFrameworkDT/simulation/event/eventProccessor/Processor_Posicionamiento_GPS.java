@@ -1,7 +1,7 @@
 package com.simulationFrameworkDT.simulation.event.eventProccessor;
 
 import com.simulationFrameworkDT.simulation.event.Event;
-import com.simulationFrameworkDT.systemState.TargetSystem;
+import com.simulationFrameworkDT.simulation.state.TargetSystem;
 
 public class Processor_Posicionamiento_GPS implements IEventProcessor {
 
@@ -15,12 +15,12 @@ public class Processor_Posicionamiento_GPS implements IEventProcessor {
 		
 		if (longitude != -1 && latitude != -1) {
 			
-			//if(busID==877) {
-				System.out.println("Processor_Posicionamiento_GPS ===> "+
-						"BusId="+event.getContext().get("busId")+" "+
-						"GPS_X="+event.getContext().get("longitude")+" "+
-						"GPS_Y="+event.getContext().get("latitude"));
-			//}
+			
+//			System.out.println("Processor_Posicionamiento_GPS ===> "+
+//					"BusId="+event.getContext().get("busId")+" "+
+//					"GPS_X="+event.getContext().get("longitude")+" "+
+//					"GPS_Y="+event.getContext().get("latitude"));
+			
 			
 			TargetSystem.moveBus(busID, lineID, longitude, latitude);
 		}

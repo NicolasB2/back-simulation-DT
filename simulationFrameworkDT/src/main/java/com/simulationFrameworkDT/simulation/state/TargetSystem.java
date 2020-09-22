@@ -1,4 +1,4 @@
-package com.simulationFrameworkDT.systemState;
+package com.simulationFrameworkDT.simulation.state;
 
 import java.io.Serializable;
 import java.util.ArrayList;

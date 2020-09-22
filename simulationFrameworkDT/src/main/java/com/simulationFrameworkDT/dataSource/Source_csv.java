@@ -62,7 +62,7 @@ public class Source_csv implements IDateSource {
 		return headers;
 	}
 
-	public HashMap<String,String> getLastRow(String file, String split, int currentPosition){
+	public HashMap<String,String> getLastRow(String file, String split, Date currentDate){
 		
 		File sourceFile = getSourceFile(file);
 		BufferedReader br;
@@ -72,9 +72,18 @@ public class Source_csv implements IDateSource {
 			
 			br = new BufferedReader(new FileReader(sourceFile));
 			text = br.readLine();
-			for (int i = 0; i < currentPosition; i++) {
+			text = br.readLine();
+			
+			String[] data = text.split(split);
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Long date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+			
+			while(date<currentDate.getTime()){
 				text = br.readLine();
+				data = text.split(split);
+				date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
 			}
+
 			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -14,7 +14,7 @@ import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderCon
 import com.simulationFrameworkDT.simulation.state.Clock;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
-import com.simulationFrameworkDT.systemState.TargetSystem;
+import com.simulationFrameworkDT.simulation.state.TargetSystem;
 
 import lombok.Getter;
 import lombok.Setter;
