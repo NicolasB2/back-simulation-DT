@@ -50,10 +50,12 @@ public class Source_csv implements IDateSource {
 		
 		try {
 
+			
 			br = new BufferedReader(new FileReader(sourceFile));
 			String text = br.readLine();
 			headers = text.split(split);
 			br.close();
+			System.out.println(text);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,7 +98,6 @@ public class Source_csv implements IDateSource {
 		for (int i = 0; i < data.length; i++) {
 			variables.put(headers[i], data[i]);
 		}
-		
 		return variables;
 	}
 	

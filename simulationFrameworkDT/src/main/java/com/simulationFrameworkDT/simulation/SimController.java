@@ -85,8 +85,8 @@ public class SimController{
 		return targetSystem.filterBusesByLineId(lineId);
 	}
 
-	public HashMap<String,String> getLastRow(String type, Project project){
-		return dataSource.getLastRow(type,project);
+	public HashMap<String,String> getLastRow(Project project){
+		return dataSource.getLastRow(project);
 	}
 	
 	public ArrayList<Event> getNextEvent(Project project){

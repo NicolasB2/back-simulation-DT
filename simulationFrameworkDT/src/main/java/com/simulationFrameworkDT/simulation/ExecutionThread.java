@@ -3,7 +3,6 @@ package com.simulationFrameworkDT.simulation;
 import java.sql.Date;
 import java.util.ArrayList;
 
-import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
@@ -69,7 +68,7 @@ class ExecutionThread extends Thread {
 							simController.getEventProcessorController().processEvent(events.get(i),simController.getTargetSystem());
 						}
 						
-						simController.getVariables().updateAllValues(simController.getLastRow(DataSourceSystem.FILE_CSV,project));
+						simController.getVariables().updateAllValues(simController.getLastRow(project));
 
 						System.out.println();
 						projectController.saveProject(project);

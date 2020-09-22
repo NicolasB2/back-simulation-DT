@@ -32,7 +32,6 @@ public class VariableController{
 
 	public void updateAllValues(HashMap<String, String> variables) {
 
-		System.out.println(variables);
 		for (HashMap.Entry<String, String> entry : variables.entrySet()) {
 
 			if (headersValue.containsKey(entry.getKey())) {

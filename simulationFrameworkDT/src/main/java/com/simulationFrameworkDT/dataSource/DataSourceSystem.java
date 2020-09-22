@@ -63,8 +63,8 @@ public class DataSourceSystem {
 		return null;
 	}
 
-	public HashMap<String, String> getLastRow(String type,Project project) {
-		switch (type) {
+	public HashMap<String, String> getLastRow(Project project) {
+		switch (project.getFileType()) {
 		case FILE_CSV:
 			return source_csv.getLastRow(project.getFileName(),project.getFileSplit(),project.getNextDate());
 
