@@ -15,7 +15,6 @@ import lombok.Setter;
 @Setter
 class ExecutionThread extends Thread {
 
-	private long lineId;
 	private Project project;
 	private SimController simController;
 	private ProjectController projectController;
@@ -34,10 +33,6 @@ class ExecutionThread extends Thread {
 		projectController = new ProjectController();
 	}
 
-	public void setVariables(long lineId) {
-		this.lineId = lineId;
-	}
-
 	@SuppressWarnings("deprecation")
 	public ArrayList<Event> getNextEvents(){
 		
@@ -48,7 +43,8 @@ class ExecutionThread extends Thread {
 			kill();
 		}else {
 			System.out.println(project.getInitialDate().toGMTString());
-			events = simController.getNextEvent(lineId, project);
+			project.setNextDate(nextDate);
+			events = simController.getNextEvent(project);
 			project.setInitialDate(nextDate);
 			simController.getClock().getNextTick(nextDate);
 		}

@@ -18,9 +18,9 @@ public class EventFetcher {
 
 	private DataSourceSystem dataSource;
 
-	public ArrayList<Event> allFetch(long lineId, Project project) {
+	public ArrayList<Event> allFetch(Project project) {
 
-		ArrayList<SITMOperationalTravels> operationaTravels = dataSource.findAllOperationalTravelsByRange(DataSourceSystem.FILE_CSV,lineId, project);
+		ArrayList<SITMOperationalTravels> operationaTravels = dataSource.findAllOperationalTravelsByRange(project);
 		ArrayList<Event> eventlist = new ArrayList<>();
 
 		for (int i = 0; i < operationaTravels.size(); i++) {

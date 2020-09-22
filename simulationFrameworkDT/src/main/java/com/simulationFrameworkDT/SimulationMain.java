@@ -64,10 +64,17 @@ public class SimulationMain {
 	public static void saveProject() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
-		Date last = new Date(dateFormat.parse("2019-06-20 18:00:30").getTime());
+		Date last = new Date(dateFormat.parse("2019-06-20 18:01:00").getTime());
 		
 		ProjectController pc = new ProjectController();
-		Project project = new Project("test", init, last, 261, "datagrams.csv", ",", 1);
+		Project project = new Project();
+		project.setName("test");
+		project.setInitialDate(init);
+		project.setFinalDate(last);
+		project.setPlanVersionId(261);
+		project.setFileName("datagrams.csv");
+		project.setFileSplit(",");
+		project.setFileType(DataSourceSystem.FILE_CSV);
 		pc.saveProject(project);
 	}
 	

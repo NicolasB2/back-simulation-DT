@@ -89,20 +89,20 @@ public class SimController{
 		return dataSource.getLastRow(type,project);
 	}
 	
-	public ArrayList<Event> getNextEvent(long lineId, Project project){
-		return eventProvirderController.getNextEvent(lineId,project);
+	public ArrayList<Event> getNextEvent(Project project){
+		return eventProvirderController.getNextEvent(project);
 	}
 	
 	public void start(String projectName, long lineId) {
 		
 		Project project = projectController.loadProject(projectName);
+		project.setLineId(lineId);
 		executionThread = new ExecutionThread(this,project);
 		
 		if(executionThread.isPause()) {
 			executionThread.setPause(false);
 			System.out.println("=======> simulation resumed");
 		}else {
-			executionThread.setVariables(lineId);
 			executionThread.start();
 			System.out.println("=======> simulation started");
 		}	

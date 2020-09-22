@@ -14,30 +14,13 @@ public class Project implements Serializable{
 	
 	private String name;
 	private Date initialDate;
+	private Date nextDate;
 	private Date finalDate;
 	private long planVersionId;
+	private long lineId;
 	
 	//DataSourceSystem
+	private String fileType;
 	private String fileName;
-	private String split;
-	private int filePosition;
-	
-	public Project(String name, Date initialDate, Date finalDate, long planVersionId) {
-		this.name = name;
-		this.initialDate = initialDate;
-		this.finalDate = finalDate;
-		this.planVersionId = planVersionId;
-	}
-
-	public Project(String name, Date initialDate, Date finalDate, long planVersionId, String fileName, String split, int filePosition) {
-		this.name = name;
-		this.initialDate = initialDate;
-		this.finalDate = finalDate;
-		this.planVersionId = planVersionId;
-		this.fileName = fileName;
-		this.split = split;
-		this.filePosition = filePosition;
-	}
-	
-	
+	private String fileSplit;
 }

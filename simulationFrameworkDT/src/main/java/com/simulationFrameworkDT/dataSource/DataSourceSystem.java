@@ -54,7 +54,7 @@ public class DataSourceSystem {
 
 		switch (type) {
 		case FILE_CSV:
-			return source_csv.getHeaders(project.getFileName(),project.getSplit());
+			return source_csv.getHeaders(project.getFileName(),project.getFileSplit());
 
 		case DATA_BASE:
 			return source_db.getHeaders();
@@ -66,7 +66,7 @@ public class DataSourceSystem {
 	public HashMap<String, String> getLastRow(String type,Project project) {
 		switch (type) {
 		case FILE_CSV:
-			return source_csv.getLastRow(project.getFileName(),project.getSplit(),project.getFilePosition());
+			return source_csv.getLastRow(project.getFileName(),project.getFileSplit(),0);
 
 		case DATA_BASE:
 			return source_db.getLastRow();
@@ -75,15 +75,15 @@ public class DataSourceSystem {
 		return null;
 	}
 
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(String type, long lineId, Project project) {
+	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Project project) {
 
-		switch (type) {
+		switch (project.getFileType()) {
 		case FILE_CSV:
 			return source_csv.findAllOperationalTravelsByRange
-					(project.getFileName(),project.getSplit(),project.getFilePosition(),project.getInitialDate(), project.getFinalDate(), lineId);
+					(project.getFileName(),project.getFileSplit(),project.getInitialDate(), project.getNextDate(), project.getLineId());
 
 		case DATA_BASE:
-			return source_db.findAllOperationalTravelsByRange(project.getInitialDate(), project.getFinalDate(), lineId);
+			return source_db.findAllOperationalTravelsByRange(project.getInitialDate(), project.getFinalDate(), project.getLineId());
 		}
 
 		return null;

@@ -1,6 +1,5 @@
 package com.simulationFrameworkDT.restService.implementation;
 
-import java.io.File;
 import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +22,27 @@ public class ProjectRest implements IProjectRest {
 	@Autowired
 	private ProjectController projectController;
 	
-	@Autowired
-	private DataSourceSystem dataSource;
-	
 	@PostMapping("/save/oracle")
 	public void saveProjectOracle(String name, Date initialDate, Date finalDate, long planVersionId) {
-		Project project = new Project(name, initialDate, finalDate, planVersionId);
+		Project project = new Project();
+		project.setName(name);
+		project.setInitialDate(initialDate);
+		project.setFinalDate(finalDate);
+		project.setPlanVersionId(planVersionId);
+		project.setFileType(DataSourceSystem.DATA_BASE);
 		projectController.saveProject(project);
 	}
 
 	@PostMapping("/save/csv")
 	public void saveProjectScvOnServer(String name, Date initialDate, Date finalDate, long planVersionId, String fileName) {
-		Project project = new Project(name, initialDate, finalDate, planVersionId, fileName, ",", 1);
-		dataSource.initializeCsv(new File(fileName), ",");
+		Project project = new Project();
+		project.setName(name);
+		project.setInitialDate(initialDate);
+		project.setFinalDate(finalDate);
+		project.setPlanVersionId(planVersionId);
+		project.setFileName(fileName);
+		project.setFileSplit(",");
+		project.setFileType(DataSourceSystem.FILE_CSV);
 		projectController.saveProject(project);
 	}
 

@@ -91,7 +91,7 @@ public class Source_csv implements IDateSource {
 		return variables;
 	}
 	
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(String file, String split,int currentPosition, Date initialDate, Date lastDate, long lineId){
+	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(String file, String split, Date initialDate, Date lastDate, long lineId){
 		
 		ArrayList<SITMOperationalTravels> operationaTravels = new ArrayList<SITMOperationalTravels>();
 
@@ -100,17 +100,18 @@ public class Source_csv implements IDateSource {
 		try {
 
 			BufferedReader br = new BufferedReader(new FileReader(sourceFile));
-			String text = br.readLine();
-			
-			for (int i = 0; i < currentPosition; i++) {
-				text = br.readLine();
-			}
-
+			String text = br.readLine(); 
+			text = br.readLine();
 			String[] data = text.split(split);
-			
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			Long date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
 			
+			while(initialDate.getTime()<=date) {
+				text = br.readLine();
+				data = text.split(split);
+				date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+			}
+				
 			if (text != null && !text.equals("")) {
 				
 				while(initialDate.getTime()>date) {
@@ -141,8 +142,6 @@ public class Source_csv implements IDateSource {
 					}
 					
 					text = br.readLine();
-					currentPosition++;
-					
 					if(text!=null && text!="") {
 						data = text.split(split);
 						date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
