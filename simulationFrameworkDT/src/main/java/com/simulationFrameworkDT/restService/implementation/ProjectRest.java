@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.project.Project;
-import com.simulationFrameworkDT.project.ProjectController;
 import com.simulationFrameworkDT.restService.interfaces.IProjectRest;
+import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.state.StateController;
 
 @RequestMapping("simulation/project")
 @RestController
@@ -20,7 +20,7 @@ import com.simulationFrameworkDT.restService.interfaces.IProjectRest;
 public class ProjectRest implements IProjectRest {
 
 	@Autowired
-	private ProjectController projectController;
+	private StateController projectController;
 	
 	@PostMapping("/save/oracle")
 	public void saveProjectOracle(String name, Date initialDate, Date finalDate, long planVersionId) {

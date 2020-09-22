@@ -12,12 +12,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 
-import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLineStop;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMOperationalTravels;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
+import com.simulationFrameworkDT.model.factorySITM.SITMLine;
+import com.simulationFrameworkDT.model.factorySITM.SITMLineStop;
+import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
+import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.project.Project;
-import com.simulationFrameworkDT.project.ProjectController;
+import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
-import com.simulationFrameworkDT.simulation.variableState.VariableController;
+import com.simulationFrameworkDT.simulation.state.Clock;
+import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.state.StateController;
 import com.simulationFrameworkDT.systemState.TargetSystem;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMBus;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class SimController{
 
 	// external packages
 	@Autowired private DataSourceSystem dataSource;
-	@Autowired private ProjectController projectController;
+	@Autowired private StateController projectController;
 	private TargetSystem targetSystem;
 
 	// simulation package

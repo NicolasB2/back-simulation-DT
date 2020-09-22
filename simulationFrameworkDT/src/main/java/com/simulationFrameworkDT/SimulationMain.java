@@ -11,13 +11,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.project.Project;
-import com.simulationFrameworkDT.project.ProjectController;
+import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
+import com.simulationFrameworkDT.model.factorySITM.SITMLine;
+import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.SimController;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
+import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.state.StateController;
 
 public class SimulationMain {
 
@@ -66,7 +66,7 @@ public class SimulationMain {
 		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
 		Date last = new Date(dateFormat.parse("2019-06-20 18:01:00").getTime());
 		
-		ProjectController pc = new ProjectController();
+		StateController pc = new StateController();
 		Project project = new Project();
 		project.setName("test");
 		project.setInitialDate(init);
@@ -81,7 +81,7 @@ public class SimulationMain {
 	public static void startTest() throws ParseException{
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
-		sm.setProjectController(new ProjectController());
+		sm.setProjectController(new StateController());
 		saveProject();
 		sm.start("test.dat",131);
 	}

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.project.Project;
+import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.EventType;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMOperationalTravels;
+import com.simulationFrameworkDT.simulation.state.Project;
 
 import lombok.Getter;
 import lombok.Setter;

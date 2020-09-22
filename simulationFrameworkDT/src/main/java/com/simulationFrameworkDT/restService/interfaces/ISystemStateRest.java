@@ -2,7 +2,7 @@ package com.simulationFrameworkDT.restService.interfaces;
 
 import java.util.ArrayList;
 
-import com.simulationFrameworkDT.systemState.factorySITM.SITMBus;
+import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 
 public interface ISystemStateRest {
 

@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
+import com.simulationFrameworkDT.model.factorySITM.SITMLine;
+import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.restService.interfaces.IDataSourceRest;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
 
 @RequestMapping("simulation/datasource")
 @RestController

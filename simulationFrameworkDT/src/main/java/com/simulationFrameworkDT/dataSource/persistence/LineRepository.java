@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
+import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 
 @Repository
 public interface LineRepository extends CrudRepository<SITMLine, Long> {

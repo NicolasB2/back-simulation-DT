@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 import com.simulationFrameworkDT.restService.interfaces.ISystemStateRest;
 import com.simulationFrameworkDT.simulation.SimController;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMBus;
 
 @RequestMapping("simulation")
 @RestController

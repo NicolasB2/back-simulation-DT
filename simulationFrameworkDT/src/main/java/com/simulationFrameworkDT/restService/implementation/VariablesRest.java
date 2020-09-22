@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simulationFrameworkDT.restService.interfaces.IVariablesRest;
-import com.simulationFrameworkDT.simulation.variableState.Variable;
+import com.simulationFrameworkDT.simulation.state.Variable;
 
 @RequestMapping("simulation/variables")
 @RestController

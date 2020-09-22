@@ -4,9 +4,9 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.project.Project;
-import com.simulationFrameworkDT.project.ProjectController;
 import com.simulationFrameworkDT.simulation.event.Event;
+import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.state.StateController;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ class ExecutionThread extends Thread {
 
 	private Project project;
 	private SimController simController;
-	private ProjectController projectController;
+	private StateController projectController;
 	
 	private volatile boolean pause = false;
 	private volatile boolean killed = false;
@@ -30,7 +30,7 @@ class ExecutionThread extends Thread {
 	public ExecutionThread(SimController simController,Project project) {
 		this.simController = simController;
 		this.project = project;
-		projectController = new ProjectController();
+		projectController = new StateController();
 	}
 
 	@SuppressWarnings("deprecation")

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.simulationFrameworkDT.systemState.factorySITM.SITMBus;
+import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 
 
 public class TargetSystem implements Serializable {

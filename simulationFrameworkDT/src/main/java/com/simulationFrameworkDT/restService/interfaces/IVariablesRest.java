@@ -2,7 +2,7 @@ package com.simulationFrameworkDT.restService.interfaces;
 
 import java.util.ArrayList;
 
-import com.simulationFrameworkDT.simulation.variableState.Variable;
+import com.simulationFrameworkDT.simulation.state.Variable;
 
 public interface IVariablesRest {
 

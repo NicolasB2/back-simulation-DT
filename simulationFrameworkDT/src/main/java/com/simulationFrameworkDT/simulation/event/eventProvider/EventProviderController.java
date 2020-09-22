@@ -3,8 +3,8 @@ package com.simulationFrameworkDT.simulation.event.eventProvider;
 import java.util.ArrayList;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.project.Project;
 import com.simulationFrameworkDT.simulation.event.Event;
+import com.simulationFrameworkDT.simulation.state.Project;
 
 public class EventProviderController {
 

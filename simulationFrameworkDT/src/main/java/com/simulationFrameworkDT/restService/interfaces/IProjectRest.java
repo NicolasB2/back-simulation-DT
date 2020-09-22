@@ -2,7 +2,7 @@ package com.simulationFrameworkDT.restService.interfaces;
 
 import java.sql.Date;
 
-import com.simulationFrameworkDT.project.Project;
+import com.simulationFrameworkDT.simulation.state.Project;
 
 public interface IProjectRest {
 

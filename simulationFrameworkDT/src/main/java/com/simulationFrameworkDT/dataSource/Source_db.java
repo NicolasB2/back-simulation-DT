@@ -17,11 +17,11 @@ import com.simulationFrameworkDT.dataSource.persistence.LineRepository;
 import com.simulationFrameworkDT.dataSource.persistence.OperationalTravelsRepository;
 import com.simulationFrameworkDT.dataSource.persistence.PlanVersionRepository;
 import com.simulationFrameworkDT.dataSource.persistence.StopRepository;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMOperationalTravels;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
+import com.simulationFrameworkDT.model.factorySITM.SITMLine;
+import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
+import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 
 @Service
 public class Source_db implements IDateSource {
