@@ -55,7 +55,7 @@ public class Source_csv implements IDateSource {
 			String text = br.readLine();
 			headers = text.split(split);
 			br.close();
-			System.out.println(text);
+		
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -116,11 +116,6 @@ public class Source_csv implements IDateSource {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			Long date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
 			
-			while(initialDate.getTime()<=date) {
-				text = br.readLine();
-				data = text.split(split);
-				date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
-			}
 				
 			if (text != null && !text.equals("")) {
 				
