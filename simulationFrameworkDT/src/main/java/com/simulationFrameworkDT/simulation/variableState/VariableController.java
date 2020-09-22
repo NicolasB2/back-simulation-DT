@@ -1,14 +1,12 @@
 package com.simulationFrameworkDT.simulation.variableState;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.simulationFrameworkDT.simulation.dataGenerationTools.ProbabilisticDistribution;
 
-public class VariableController implements Serializable {
+public class VariableController{
 
-	private static final long serialVersionUID = 1L;
 	private HashMap<String, Object> headersValue;
 
 	public VariableController() {
