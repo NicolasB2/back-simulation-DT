@@ -50,9 +50,9 @@ public class DataSourceSystem {
 		}
 	}
 
-	public String[] getHeaders(String type,Project project) {
+	public String[] getHeaders(Project project) {
 
-		switch (type) {
+		switch (project.getFileType()) {
 		case FILE_CSV:
 			return source_csv.getHeaders(project.getFileName(),project.getFileSplit());
 

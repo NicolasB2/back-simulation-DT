@@ -14,4 +14,5 @@ public interface IDataSourceRest {
 	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(String type, long planVersionId);
 	public ArrayList<SITMLine> findAllLinesByPlanVersion(String type, long planVersionId);
 	public ArrayList<SITMStop> findAllStopsByLine(String type, long planVersionID,long lineId);
+	public String[] getHeaders(String projectName);
 }
