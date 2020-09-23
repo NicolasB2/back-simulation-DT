@@ -1,18 +1,18 @@
 package com.simulationFrameworkDT.dataSource;
 
 import java.io.File;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMOperationalTravels;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
+import com.simulationFrameworkDT.model.factorySITM.SITMLine;
+import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
+import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.simulation.state.Project;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +40,7 @@ public class DataSourceSystem {
 	}
 
 	public void initializeCsv(File sourceFile, String split) {
-		source_csv = new Source_csv(sourceFile, split);
+		source_csv = new Source_csv();
 		setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
 	}
 
@@ -50,17 +50,11 @@ public class DataSourceSystem {
 		}
 	}
 
-	public void setHeaders(HashMap<String, Integer> headers) {
-		if (source_csv != null) {
-			source_csv.setHeaders(headers);
-		}
-	}
+	public String[] getHeaders(Project project) {
 
-	public String[] getHeaders(String type) {
-
-		switch (type) {
+		switch (project.getFileType()) {
 		case FILE_CSV:
-			return source_csv.getHeaders();
+			return source_csv.getHeaders(project.getFileName(),project.getFileSplit());
 
 		case DATA_BASE:
 			return source_db.getHeaders();
@@ -69,10 +63,10 @@ public class DataSourceSystem {
 		return null;
 	}
 
-	public HashMap<String, String> getLastRow(String type) {
-		switch (type) {
+	public HashMap<String, String> getLastRow(Project project) {
+		switch (project.getFileType()) {
 		case FILE_CSV:
-			return source_csv.getLastRow();
+			return source_csv.getLastRow(project.getFileName(),project.getFileSplit(),project.getNextDate());
 
 		case DATA_BASE:
 			return source_db.getLastRow();
@@ -81,6 +75,20 @@ public class DataSourceSystem {
 		return null;
 	}
 
+	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Project project) {
+
+		switch (project.getFileType()) {
+		case FILE_CSV:
+			return source_csv.findAllOperationalTravelsByRange
+					(project.getFileName(),project.getFileSplit(),project.getInitialDate(), project.getNextDate(), project.getLineId());
+
+		case DATA_BASE:
+			return source_db.findAllOperationalTravelsByRange(project.getInitialDate(), project.getFinalDate(), project.getLineId());
+		}
+
+		return null;
+	}
+	
 	public ArrayList<SITMPlanVersion> findAllPlanVersions(String type) {
 
 		switch (type) {
@@ -128,19 +136,6 @@ public class DataSourceSystem {
 
 		case DATA_BASE:
 			return source_db.findAllStopsByLine(planVersionId, lineId);
-		}
-
-		return null;
-	}
-
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(String type, Date initialDate, Date lastDate, long lineId) {
-
-		switch (type) {
-		case FILE_CSV:
-			return source_csv.findAllOperationalTravelsByRange(initialDate, lastDate, lineId);
-
-		case DATA_BASE:
-			return source_db.findAllOperationalTravelsByRange(initialDate, lastDate, lineId);
 		}
 
 		return null;

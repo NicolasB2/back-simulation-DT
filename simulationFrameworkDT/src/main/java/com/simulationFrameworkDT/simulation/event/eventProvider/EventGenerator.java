@@ -2,9 +2,9 @@ package com.simulationFrameworkDT.simulation.event.eventProvider;
 
 import java.util.Hashtable;
 
-import com.simulationFrameworkDT.simulation.dataGenerationTools.ProbabilisticDistribution;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.EventType;
+import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 public class EventGenerator {
 

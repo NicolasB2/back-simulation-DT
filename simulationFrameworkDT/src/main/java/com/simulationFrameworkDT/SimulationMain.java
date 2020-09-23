@@ -11,28 +11,31 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
+import com.simulationFrameworkDT.model.factorySITM.SITMLine;
+import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.SimController;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
+import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.state.StateController;
 
 public class SimulationMain {
 
 	public static void main(String[] args) throws IOException, ParseException {
 		
-		DataSourceSystem ds = new DataSourceSystem();
-		ds.initializeCsv(new File("datagrams/datagrams.csv"), ",");
-		ds.setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
-		dataTest(ds);
-		startTest(ds);
+		//dataTest();
+		startTest();
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		reader.readLine();
 	}
 	
 	
-	public static <T> void dataTest(DataSourceSystem ds){
+	public static void dataTest(){
+		
+		DataSourceSystem ds = new DataSourceSystem();
+		ds.initializeCsv(new File("datagrams/datagrams.csv"), ",");
+		ds.setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
 		
 		System.out.println("plan Versions ========================================================================================================================================\n");
 		ArrayList<SITMPlanVersion> planversions = ds.findAllPlanVersions(DataSourceSystem.FILE_CSV);
@@ -56,18 +59,30 @@ public class SimulationMain {
 		ArrayList<SITMStop> stops = ds.findAllStopsByLine(DataSourceSystem.FILE_CSV,261, 131);
 		for (int i = 0; i < stops.size(); i++) {System.out.println(stops.get(i));}
 		System.out.println();
-		
 	}
 
-	public static void startTest(DataSourceSystem ds) throws ParseException {
-		
-		System.out.println("Events =================================================\n");
-		SimController sm =  new SimController();
-		sm.setDataSource(ds);
+	public static void saveProject() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Date init = new Date(dateFormat.parse("2019-06-20 18:00:08").getTime());
-		Date last = new Date(dateFormat.parse("2019-06-20 18:30:00").getTime());
+		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
+		Date last = new Date(dateFormat.parse("2019-06-20 18:01:00").getTime());
 		
-		sm.start(init,last,131);
+		StateController pc = new StateController();
+		Project project = new Project();
+		project.setName("test");
+		project.setInitialDate(init);
+		project.setFinalDate(last);
+		project.setPlanVersionId(261);
+		project.setFileName("datagrams.csv");
+		project.setFileSplit(",");
+		project.setFileType(DataSourceSystem.FILE_CSV);
+		pc.saveProject(project);
+	}
+	
+	public static void startTest() throws ParseException{
+		SimController sm =  new SimController();
+		sm.setDataSource(new DataSourceSystem());
+		sm.setProjectController(new StateController());
+		saveProject();
+		sm.start("test.dat",131);
 	}
 }

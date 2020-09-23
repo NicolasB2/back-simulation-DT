@@ -12,12 +12,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 
-import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLineStop;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMOperationalTravels;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
+import com.simulationFrameworkDT.model.factorySITM.SITMLine;
+import com.simulationFrameworkDT.model.factorySITM.SITMLineStop;
+import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
+import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -25,24 +25,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Source_csv implements IDateSource {
-
-	private File sourceFile;
-	private String split;
-	private int currentPosition = 1;
-	private String lastRow;
 	
-	private HashMap<String, Integer> headersDirectory;
+	public final static String DATAGRAMS_PATH = "datagrams";
 	private HashMap<String, Integer> systemDirectory;
 	
-
-	public Source_csv(File sourceFile, String split) {
-		this.split = split;
-		this.sourceFile = sourceFile;
-		this.systemDirectory = new HashMap<String, Integer>();
-		this.headersDirectory = new HashMap<String, Integer>();
-	}
-
 	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int lineId) {
+		systemDirectory = new HashMap<String, Integer>();
 		systemDirectory.put("clock", clock);
 		systemDirectory.put("busId", busId);
 		systemDirectory.put("lineId", lineId);
@@ -50,29 +38,24 @@ public class Source_csv implements IDateSource {
 		systemDirectory.put("latitude", latitude);
 	}
 	
-	public void setHeaders(HashMap<String, Integer> headers) {
-		
-		for (HashMap.Entry<String, Integer> entry : headers.entrySet()) {
-
-			if (headersDirectory.containsKey(entry.getKey())) {
-				headersDirectory.replace(entry.getKey(), entry.getValue());
-			}else {
-				headersDirectory.put(entry.getKey(), entry.getValue());
-			}
-		}
+	public File getSourceFile(String file) {
+		return new File(DATAGRAMS_PATH+File.separator+file);
 	}
 	
-	@Override
-	public String[] getHeaders() {
+	public String[] getHeaders(String file, String split) {
 		
 		BufferedReader br;
 		String[] headers = null;
+		File sourceFile = getSourceFile(file);
 		
 		try {
 
+			
 			br = new BufferedReader(new FileReader(sourceFile));
 			String text = br.readLine();
 			headers = text.split(split);
+			br.close();
+		
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,18 +64,106 @@ public class Source_csv implements IDateSource {
 		return headers;
 	}
 
-	@Override
-	public HashMap<String,String> getLastRow(){
+	public HashMap<String,String> getLastRow(String file, String split, Date currentDate){
 		
-		String[] data = lastRow.split(this.split);
-		HashMap<String, String> variables = new HashMap<>();
-
-		for (HashMap.Entry<String, Integer> entry : headersDirectory.entrySet()) {
-			if(entry.getValue()<data.length) {
-				variables.put(entry.getKey(), data[entry.getValue()]);				
+		File sourceFile = getSourceFile(file);
+		BufferedReader br;
+		String text = "";
+		
+		try {
+			
+			br = new BufferedReader(new FileReader(sourceFile));
+			text = br.readLine();
+			text = br.readLine();
+			
+			String[] data = text.split(split);
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Long date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+			
+			while(date<currentDate.getTime()){
+				text = br.readLine();
+				data = text.split(split);
+				date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
 			}
+
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		String[] data = text.split(split);
+		String[] headers = getHeaders(file,split);
+		HashMap<String, String> variables = new HashMap<>();
+		
+		for (int i = 0; i < data.length; i++) {
+			variables.put(headers[i], data[i]);
 		}
 		return variables;
+	}
+	
+	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(String file, String split, Date initialDate, Date lastDate, long lineId){
+		
+		ArrayList<SITMOperationalTravels> operationaTravels = new ArrayList<SITMOperationalTravels>();
+
+		File sourceFile = getSourceFile(file);
+		
+		try {
+
+			BufferedReader br = new BufferedReader(new FileReader(sourceFile));
+			String text = br.readLine(); 
+			text = br.readLine();
+			String[] data = text.split(split);
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Long date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+			
+				
+			if (text != null && !text.equals("")) {
+				
+				while(initialDate.getTime()>date) {
+					text = br.readLine();
+					
+					if(text!=null && text!="") {
+						data = text.split(split);
+						date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+					}else {
+						break;
+					}
+				}
+				
+				while (initialDate.getTime()<= date && date <=lastDate.getTime()) {
+					
+					Long opertravelId = System.currentTimeMillis();
+					Long busId = Long.parseLong(data[systemDirectory.get("busId")]);
+					double longitudeLng = Long.parseLong(data[systemDirectory.get("longitude")]);
+					double latitudeLng = Long.parseLong(data[systemDirectory.get("latitude")]);
+					String longitude = longitudeLng / 10000000 + "";
+					String latitude = latitudeLng  / 10000000+ "";
+					
+					Date eventDate = new Date(date);
+
+					if(data[7].equals(lineId+"") && longitudeLng!=-1 && latitudeLng!=-1) {
+						SITMOperationalTravels op = new SITMOperationalTravels(opertravelId, busId, lineId, longitude, latitude, eventDate);
+						operationaTravels.add(op);
+					}
+					
+					text = br.readLine();
+					if(text!=null && text!="") {
+						data = text.split(split);
+						date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+					}else {
+						break;
+					}
+					
+				}		
+			}
+
+			br.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return operationaTravels;
 	}
 
 	@Override
@@ -343,73 +414,4 @@ public class Source_csv implements IDateSource {
 		return stopsByLine;
 	}
 	
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Date initialDate, Date lastDate, long lineId){
-				
-		ArrayList<SITMOperationalTravels> operationaTravels = new ArrayList<SITMOperationalTravels>();
-
-		try {
-
-			BufferedReader br = new BufferedReader(new FileReader(sourceFile));
-			String text = br.readLine();
-			
-			for (int i = 0; i < currentPosition; i++) {
-				text = br.readLine();
-			}
-
-			String[]data = text.split(this.split);
-			
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			Long date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
-			
-			if (text != null && !text.equals("")) {
-				
-				while(initialDate.getTime()>date) {
-					text = br.readLine();
-					
-					if(text!=null && text!="") {
-						data = text.split(this.split);
-						date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
-					}else {
-						break;
-					}
-				}
-				
-				while (initialDate.getTime()<= date && date <=lastDate.getTime()) {
-					
-					Long opertravelId = System.currentTimeMillis();
-					Long busId = Long.parseLong(data[systemDirectory.get("busId")]);
-					double longitudeLng = Long.parseLong(data[systemDirectory.get("longitude")]);
-					double latitudeLng = Long.parseLong(data[systemDirectory.get("latitude")]);
-					String longitude = longitudeLng / 10000000 + "";
-					String latitude = latitudeLng  / 10000000+ "";
-					
-					Date eventDate = new Date(date);
-
-					if(data[7].equals(lineId+"") && longitudeLng!=-1 && latitudeLng!=-1) {
-						SITMOperationalTravels op = new SITMOperationalTravels(opertravelId, busId, lineId, longitude, latitude, eventDate);
-						operationaTravels.add(op);
-					}
-					
-					text = br.readLine();
-					currentPosition++;
-					
-					if(text!=null && text!="") {
-						data = text.split(this.split);
-						date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
-					}else {
-						break;
-					}
-					
-				}		
-				this.lastRow = text;	
-			}
-
-			br.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return operationaTravels;
-	}
 }

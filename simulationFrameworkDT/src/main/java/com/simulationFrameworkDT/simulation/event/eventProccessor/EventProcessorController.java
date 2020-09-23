@@ -2,7 +2,7 @@ package com.simulationFrameworkDT.simulation.event.eventProccessor;
 
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.EventType;
-import com.simulationFrameworkDT.systemState.TargetSystem;
+import com.simulationFrameworkDT.simulation.state.TargetSystem;
 
 public class EventProcessorController {
 	

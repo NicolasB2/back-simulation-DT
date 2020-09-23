@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
+import com.simulationFrameworkDT.model.factorySITM.SITMLine;
+import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.restService.interfaces.IDataSourceRest;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMLine;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMStop;
+import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.state.StateController;
 
 @RequestMapping("simulation/datasource")
 @RestController
@@ -24,6 +26,9 @@ public class DataSourceRest implements IDataSourceRest{
 
 	@Autowired
 	private DataSourceSystem dataSource;
+	
+	@Autowired
+	private StateController projectController;
 	
 	@GetMapping("/datagrams")
 	public String[] getFileNames() {
@@ -59,6 +64,12 @@ public class DataSourceRest implements IDataSourceRest{
 	@GetMapping("/stops")
 	public ArrayList<SITMStop> findAllStopsByLine(String type, long planVersionId, long lineId) {
 		return dataSource.findAllStopsByLine(type, planVersionId, lineId);
+	}
+	
+	@GetMapping("headers")
+	public String[] getHeaders(String projectName) {
+		Project project = projectController.loadProject(projectName);
+		return dataSource.getHeaders(project);
 	}
 
 }

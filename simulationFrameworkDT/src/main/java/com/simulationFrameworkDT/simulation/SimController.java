@@ -1,6 +1,5 @@
 package com.simulationFrameworkDT.simulation;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,22 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
-import com.simulationFrameworkDT.simulation.variableState.VariableController;
-import com.simulationFrameworkDT.systemState.TargetSystem;
-import com.simulationFrameworkDT.systemState.factorySITM.SITMBus;
+import com.simulationFrameworkDT.simulation.state.Clock;
+import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.state.StateController;
+import com.simulationFrameworkDT.simulation.state.TargetSystem;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
+@Setter
 @Service
 public class SimController{
 
 	// external packages
 	@Autowired private DataSourceSystem dataSource;
+	@Autowired private StateController projectController;
 	private TargetSystem targetSystem;
 
 	// simulation package
@@ -53,7 +56,6 @@ public class SimController{
 
 		// initialize relationships
 		variables = new VariableController();
-		executionThread = new ExecutionThread(this);
 		eventProvirderController = new EventProviderController();
 		eventProcessorController = new EventProcessorController();
 		eventProvirderController.setDataSource(dataSource);
@@ -78,34 +80,29 @@ public class SimController{
 	public void initialize_TargetSystem() {
 		this.targetSystem = new TargetSystem();
 	}
-	
-	public void setHeaders(HashMap<String, Integer> headers) {
-		dataSource.setHeaders(headers);
-	}
-	
-	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int lineId) {
-		dataSource.setColumnNumberForSimulationVariables(clock, longitude, latitude, busId, lineId);
-	}
 		
 	public ArrayList<SITMBus> getBusesByLine(long lineId){
 		return targetSystem.filterBusesByLineId(lineId);
 	}
 
-	public HashMap<String,String> getLastRow(String type){
-		return dataSource.getLastRow(type);
+	public HashMap<String,String> getLastRow(Project project){
+		return dataSource.getLastRow(project);
 	}
 	
-	public ArrayList<Event> getNextEvent(Date initialDate, Date lastDate, long lineId){
-		return eventProvirderController.getNextEvent(initialDate,lastDate,lineId);
+	public ArrayList<Event> getNextEvent(Project project){
+		return eventProvirderController.getNextEvent(project);
 	}
 	
-	public void start(Date initialDate, Date lastDate, long lineId) {
+	public void start(String projectName, long lineId) {
+		
+		Project project = projectController.loadProject(projectName);
+		project.setLineId(lineId);
+		executionThread = new ExecutionThread(this,project);
 		
 		if(executionThread.isPause()) {
 			executionThread.setPause(false);
 			System.out.println("=======> simulation resumed");
 		}else {
-			executionThread.setVariables(initialDate, lastDate, lineId);
 			executionThread.start();
 			System.out.println("=======> simulation started");
 		}	
@@ -166,83 +163,4 @@ public class SimController{
 		System.out.println("=======> set One To Sixty Speed");
 	}
 	
-}
-
-@Getter
-@Setter
-class ExecutionThread extends Thread {
-
-	private long lineId;
-	private Date lastDate;
-	private Date initialDate;
-	private SimController simController;
-	
-	private volatile boolean pause = false;
-	private volatile boolean killed = false;
-	
-	public void kill() {
-		pause = true;
-		killed = true;
-	}
-	
-	public ExecutionThread(SimController simController) {
-		this.simController = simController;
-	}
-
-	public void setVariables(Date initialDate,Date lastDate, long lineId) {
-		this.initialDate = initialDate;
-		this.lastDate = lastDate;
-		this.lineId = lineId;
-	}
-
-	public ArrayList<Event> getNextEvents(){
-		
-		Date nextDate = new Date(initialDate.getTime()+simController.getClock().getClockRate());
-		ArrayList<Event> events = new ArrayList<>();
-		
-		if(nextDate.getTime()>lastDate.getTime()) {
-			kill();
-		}else {
-			events = simController.getNextEvent(initialDate, nextDate, lineId);
-			simController.getClock().getNextTick(nextDate);
-			initialDate = nextDate;
-		}
-		return events;
-	}
-	
-	@SuppressWarnings("deprecation")
-	@Override
-	public void run() {
-		while (!killed) {
-			while (!pause) {
-				try {
-
-					ArrayList<Event> events = getNextEvents();
-									
-					if(events==null) {
-						
-						kill();
-						System.out.println("=======> simulation finished");
-						
-					}else if (!events.isEmpty()) {			
-
-						System.out.println(initialDate.toGMTString());
-						
-						for (int i = 0; i < events.size(); i++) {
-							simController.getEventProcessorController().processEvent(events.get(i),simController.getTargetSystem());
-						}
-						
-						simController.getVariables().updateAllValues(simController.getLastRow(DataSourceSystem.FILE_CSV));
-
-						System.out.println();
-						sleep(simController.getSpeed());
-					}
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-					pause = true;
-				}
-			}
-		}
-	}
 }
