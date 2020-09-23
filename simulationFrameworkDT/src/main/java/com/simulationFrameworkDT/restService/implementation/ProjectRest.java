@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simulationFrameworkDT.restService.interfaces.IProjectRest;
@@ -25,9 +25,8 @@ public class ProjectRest implements IProjectRest {
 		projectController.saveProject(project);
 	}
 
-	@PostMapping(value = "/save",consumes = "application/json", produces = "application/json")
-	public Project saveScv(@RequestParam Project project) {
-		System.out.println(project.getName());
+	@PostMapping(value = "/save", consumes = "application/json", produces = "application/json")
+	public Project saveScv(@RequestBody Project project) {
 		projectController.saveProject(project);
 		return project;
 	}
