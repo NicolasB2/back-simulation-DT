@@ -66,7 +66,7 @@ public class DataSourceRest implements IDataSourceRest{
 		return dataSource.findAllStopsByLine(type, planVersionId, lineId);
 	}
 	
-	@GetMapping("headers")
+	@GetMapping("/headers")
 	public String[] getHeaders(String projectName) {
 		Project project = projectController.loadProject(projectName);
 		return dataSource.getHeaders(project);

@@ -3,11 +3,9 @@ package com.simulationFrameworkDT.simulation.state;
 import java.io.Serializable;
 import java.sql.Date;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class Project implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -23,4 +21,5 @@ public class Project implements Serializable{
 	private String fileType;
 	private String fileName;
 	private String fileSplit;
+	
 }

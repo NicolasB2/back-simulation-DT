@@ -1,14 +1,12 @@
 package com.simulationFrameworkDT.restService.interfaces;
 
-import java.sql.Date;
-
 import com.simulationFrameworkDT.simulation.state.Project;
 
 public interface IProjectRest {
 
-	public void saveProjectOracle(String name, Date initialDate, Date finalDate, long planVersionId);
+	public void saveProjectOracle(Project project);
 	
-	public void saveProjectScvOnServer(String name, Date initialDate, Date finalDate, long planVersionId, String fileName);
+	public Project saveScv(Project project);
 	
 	//public void saveProjectScvByFile(String name, Date initialDate, Date finalDate, long planVersionId);
 	
