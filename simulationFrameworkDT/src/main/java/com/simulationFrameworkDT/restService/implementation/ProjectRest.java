@@ -25,9 +25,9 @@ public class ProjectRest implements IProjectRest {
 		projectController.saveProject(project);
 	}
 
-	@PostMapping(value = "/save", consumes = "application/json", produces = "application/json")
+	@PostMapping("/save")
 	public Project saveScv(@RequestBody Project project) {
-		projectController.saveProject(project);
+		projectController.saveProject(project);	
 		return project;
 	}
 
