@@ -11,10 +11,8 @@ import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
-import com.simulationFrameworkDT.simulation.state.Clock;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
-import com.simulationFrameworkDT.simulation.state.TargetSystem;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -27,11 +25,8 @@ public class SimController{
 	// external packages
 	@Autowired private DataSourceSystem dataSource;
 	@Autowired private StateController projectController;
-	private TargetSystem targetSystem;
 
 	// simulation package
-	private Clock clock;
-	private VariableController variables;
 	private EventProviderController eventProvirderController;
 	private EventProcessorController eventProcessorController;
 
@@ -39,15 +34,7 @@ public class SimController{
 	private ExecutionThread executionThread;
 
 	public SimController() {
-
-		// upload system state
-		initialize_TargetSystem();
-
-		// clock configuration
-		clock = new Clock();
-
 		// initialize relationships
-		variables = new VariableController();
 		eventProvirderController = new EventProviderController();
 		eventProcessorController = new EventProcessorController();
 		eventProvirderController.setDataSource(dataSource);
@@ -58,12 +45,10 @@ public class SimController{
 		this.eventProvirderController.setDataSource(dataSource);
 	}
 	
-	public void initialize_TargetSystem() {
-		this.targetSystem = new TargetSystem();
-	}
 		
 	public ArrayList<SITMBus> getBusesByLine(long lineId){
-		return targetSystem.filterBusesByLineId(lineId);
+//		return targetSystem.filterBusesByLineId(lineId);
+		return null;
 	}
 
 	public HashMap<String,String> getLastRow(Project project){
@@ -102,38 +87,6 @@ public class SimController{
 	public void stop() {
 		executionThread.kill();
 		System.out.println("=======> simulation finished");
-	}
-
-	public void setFastSpeed() {
-		this.clock.setFastSpeed();
-	}
-
-	public void setNormalSpeed() {
-		this.clock.setNormalSpeed();
-	}
-
-	public void setSlowSpeed() {
-		this.clock.setSlowSpeed();
-	}
-
-	public void setOneToOneSpeed() {
-		this.clock.setOneToOneSpeed();
-	}
-
-	public void setOneToFiveSpeed() {
-		this.clock.setOneToFiveSpeed();
-	}
-
-	public void setOneToTenSpeed() {
-		this.clock.setOneToTenSpeed();
-	}
-
-	public void setOneToThirtySpeed() {
-		this.clock.setOneToThirtySpeed();
-	}
-
-	public void setOneToSixtySpeed() {
-		this.clock.setOneToSixtySpeed();
 	}
 	
 }

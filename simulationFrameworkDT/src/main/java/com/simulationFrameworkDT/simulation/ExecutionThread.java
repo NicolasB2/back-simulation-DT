@@ -35,7 +35,7 @@ class ExecutionThread extends Thread {
 	@SuppressWarnings("deprecation")
 	public ArrayList<Event> getNextEvents(){	
 		
-		Date nextDate = new Date(project.getInitialDate().getTime()+simController.getClock().getReadSpeed());
+		Date nextDate = new Date(project.getInitialDate().getTime()+project.getClock().getReadSpeed());
 		ArrayList<Event> events = new ArrayList<>();
 		
 		if(nextDate.getTime()>project.getFinalDate().getTime()) {
@@ -45,7 +45,7 @@ class ExecutionThread extends Thread {
 			project.setNextDate(nextDate);
 			events = simController.getNextEvent(project);
 			project.setInitialDate(nextDate);
-			simController.getClock().getNextTick(nextDate);
+			project.getClock().getNextTick(nextDate);
 		}
 		return events;
 	}
@@ -65,14 +65,14 @@ class ExecutionThread extends Thread {
 					}else if (!events.isEmpty()) {			
 						
 						for (int i = 0; i < events.size(); i++) {
-							simController.getEventProcessorController().processEvent(events.get(i),simController.getTargetSystem());
+							simController.getEventProcessorController().processEvent(events.get(i),project.getTargetSystem());
 						}
 						
-						simController.getVariables().updateAllValues(simController.getLastRow(project));
+//						project.getVariables().updateAllValues(simController.getLastRow(project));
 
 						System.out.println();
 						projectController.saveProject(project);
-						sleep(simController.getClock().getAnimationSpeed());
+						sleep(project.getClock().getAnimationSpeed());
 					}
 					
 				} catch (Exception e) {

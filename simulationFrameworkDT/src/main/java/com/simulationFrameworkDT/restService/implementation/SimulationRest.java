@@ -38,44 +38,4 @@ public class SimulationRest implements ISimulationRest {
 		SimController.stop();
 	}
 
-	@ResponseStatus(HttpStatus.OK)
-	public void setFastSpeed() {
-		SimController.setFastSpeed();
-	}
-
-	@ResponseStatus(HttpStatus.OK)
-	public void setNormalSpeed() {
-		SimController.setNormalSpeed();
-	}
-
-	@ResponseStatus(HttpStatus.OK)
-	public void setSlowSpeed() {
-		SimController.setSlowSpeed();
-	}
-
-	@ResponseStatus(HttpStatus.OK)
-	public void setOneToOneSpeed() {
-		SimController.setOneToOneSpeed();
-	}
-
-	@ResponseStatus(HttpStatus.OK)
-	public void setOneToFiveSpeed() {
-		SimController.setOneToFiveSpeed();
-	}
-
-	@ResponseStatus(HttpStatus.OK)
-	public void setOneToTenSpeed() {
-		SimController.setOneToTenSpeed();
-	}
-
-	@ResponseStatus(HttpStatus.OK)
-	public void setOneToThirtySpeed() {
-		SimController.setOneToThirtySpeed();
-	}
-
-	@ResponseStatus(HttpStatus.OK)
-	public void setOneToSixtySpeed() {
-		SimController.setOneToSixtySpeed();
-	}
-
 }

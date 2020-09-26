@@ -45,6 +45,10 @@ public class Clock extends Thread implements Serializable {
 		}
 	}
 
+	//================================================================================
+    // Animation Speed
+    //================================================================================
+
 	public void setFastSpeed() {
 		this.animationSpeed = FAST;
 		System.out.println("=======> set Fast Speed");
@@ -60,6 +64,10 @@ public class Clock extends Thread implements Serializable {
 		System.out.println("=======> set Slow Speed");
 	}
 
+	//================================================================================
+    // Read Speed
+    //================================================================================
+	
 	public void setOneToOneSpeed() {
 		this.readSpeed = ONE_TO_ONE;
 		System.out.println("=======> set One To One Speed");
