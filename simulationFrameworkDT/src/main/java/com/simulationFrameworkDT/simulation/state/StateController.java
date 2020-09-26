@@ -14,9 +14,15 @@ public class StateController {
 	public static final String FILE_EXTENSION = ".dat";
 	public static final String PROJECTS_PATH = "projects";
 	
+	public String[] getProjectsNames() {
+		File f = new File(PROJECTS_PATH);
+		String[] pathnames = f.list();
+		return pathnames;
+	}
+	
 	public void saveProject(Project project) {
-		String pName = project.getName();
 		
+		String pName = project.getName();
 		File file = new File(PROJECTS_PATH);
 		
 		if (!file.exists()) {
@@ -24,15 +30,12 @@ public class StateController {
         }
 		
 		file = new File(PROJECTS_PATH+File.separator+pName+FILE_EXTENSION);
-		
-    	ObjectOutputStream objectOutputStream;
+		ObjectOutputStream objectOutputStream;
     	
 		try {
-			
 			objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
 			objectOutputStream.writeObject(project);
 	    	objectOutputStream.close();
-	    	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,9 +58,5 @@ public class StateController {
 		return project;
 	}
 	
-	public String[] getProjectsNames() {
-		File f = new File(PROJECTS_PATH);
-		String[] pathnames = f.list();
-		return pathnames;
-	}
+	
 }

@@ -33,9 +33,9 @@ class ExecutionThread extends Thread {
 	}
 
 	@SuppressWarnings("deprecation")
-	public ArrayList<Event> getNextEvents(){
+	public ArrayList<Event> getNextEvents(){	
 		
-		Date nextDate = new Date(project.getInitialDate().getTime()+simController.getClock().getClockRate());
+		Date nextDate = new Date(project.getInitialDate().getTime()+simController.getClock().getReadSpeed());
 		ArrayList<Event> events = new ArrayList<>();
 		
 		if(nextDate.getTime()>project.getFinalDate().getTime()) {
@@ -72,7 +72,7 @@ class ExecutionThread extends Thread {
 
 						System.out.println();
 						projectController.saveProject(project);
-						sleep(simController.getSpeed());
+						sleep(simController.getClock().getAnimationSpeed());
 					}
 					
 				} catch (Exception e) {

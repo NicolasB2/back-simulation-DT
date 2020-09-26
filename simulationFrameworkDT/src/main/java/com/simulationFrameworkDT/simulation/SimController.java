@@ -38,21 +38,13 @@ public class SimController{
 	// execution thread
 	private ExecutionThread executionThread;
 
-	// variables
-	private int speed;
-
 	public SimController() {
-
-		// set default variables
-		speed = Clock.NORMAL;
 
 		// upload system state
 		initialize_TargetSystem();
 
 		// clock configuration
 		clock = new Clock();
-		clock.setClockMode(Clock.DISCRET);
-		clock.setClockRate(Clock.ONE_TO_FIVE);
 
 		// initialize relationships
 		variables = new VariableController();
@@ -60,17 +52,6 @@ public class SimController{
 		eventProcessorController = new EventProcessorController();
 		eventProvirderController.setDataSource(dataSource);
 	}
-
-//	public void initializeDB() {
-//		dataSource = new DataSourceSystem();
-//		eventProvirderController.setDataSource(dataSource);
-//	}
-	
-//	public void initializeSCV(File sourceFile, String split) {
-//		dataSource = new DataSourceSystem();
-//		dataSource.initializeCsv(sourceFile, split);
-//		eventProvirderController.setDataSource(dataSource);
-//	}
 	
 	public void setDataSource(DataSourceSystem dataSource) {
 		this.dataSource = dataSource;
@@ -124,43 +105,35 @@ public class SimController{
 	}
 
 	public void setFastSpeed() {
-		this.speed = Clock.FAST;
-		System.out.println("=======> set Fast Speed");
+		this.clock.setFastSpeed();
 	}
 
 	public void setNormalSpeed() {
-		this.speed = Clock.NORMAL;
-		System.out.println("=======> set Normal Speed");
+		this.clock.setNormalSpeed();
 	}
 
 	public void setSlowSpeed() {
-		this.speed = Clock.SLOW;
-		System.out.println("=======> set Slow Speed");
+		this.clock.setSlowSpeed();
 	}
 
 	public void setOneToOneSpeed() {
-		this.clock.setClockRate(Clock.ONE_TO_ONE);
-		System.out.println("=======> set One To One Speed");
+		this.clock.setOneToOneSpeed();
 	}
 
 	public void setOneToFiveSpeed() {
-		this.clock.setClockRate(Clock.ONE_TO_FIVE);
-		System.out.println("=======> set One To Five Speed");
+		this.clock.setOneToFiveSpeed();
 	}
 
 	public void setOneToTenSpeed() {
-		this.clock.setClockRate(Clock.ONE_TO_TEN);
-		System.out.println("=======> set One To Ten Speed");
+		this.clock.setOneToTenSpeed();
 	}
 
 	public void setOneToThirtySpeed() {
-		this.clock.setClockRate(Clock.ONE_TO_THIRTY);
-		System.out.println("=======> set One To Thirty Speed");
+		this.clock.setOneToThirtySpeed();
 	}
 
 	public void setOneToSixtySpeed() {
-		this.clock.setClockRate(Clock.ONE_TO_SIXTY);
-		System.out.println("=======> set One To Sixty Speed");
+		this.clock.setOneToSixtySpeed();
 	}
 	
 }
