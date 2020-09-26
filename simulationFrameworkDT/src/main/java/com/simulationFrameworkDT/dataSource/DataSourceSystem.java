@@ -24,30 +24,25 @@ public class DataSourceSystem {
 
 	public final static String FILE_CSV = "FileCSV";
 	public final static String DATA_BASE = "DataBase";
+	public final static String FILES_PATH = "";
 
 	@Autowired
 	public Source_db source_db;
 	public Source_csv source_csv;
 
 	public DataSourceSystem() {
-		initializeCsv(new File("../datagrams.csv"), ",");
+		initializeCsv();
 	}
-
+	
 	public String[] getFileNames() {
 		File f = new File("datagrams");
 		String[] pathnames = f.list();
 		return pathnames;
 	}
 
-	public void initializeCsv(File sourceFile, String split) {
+	public void initializeCsv() {
 		source_csv = new Source_csv();
-		setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
-	}
-
-	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int lineId) {
-		if (source_csv != null) {
-			source_csv.setColumnNumberForSimulationVariables(clock, longitude, latitude, busId, lineId);
-		}
+		source_csv.setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
 	}
 
 	public String[] getHeaders(Project project) {

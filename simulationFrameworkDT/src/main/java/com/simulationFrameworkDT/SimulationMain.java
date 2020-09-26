@@ -1,7 +1,6 @@
 package com.simulationFrameworkDT;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Date;
@@ -34,8 +33,7 @@ public class SimulationMain {
 	public static void dataTest(){
 		
 		DataSourceSystem ds = new DataSourceSystem();
-		ds.initializeCsv(new File("datagrams/datagrams.csv"), ",");
-		ds.setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
+		ds.initializeCsv();
 		
 		System.out.println("plan Versions ========================================================================================================================================\n");
 		ArrayList<SITMPlanVersion> planversions = ds.findAllPlanVersions(DataSourceSystem.FILE_CSV);
@@ -82,6 +80,7 @@ public class SimulationMain {
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
 		sm.setProjectController(new StateController());
+		sm.getEventProvirderController().getEventFecher().setDataSource(sm.getDataSource());
 		saveProject();
 		sm.start("test.dat",131);
 	}

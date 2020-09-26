@@ -37,14 +37,7 @@ public class SimController{
 		// initialize relationships
 		eventProvirderController = new EventProviderController();
 		eventProcessorController = new EventProcessorController();
-		eventProvirderController.setDataSource(dataSource);
 	}
-	
-	public void setDataSource(DataSourceSystem dataSource) {
-		this.dataSource = dataSource;
-		this.eventProvirderController.setDataSource(dataSource);
-	}
-	
 		
 	public ArrayList<SITMBus> getBusesByLine(long lineId){
 //		return targetSystem.filterBusesByLineId(lineId);

@@ -3,6 +3,8 @@ package com.simulationFrameworkDT.simulation.event.eventProvider;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
 import com.simulationFrameworkDT.simulation.event.Event;
@@ -16,6 +18,7 @@ import lombok.Setter;
 @Setter
 public class EventFetcher {
 
+	@Autowired
 	private DataSourceSystem dataSource;
 
 	public ArrayList<Event> allFetch(Project project) {
