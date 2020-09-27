@@ -12,6 +12,7 @@ public class Clock implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	// Attributes
 	private volatile int animationSpeed;
 	private volatile int readSpeed;
 	private Date dataDateTime;

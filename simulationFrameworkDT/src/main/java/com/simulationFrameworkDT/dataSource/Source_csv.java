@@ -29,6 +29,14 @@ public class Source_csv implements IDateSource {
 	public final static String DATAGRAMS_PATH = "datagrams";
 	private HashMap<String, Integer> systemDirectory;
 	
+	public File getSourceFile(String file) {
+		return new File(DATAGRAMS_PATH+File.separator+file);
+	}
+	
+	//================================================================================
+    // Constructor and initialize
+    //================================================================================
+	
 	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int lineId) {
 		systemDirectory = new HashMap<String, Integer>();
 		systemDirectory.put("clock", clock);
@@ -38,9 +46,9 @@ public class Source_csv implements IDateSource {
 		systemDirectory.put("latitude", latitude);
 	}
 	
-	public File getSourceFile(String file) {
-		return new File(DATAGRAMS_PATH+File.separator+file);
-	}
+	//================================================================================
+    // Simulation
+    //================================================================================
 	
 	public String[] getHeaders(String file, String split) {
 		
@@ -49,7 +57,6 @@ public class Source_csv implements IDateSource {
 		File sourceFile = getSourceFile(file);
 		
 		try {
-
 			
 			br = new BufferedReader(new FileReader(sourceFile));
 			String text = br.readLine();
@@ -166,6 +173,10 @@ public class Source_csv implements IDateSource {
 		return operationaTravels;
 	}
 
+	//================================================================================
+    // Queries
+    //================================================================================
+	
 	@Override
 	public ArrayList<SITMPlanVersion> findAllPlanVersions() {
 

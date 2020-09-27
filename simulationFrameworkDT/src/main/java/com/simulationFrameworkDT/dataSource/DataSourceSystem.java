@@ -24,27 +24,34 @@ public class DataSourceSystem {
 
 	public final static String FILE_CSV = "FileCSV";
 	public final static String DATA_BASE = "DataBase";
-	public final static String FILES_PATH = "";
 
 	@Autowired
 	public Source_db source_db;
 	public Source_csv source_csv;
-
-	public DataSourceSystem() {
-		initializeCsv();
-	}
 	
 	public String[] getFileNames() {
 		File f = new File("datagrams");
 		String[] pathnames = f.list();
 		return pathnames;
 	}
-
+	
+	//================================================================================
+    // Constructor and initialize
+    //================================================================================
+	
+	public DataSourceSystem() {
+		initializeCsv();
+	}
+	
 	public void initializeCsv() {
 		source_csv = new Source_csv();
 		source_csv.setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
 	}
-
+	
+	//================================================================================
+    // Simulation
+    //================================================================================
+	
 	public String[] getHeaders(Project project) {
 
 		switch (project.getFileType()) {
@@ -64,18 +71,17 @@ public class DataSourceSystem {
 			return source_csv.getLastRow(project.getFileName(),project.getFileSplit(),project.getNextDate());
 
 		case DATA_BASE:
-			return source_db.getLastRow();
+			return source_db.getLastRow(project.getNextDate());
 		}
 
 		return null;
 	}
-
+	
 	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Project project) {
 
 		switch (project.getFileType()) {
 		case FILE_CSV:
-			return source_csv.findAllOperationalTravelsByRange
-					(project.getFileName(),project.getFileSplit(),project.getInitialDate(), project.getNextDate(), project.getLineId());
+			return source_csv.findAllOperationalTravelsByRange(project.getFileName(),project.getFileSplit(),project.getInitialDate(), project.getNextDate(), project.getLineId());
 
 		case DATA_BASE:
 			return source_db.findAllOperationalTravelsByRange(project.getInitialDate(), project.getFinalDate(), project.getLineId());
@@ -83,6 +89,10 @@ public class DataSourceSystem {
 
 		return null;
 	}
+	
+	//================================================================================
+    // Queries
+    //================================================================================
 	
 	public ArrayList<SITMPlanVersion> findAllPlanVersions(String type) {
 

@@ -45,6 +45,10 @@ public class Source_db implements IDateSource {
 	@Autowired
 	private OperationalTravelsRepository operationalTravelsRepository;
 
+	//================================================================================
+    // Constructor and initialize
+    //================================================================================
+	
 	public Source_db() {
 		super();
 	}
@@ -62,6 +66,10 @@ public class Source_db implements IDateSource {
 		}
 	}
 
+	//================================================================================
+    // Simulation
+    //================================================================================
+	
 	public String[] getHeaders() {
 
 		String[] headers = new String[10];
@@ -79,10 +87,10 @@ public class Source_db implements IDateSource {
 		return headers;
 	}
 	
-	public HashMap<String,String> getLastRow(){
+	public HashMap<String,String> getLastRow(Date currentDate){
 		return null;
 	}
-
+	
 	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Date initialDate, Date lastDate, long lineId){
 		
 		ArrayList<SITMOperationalTravels> returnAnswer = new ArrayList<SITMOperationalTravels>();
@@ -122,6 +130,10 @@ public class Source_db implements IDateSource {
 		
 		return returnAnswer;
 	}
+	
+	//================================================================================
+    // Queries
+    //================================================================================
 	
 	@Override
 	public ArrayList<SITMPlanVersion> findAllPlanVersions() {
