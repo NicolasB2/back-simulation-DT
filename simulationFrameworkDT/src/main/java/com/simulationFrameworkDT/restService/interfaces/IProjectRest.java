@@ -7,5 +7,5 @@ public interface IProjectRest {
 	public String[] getProjectsNames();
 	public void saveProjectOracle(ProjectDTO project);	
 	public void saveScv(ProjectDTO project);
-	public ProjectDTO loadProject(String name);
+	public ProjectDTO loadProject(String projectName);
 }

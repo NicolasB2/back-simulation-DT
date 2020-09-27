@@ -29,7 +29,7 @@ public class ProjectRest implements IProjectRest {
 	@PostMapping("/save/oracle")
 	public void saveProjectOracle(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
-		newProject.setName(project.getName());
+		newProject.setProjectName(project.getName());
 		newProject.setInitialDate(project.getInitialDate());
 		newProject.setFinalDate(project.getFinalDate());
 		newProject.setPlanVersionId(project.getPlanVersionId());
@@ -39,7 +39,7 @@ public class ProjectRest implements IProjectRest {
 	@PostMapping("/save")
 	public void saveScv(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
-		newProject.setName(project.getName());
+		newProject.setProjectName(project.getName());
 		newProject.setInitialDate(project.getInitialDate());
 		newProject.setFinalDate(project.getFinalDate());
 		newProject.setPlanVersionId(project.getPlanVersionId());
@@ -48,10 +48,10 @@ public class ProjectRest implements IProjectRest {
 	}
 
 	@GetMapping("/load")
-	public ProjectDTO loadProject(String name) {
-		Project project = projectController.loadProject(name);
+	public ProjectDTO loadProject(String projectName) {
+		Project project = projectController.loadProject(projectName);
 		ProjectDTO dto = new ProjectDTO();
-		dto.setName(project.getName());
+		dto.setName(project.getProjectName());
 		dto.setInitialDate(project.getInitialDate());
 		dto.setFinalDate(project.getFinalDate());
 		dto.setPlanVersionId(project.getPlanVersionId());

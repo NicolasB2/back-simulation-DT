@@ -67,7 +67,7 @@ public class SimulationMain {
 		
 		StateController pc = new StateController();
 		Project project = new Project();
-		project.setName("test");
+		project.setProjectName("test");
 		project.setInitialDate(init);
 		project.setFinalDate(last);
 		project.setPlanVersionId(261);

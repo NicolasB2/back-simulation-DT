@@ -26,7 +26,7 @@ public class StateController {
 	
 	public void saveProject(Project project) {
 		
-		String pName = project.getName();
+		String pName = project.getProjectName();
 		File file = new File(PROJECTS_PATH);
 		
 		if (!file.exists()) {
