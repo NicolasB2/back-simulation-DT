@@ -1,14 +1,18 @@
 package com.simulationFrameworkDT.restService.interfaces;
 
+import com.simulationFrameworkDT.simulation.state.Clock;
+
 public interface IClockRest {
 
-	public void setFastSpeed();
-	public void setNormalSpeed();
-	public void setSlowSpeed();
+	public Clock getClock(String nameProject);
+	
+	public Clock setFastSpeed(String nameProject);
+	public Clock setNormalSpeed(String nameProject);
+	public Clock setSlowSpeed(String nameProject);
 
-	public void setOneToOneSpeed();
-	public void setOneToFiveSpeed();
-	public void setOneToTenSpeed();
-	public void setOneToThirtySpeed();
-	public void setOneToSixtySpeed();
+	public Clock setOneToOneSpeed(String nameProject);
+	public Clock setOneToFiveSpeed(String nameProject);
+	public Clock setOneToTenSpeed(String nameProject);
+	public Clock setOneToThirtySpeed(String nameProject);
+	public Clock setOneToSixtySpeed(String nameProject);
 }

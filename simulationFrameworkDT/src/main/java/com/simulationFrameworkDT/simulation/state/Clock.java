@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Clock extends Thread implements Serializable {
+public class Clock implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
