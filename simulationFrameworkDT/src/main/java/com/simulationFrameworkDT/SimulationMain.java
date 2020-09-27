@@ -23,7 +23,8 @@ public class SimulationMain {
 	public static void main(String[] args) throws IOException, ParseException {
 		
 		//dataTest();
-		startTest();
+		saveProject();
+		//startTest();
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		reader.readLine();

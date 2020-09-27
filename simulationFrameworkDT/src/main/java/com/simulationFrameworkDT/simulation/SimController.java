@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
@@ -22,27 +21,20 @@ import lombok.Setter;
 @Service
 public class SimController{
 
-	// external packages
-	@Autowired private DataSourceSystem dataSource;
-	@Autowired private StateController projectController;
+	@Autowired 
+	private DataSourceSystem dataSource;
+	
+	@Autowired 
+	private StateController projectController;
 
-	// simulation package
+	@Autowired 
 	private EventProviderController eventProvirderController;
+	
+	@Autowired 
 	private EventProcessorController eventProcessorController;
 
 	// execution thread
 	private ExecutionThread executionThread;
-
-	public SimController() {
-		// initialize relationships
-		eventProvirderController = new EventProviderController();
-		eventProcessorController = new EventProcessorController();
-	}
-		
-	public ArrayList<SITMBus> getBusesByLine(long lineId){
-//		return targetSystem.filterBusesByLineId(lineId);
-		return null;
-	}
 
 	public HashMap<String,String> getLastRow(Project project){
 		return dataSource.getLastRow(project);

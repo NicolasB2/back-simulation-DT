@@ -3,7 +3,7 @@ package com.simulationFrameworkDT.restService.interfaces;
 public interface ISimulationRest {
 
 	public void start(String projectName, long lineId);
-	public void pause();
-	public void resume();
-	public void stop();
+	public void pause(String projectName);
+	public void resume(String projectName);
+	public void stop(String projectName);
 }

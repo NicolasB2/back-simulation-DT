@@ -27,7 +27,7 @@ public class ProjectRest implements IProjectRest {
 	}
 	
 	@PostMapping("/save/oracle")
-	public void saveProjectOracle(ProjectDTO project) {
+	public void saveProjectOracle(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
 		newProject.setName(project.getName());
 		newProject.setInitialDate(project.getInitialDate());
