@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +29,7 @@ public class ClockRest implements IClockRest{
 		return project.getClock();
 	}
 	
-	@PostMapping("/setfast")
+	@PutMapping("/setfast")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setFastSpeed(String nameProject) {
 		Project project = stateController.loadProject(nameProject);
@@ -39,7 +39,7 @@ public class ClockRest implements IClockRest{
 		return clock;
 	}
 
-	@PostMapping("/setnormal")
+	@PutMapping("/setnormal")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setNormalSpeed(String nameProject) {
 		Project project = stateController.loadProject(nameProject);
@@ -49,7 +49,7 @@ public class ClockRest implements IClockRest{
 		return clock;
 	}
 
-	@PostMapping("/setslow")
+	@PutMapping("/setslow")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setSlowSpeed(String nameProject) {
 		Project project = stateController.loadProject(nameProject);
@@ -59,7 +59,7 @@ public class ClockRest implements IClockRest{
 		return clock;
 	}
 
-	@PostMapping("/set1to1")
+	@PutMapping("/set1to1")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToOneSpeed(String nameProject) {
 		Project project = stateController.loadProject(nameProject);
@@ -69,7 +69,7 @@ public class ClockRest implements IClockRest{
 		return clock;
 	}
 
-	@PostMapping("/set1to5")
+	@PutMapping("/set1to5")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToFiveSpeed(String nameProject) {
 		Project project = stateController.loadProject(nameProject);
@@ -79,7 +79,7 @@ public class ClockRest implements IClockRest{
 		return clock;
 	}
 
-	@PostMapping("/set1to10")
+	@PutMapping("/set1to10")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToTenSpeed(String nameProject) {
 		Project project = stateController.loadProject(nameProject);
@@ -89,7 +89,7 @@ public class ClockRest implements IClockRest{
 		return clock;
 	}
 
-	@PostMapping("/set1to30")
+	@PutMapping("/set1to30")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToThirtySpeed(String nameProject) {
 		Project project = stateController.loadProject(nameProject);
@@ -99,7 +99,7 @@ public class ClockRest implements IClockRest{
 		return clock;
 	}
 
-	@PostMapping("/set1to60")
+	@PutMapping("/set1to60")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToSixtySpeed(String nameProject) {
 		Project project = stateController.loadProject(nameProject);
