@@ -1,16 +1,11 @@
 package com.simulationFrameworkDT.restService.interfaces;
 
-import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.restService.dataTransfer.ProjectDTO;
 
 public interface IProjectRest {
 
-	public void saveProjectOracle(Project project);
-	
-	public Project saveScv(Project project);
-	
-	//public void saveProjectScvByFile(String name, Date initialDate, Date finalDate, long planVersionId);
-	
-	public Project loadProject(String name);
-	
 	public String[] getProjectsNames();
+	public void saveProjectOracle(ProjectDTO project);	
+	public void saveScv(ProjectDTO project);
+	public ProjectDTO loadProject(String name);
 }
