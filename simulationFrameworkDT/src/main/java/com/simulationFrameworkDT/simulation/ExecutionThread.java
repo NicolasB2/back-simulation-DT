@@ -68,7 +68,7 @@ class ExecutionThread extends Thread {
 							simController.getEventProcessorController().processEvent(events.get(i),project.getTargetSystem());
 						}
 						
-//						project.getVariables().updateAllValues(simController.getLastRow(project));
+						project.updateVariables(simController.getLastRow(project));
 
 						System.out.println();
 						projectController.saveProject(project);

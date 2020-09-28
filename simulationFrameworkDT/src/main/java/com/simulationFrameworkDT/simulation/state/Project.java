@@ -3,6 +3,7 @@ package com.simulationFrameworkDT.simulation.state;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import lombok.Data;
 
@@ -33,6 +34,18 @@ public class Project implements Serializable{
 		lineId = 131;
 		targetSystem = new TargetSystem();
 		variables = new ArrayList<Variable>();
+	}
+	
+	public void setHeaders(String[] headers) {
+		for (int i = 0; i < headers.length; i++) {
+			variables.add(new Variable(headers[i],"" ));
+		}
+	}
+	
+	public void updateVariables(HashMap<String,String> newVariables) {
+		for (int i = 0; i < variables.size(); i++) {
+			variables.get(i).setValue(newVariables.get(variables.get(i).getHeader()));			
+		}
 	}
 	
 }
