@@ -7,6 +7,6 @@ import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 
 public interface ITargetSystemRest {
 
-	public ArrayList<SITMBus> findAllBuses();
-	public ArrayList<SITMStop> findAllStops();
+	public ArrayList<SITMBus> findAllBuses(String projectName);
+	public ArrayList<SITMStop> findAllStops(String projectName);
 }
