@@ -30,6 +30,7 @@ public class Project implements Serializable{
 	
 	public Project() {
 		clock = new Clock();
+		lineId = 131;
 		targetSystem = new TargetSystem();
 		variables = new ArrayList<Variable>();
 	}

@@ -8,4 +8,6 @@ public interface IProjectRest {
 	public void saveProjectOracle(ProjectDTO project);	
 	public void saveScv(ProjectDTO project);
 	public ProjectDTO loadProject(String projectName);
+	public ProjectDTO setLineId(String projectName, long lineId);
+	
 }
