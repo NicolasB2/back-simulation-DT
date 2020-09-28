@@ -15,6 +15,8 @@ import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.SimController;
+import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
+import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
 
@@ -71,6 +73,7 @@ public class SimulationMain {
 		project.setInitialDate(init);
 		project.setFinalDate(last);
 		project.setPlanVersionId(261);
+		project.setLineId(131);
 		project.setFileName("datagrams.csv");
 		project.setFileSplit(",");
 		project.setFileType(DataSourceSystem.FILE_CSV);
@@ -81,8 +84,10 @@ public class SimulationMain {
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
 		sm.setProjectController(new StateController());
+		sm.setEventProcessorController(new EventProcessorController());
+		sm.setEventProvirderController(new EventProviderController());
 		sm.getEventProvirderController().getEventFecher().setDataSource(sm.getDataSource());
 		saveProject();
-		sm.start("test.dat",131);
+		sm.start("test.dat");
 	}
 }

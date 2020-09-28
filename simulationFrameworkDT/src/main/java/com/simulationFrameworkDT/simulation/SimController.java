@@ -44,10 +44,9 @@ public class SimController{
 		return eventProvirderController.getNextEvent(project);
 	}
 	
-	public void start(String projectName, long lineId) {
+	public void start(String projectName) {
 		
 		Project project = projectController.loadProject(projectName);
-		project.setLineId(lineId);
 		executionThread = new ExecutionThread(this,project);
 		
 		if(executionThread.isPause()) {
@@ -69,7 +68,7 @@ public class SimController{
 		System.out.println("=======> simulation resumed");
 	}
 
-	public void stop() {
+	public void finish() {
 		executionThread.kill();
 		System.out.println("=======> simulation finished");
 	}

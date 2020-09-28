@@ -21,9 +21,8 @@ public class SimulationRest implements ISimulationRest {
 
 	@PutMapping("/start")
 	@ResponseStatus(HttpStatus.OK)
-	public void start(String projectName, long lineId) {
-		System.out.println(SimController.getDataSource());
-		SimController.start(projectName, lineId);
+	public void start(String projectName) {
+		SimController.start(projectName);
 	}
 
 	@PutMapping("/pause")
@@ -38,10 +37,10 @@ public class SimulationRest implements ISimulationRest {
 		SimController.resume();
 	}
 
-	@PutMapping("/stop")
+	@PutMapping("/finish")
 	@ResponseStatus(HttpStatus.OK)
 	public void stop(String projectName) {
-		SimController.stop();
+		SimController.finish();
 	}
 
 }
