@@ -39,7 +39,10 @@ class ExecutionThread extends Thread {
 		ArrayList<Event> events = new ArrayList<>();
 		
 		if(nextDate.getTime()>project.getFinalDate().getTime()) {
+			
 			kill();
+			System.out.println("=======> simulation finished");
+			
 		}else {
 			System.out.println(project.getInitialDate().toGMTString());
 			project.setNextDate(nextDate);
@@ -61,6 +64,7 @@ class ExecutionThread extends Thread {
 					if(events==null) {
 						
 						kill();
+						System.out.println("=======> simulation finished");
 						
 					}else if (!events.isEmpty()) {			
 						
