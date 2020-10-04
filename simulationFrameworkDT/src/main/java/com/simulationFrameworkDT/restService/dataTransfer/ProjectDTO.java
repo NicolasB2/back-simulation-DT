@@ -12,5 +12,9 @@ public class ProjectDTO {
 	private Date finalDate;
 	private long planVersionId;
 	private long lineId;
+	private String fileName;
+	private String fileSplit;
+	private String fileType;
+	
 	
 }

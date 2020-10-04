@@ -45,6 +45,9 @@ public class ProjectRest implements IProjectRest {
 		newProject.setFinalDate(project.getFinalDate());
 		newProject.setPlanVersionId(project.getPlanVersionId());
 		newProject.setLineId(project.getLineId());
+		newProject.setFileType(project.getFileType());
+		newProject.setFileSplit(project.getFileSplit());
+		newProject.setFileName(project.getFileName());
 		stateController.saveProject(newProject);	
 	}
 

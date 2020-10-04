@@ -68,7 +68,9 @@ public class DataSourceRest implements IDataSourceRest{
 	
 	@GetMapping("/headers")
 	public String[] getHeaders(String projectName) {
-		Project project = projectController.loadProject(projectName);
+		System.out.println(projectName);
+		Project project = projectController.loadProject(projectName+".dat");
+		System.out.println("Ob: "+project);
 		return dataSource.getHeaders(project);
 	}
 
