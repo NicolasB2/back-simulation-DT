@@ -24,7 +24,7 @@ public class TargetSystemRest implements ITargetSystemRest{
 	
 	@GetMapping("/buses")
 	public ArrayList<SITMBus> findAllBuses(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		return project.getTargetSystem().filterBusesByLineId(project.getLineId());
 	}
 	
