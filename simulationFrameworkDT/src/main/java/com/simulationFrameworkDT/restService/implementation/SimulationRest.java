@@ -22,7 +22,7 @@ public class SimulationRest implements ISimulationRest {
 	@PutMapping("/start")
 	@ResponseStatus(HttpStatus.OK)
 	public void start(String projectName) {
-		SimController.start(projectName);
+		SimController.start(projectName+".dat");
 	}
 
 	@PutMapping("/pause")

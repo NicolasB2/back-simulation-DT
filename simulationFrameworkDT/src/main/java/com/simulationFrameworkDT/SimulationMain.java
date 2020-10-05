@@ -26,7 +26,7 @@ public class SimulationMain {
 		
 		//dataTest();
 		saveProject();
-		//startTest();
+		startTest();
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		reader.readLine();

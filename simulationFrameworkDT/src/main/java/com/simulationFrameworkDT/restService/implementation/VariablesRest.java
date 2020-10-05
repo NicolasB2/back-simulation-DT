@@ -33,7 +33,7 @@ public class VariablesRest implements IVariablesRest{
 
 	@GetMapping("/load")
 	public ArrayList<Variable> getVariables(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		return project.getVariables();
 	}
 	

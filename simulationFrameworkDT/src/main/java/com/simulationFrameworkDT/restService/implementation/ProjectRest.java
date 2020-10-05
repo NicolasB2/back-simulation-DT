@@ -48,35 +48,39 @@ public class ProjectRest implements IProjectRest {
 		newProject.setFileType(project.getFileType());
 		newProject.setFileSplit(project.getFileSplit());
 		newProject.setFileName(project.getFileName());
-		newProject.setLineId(project.getLineId());
-		stateController.saveProject(newProject);	
+		stateController.saveProject(newProject);
 	}
 
 	@GetMapping("/load")
 	public ProjectDTO loadProject(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		ProjectDTO dto = new ProjectDTO();
 		dto.setName(project.getProjectName());
 		dto.setInitialDate(project.getInitialDate());
 		dto.setFinalDate(project.getFinalDate());
 		dto.setPlanVersionId(project.getPlanVersionId());
 		dto.setLineId(project.getLineId());
+		dto.setFileType(project.getFileType());
+		dto.setFileSplit(project.getFileSplit());
+		dto.setFileName(project.getFileName());
 		return dto;
 	}
 
 	@PutMapping("/setline")
 	public ProjectDTO setLineId(String projectName, long lineId) {
 		
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		project.setLineId(lineId);
 		stateController.saveProject(project);
-		
 		ProjectDTO dto = new ProjectDTO();
 		dto.setName(project.getProjectName());
 		dto.setInitialDate(project.getInitialDate());
 		dto.setFinalDate(project.getFinalDate());
 		dto.setPlanVersionId(project.getPlanVersionId());
 		dto.setLineId(project.getLineId());
+		dto.setFileType(project.getFileType());
+		dto.setFileSplit(project.getFileSplit());
+		dto.setFileName(project.getFileName());
 		return dto;
 	}
 }

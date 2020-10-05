@@ -25,14 +25,14 @@ public class ClockRest implements IClockRest{
 	@GetMapping("/load")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock getClock(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		return project.getClock();
 	}
 	
 	@PutMapping("/setfast")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setFastSpeed(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setFastSpeed();
 		stateController.saveProject(project);
@@ -42,7 +42,7 @@ public class ClockRest implements IClockRest{
 	@PutMapping("/setnormal")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setNormalSpeed(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setNormalSpeed();
 		stateController.saveProject(project);
@@ -52,7 +52,7 @@ public class ClockRest implements IClockRest{
 	@PutMapping("/setslow")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setSlowSpeed(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setSlowSpeed();
 		stateController.saveProject(project);
@@ -62,7 +62,7 @@ public class ClockRest implements IClockRest{
 	@PutMapping("/set1to1")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToOneSpeed(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setOneToOneSpeed();
 		stateController.saveProject(project);
@@ -72,7 +72,7 @@ public class ClockRest implements IClockRest{
 	@PutMapping("/set1to5")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToFiveSpeed(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setOneToFiveSpeed();
 		stateController.saveProject(project);
@@ -82,7 +82,7 @@ public class ClockRest implements IClockRest{
 	@PutMapping("/set1to10")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToTenSpeed(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setOneToTenSpeed();
 		stateController.saveProject(project);
@@ -92,7 +92,7 @@ public class ClockRest implements IClockRest{
 	@PutMapping("/set1to30")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToThirtySpeed(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setOneToThirtySpeed();
 		stateController.saveProject(project);
@@ -102,7 +102,7 @@ public class ClockRest implements IClockRest{
 	@PutMapping("/set1to60")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToSixtySpeed(String projectName) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setOneToSixtySpeed();
 		stateController.saveProject(project);
