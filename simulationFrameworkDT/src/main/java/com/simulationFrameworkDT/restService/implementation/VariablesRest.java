@@ -25,7 +25,7 @@ public class VariablesRest implements IVariablesRest{
 
 	@PutMapping("/setheaders")
 	public ArrayList<Variable> setHeaders(String projectName, @RequestBody String[] headers) {
-		Project project = stateController.loadProject(projectName);
+		Project project = stateController.loadProject(projectName+".dat");
 		project.setHeaders(headers);
 		stateController.saveProject(project);
 		return project.getVariables();
