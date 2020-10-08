@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +24,12 @@ public class VariablesRest implements IVariablesRest{
 	@Autowired
 	private StateController stateController;
 
-	@PutMapping("/setheaders")
-	public ArrayList<Variable> setHeaders(String projectName, @RequestBody String[] headers) {
+	@PutMapping("/setheaders/{id}")
+	public ArrayList<Variable> setHeaders(@PathVariable("id") String projectName, @RequestBody String[] headers) {
+		System.out.println(projectName);
+		for (int i = 0; i < headers.length; i++) {
+			System.out.println(headers[i]);
+		}
 		Project project = stateController.loadProject(projectName+".dat");
 		project.setHeaders(headers);
 		stateController.saveProject(project);
