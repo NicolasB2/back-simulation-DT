@@ -3,6 +3,7 @@ package com.simulationFrameworkDT.restService.implementation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,8 +67,8 @@ public class ProjectRest implements IProjectRest {
 		return dto;
 	}
 
-	@PutMapping("/setline")
-	public ProjectDTO setLineId(String projectName, long lineId) {
+	@PutMapping("/setline/{id}/{lineId}")
+	public ProjectDTO setLineId(@PathVariable("id") String projectName,@PathVariable("lineId") long lineId) {
 		
 		Project project = stateController.loadProject(projectName+".dat");
 		project.setLineId(lineId);

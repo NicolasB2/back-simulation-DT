@@ -141,7 +141,7 @@ public class Source_db implements IDateSource {
 		ArrayList<SITMPlanVersion> returnAnswer = new ArrayList<SITMPlanVersion>();
 
 		for (SITMPlanVersion element : planVersionRepository.findAll()) {
-			returnAnswer.add(element);
+			returnAnswer.add(element);	
 		}
 
 		return returnAnswer;
