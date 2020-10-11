@@ -18,13 +18,20 @@ public class TargetSystem implements Serializable {
 		buses = new HashMap<Long, SITMBus>();
 	}
 
-	public void moveBus(long busId, long lineId, double longitude, double latitude) {
+	public void moveBus(long busId, long stopId, long lineId, double longitude, double latitude) {
+		
+		System.out.println("Move Bus ===> "+
+				"BusId="+busId+"\t"+
+				"StopId="+stopId+"\t"+
+				"Longitude="+longitude+"\t"+
+				"Latitude="+latitude);
 		
 		if(buses.containsKey(busId)) {
 			
 			buses.get(busId).setLatitude(latitude);
 			buses.get(busId).setLongitude(longitude);
-			buses.get(busId).setLineId(lineId);;
+			buses.get(busId).setLineId(lineId);
+			
 		}else {
 			
 			SITMBus bus = new SITMBus();
