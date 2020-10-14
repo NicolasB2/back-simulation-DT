@@ -103,9 +103,10 @@ public class SITMOperationalTravels {
 		super();
 	}
 
-	public SITMOperationalTravels(Long opertravelId, Long busId,  long lineId, String gPS_X, String gPS_Y, Date eventDate) {
+	public SITMOperationalTravels(long opertravelId, long busId, long stopId,  long lineId, String gPS_X, String gPS_Y, Date eventDate) {
 		this.opertravelId = opertravelId;
 		this.busId = busId;
+		this.laststopId = stopId;
 		this.lineId = lineId;
 		this.GPS_X = gPS_X;
 		this.GPS_Y = gPS_Y;

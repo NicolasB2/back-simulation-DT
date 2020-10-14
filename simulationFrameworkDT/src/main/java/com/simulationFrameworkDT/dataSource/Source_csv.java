@@ -37,10 +37,11 @@ public class Source_csv implements IDateSource {
     // Constructor and initialize
     //================================================================================
 	
-	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int lineId) {
+	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int stopId, int lineId) {
 		systemDirectory = new HashMap<String, Integer>();
 		systemDirectory.put("clock", clock);
 		systemDirectory.put("busId", busId);
+		systemDirectory.put("stopId", stopId);
 		systemDirectory.put("lineId", lineId);
 		systemDirectory.put("longitude", longitude);
 		systemDirectory.put("latitude", latitude);
@@ -141,6 +142,7 @@ public class Source_csv implements IDateSource {
 					
 					Long opertravelId = System.currentTimeMillis();
 					Long busId = Long.parseLong(data[systemDirectory.get("busId")]);
+					Long stopId = Long.parseLong(data[systemDirectory.get("stopId")]);
 					double longitudeLng = Long.parseLong(data[systemDirectory.get("longitude")]);
 					double latitudeLng = Long.parseLong(data[systemDirectory.get("latitude")]);
 					String longitude = longitudeLng / 10000000 + "";
@@ -149,7 +151,7 @@ public class Source_csv implements IDateSource {
 					Date eventDate = new Date(date);
 
 					if(data[7].equals(lineId+"") && longitudeLng!=-1 && latitudeLng!=-1) {
-						SITMOperationalTravels op = new SITMOperationalTravels(opertravelId, busId, lineId, longitude, latitude, eventDate);
+						SITMOperationalTravels op = new SITMOperationalTravels(opertravelId, busId, stopId, lineId, longitude, latitude, eventDate);
 						operationaTravels.add(op);
 					}
 					

@@ -45,7 +45,7 @@ public class DataSourceSystem {
 	
 	public void initializeCsv() {
 		source_csv = new Source_csv();
-		source_csv.setColumnNumberForSimulationVariables(0, 4, 5, 1, 7);
+		source_csv.setColumnNumberForSimulationVariables(0, 4, 5, 1, 2, 7);
 	}
 	
 	//================================================================================
