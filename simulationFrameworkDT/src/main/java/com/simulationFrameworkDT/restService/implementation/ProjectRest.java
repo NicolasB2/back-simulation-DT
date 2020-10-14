@@ -1,5 +1,10 @@
 package com.simulationFrameworkDT.restService.implementation;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +36,18 @@ public class ProjectRest implements IProjectRest {
 	@PostMapping("/save/oracle")
 	public void saveProjectOracle(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
+		
+		try {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Date initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
+			Date finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
+			newProject.setInitialDate(initdate);
+			newProject.setFinalDate(finaldate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		newProject.setProjectName(project.getName());
-		newProject.setInitialDate(project.getInitialDate());
-		newProject.setFinalDate(project.getFinalDate());
 		newProject.setPlanVersionId(project.getPlanVersionId());
 		stateController.saveProject(newProject);	
 	}
@@ -41,10 +55,20 @@ public class ProjectRest implements IProjectRest {
 	@PostMapping("/save")
 	public void saveScv(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
+		
+		try {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Date initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
+			Date finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
+			newProject.setInitialDate(initdate);
+			newProject.setFinalDate(finaldate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		newProject.setProjectName(project.getName());
-		newProject.setInitialDate(project.getInitialDate());
-		newProject.setFinalDate(project.getFinalDate());
 		newProject.setPlanVersionId(project.getPlanVersionId());
+		System.out.println(project.getLineId());
 		newProject.setLineId(project.getLineId());
 		newProject.setFileType(project.getFileType());
 		newProject.setFileSplit(project.getFileSplit());
@@ -52,13 +76,18 @@ public class ProjectRest implements IProjectRest {
 		stateController.saveProject(newProject);
 	}
 
+	@SuppressWarnings("deprecation")
 	@GetMapping("/load")
 	public ProjectDTO loadProject(String projectName) {
 		Project project = stateController.loadProject(projectName+".dat");
 		ProjectDTO dto = new ProjectDTO();
+		
+		String initdate = project.getInitialDate().toGMTString();
+		String finaldate = project.getFinalDate().toGMTString();
+		
+		dto.setInitialDate(initdate);
+		dto.setFinalDate(finaldate);
 		dto.setName(project.getProjectName());
-		dto.setInitialDate(project.getInitialDate());
-		dto.setFinalDate(project.getFinalDate());
 		dto.setPlanVersionId(project.getPlanVersionId());
 		dto.setLineId(project.getLineId());
 		dto.setFileType(project.getFileType());
@@ -67,6 +96,7 @@ public class ProjectRest implements IProjectRest {
 		return dto;
 	}
 
+	@SuppressWarnings("deprecation")
 	@PutMapping("/setline/{id}/{lineId}")
 	public ProjectDTO setLineId(@PathVariable("id") String projectName,@PathVariable("lineId") long lineId) {
 		
@@ -74,9 +104,13 @@ public class ProjectRest implements IProjectRest {
 		project.setLineId(lineId);
 		stateController.saveProject(project);
 		ProjectDTO dto = new ProjectDTO();
+		
+		String initdate = project.getInitialDate().toGMTString();
+		String finaldate = project.getFinalDate().toGMTString();
+		
 		dto.setName(project.getProjectName());
-		dto.setInitialDate(project.getInitialDate());
-		dto.setFinalDate(project.getFinalDate());
+		dto.setInitialDate(initdate);
+		dto.setFinalDate(finaldate);
 		dto.setPlanVersionId(project.getPlanVersionId());
 		dto.setLineId(project.getLineId());
 		dto.setFileType(project.getFileType());

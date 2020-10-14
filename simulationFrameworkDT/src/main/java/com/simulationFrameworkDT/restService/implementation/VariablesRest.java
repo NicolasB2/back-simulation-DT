@@ -26,10 +26,6 @@ public class VariablesRest implements IVariablesRest{
 
 	@PutMapping("/setheaders/{id}")
 	public ArrayList<Variable> setHeaders(@PathVariable("id") String projectName, @RequestBody String[] headers) {
-		System.out.println(projectName);
-		for (int i = 0; i < headers.length; i++) {
-			System.out.println(headers[i]);
-		}
 		Project project = stateController.loadProject(projectName+".dat");
 		project.setHeaders(headers);
 		stateController.saveProject(project);

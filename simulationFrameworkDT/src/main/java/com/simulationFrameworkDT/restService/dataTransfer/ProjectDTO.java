@@ -8,8 +8,8 @@ import lombok.Data;
 public class ProjectDTO {
 	
 	private String name;
-	private Date initialDate;
-	private Date finalDate;
+	private String initialDate;
+	private String finalDate;
 	private long planVersionId;
 	private long lineId;
 	private String fileName;
