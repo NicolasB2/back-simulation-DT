@@ -34,7 +34,6 @@ class ExecutionThread extends Thread {
 
 	@SuppressWarnings("deprecation")
 	public ArrayList<Event> getNextEvents(){	
-		
 		Date nextDate = new Date(project.getInitialDate().getTime()+project.getClock().getReadSpeed());
 		ArrayList<Event> events = new ArrayList<>();
 		
@@ -58,7 +57,8 @@ class ExecutionThread extends Thread {
 		while (!killed) {
 			while (!pause) {
 				try {
-
+					
+					this.project = projectController.loadProject(this.project.getProjectName()+".dat");
 					ArrayList<Event> events = getNextEvents();
 									
 					if(events==null) {

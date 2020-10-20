@@ -19,13 +19,13 @@ public class TargetSystem implements Serializable {
 	}
 
 	public void moveBus(long busId, long stopId, long lineId, double longitude, double latitude) {
-		
+		/*
 		System.out.println("Move Bus ===> "+
 				"BusId="+busId+"\t"+
 				"StopId="+stopId+"\t"+
 				"Longitude="+longitude+"\t"+
 				"Latitude="+latitude);
-		
+		*/
 		if(buses.containsKey(busId)) {
 			
 			buses.get(busId).setLatitude(latitude);
