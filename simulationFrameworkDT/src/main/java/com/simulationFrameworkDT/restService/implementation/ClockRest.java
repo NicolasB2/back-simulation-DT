@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simulationFrameworkDT.restService.interfaces.IClockRest;
+import com.simulationFrameworkDT.simulation.SimController;
 import com.simulationFrameworkDT.simulation.state.Clock;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
@@ -22,6 +23,9 @@ public class ClockRest implements IClockRest{
 
 	@Autowired
 	private StateController stateController;
+	
+	@Autowired
+	private SimController simController;
 	
 	@GetMapping("/load")
 	@ResponseStatus(HttpStatus.OK)
@@ -63,50 +67,103 @@ public class ClockRest implements IClockRest{
 	@PutMapping("/set1to1/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToOneSpeed(@PathVariable("id") String projectName) {
-		Project project = stateController.loadProject(projectName+".dat");
-		Clock clock = project.getClock();
-		clock.setOneToOneSpeed();
-		stateController.saveProject(project);
+		Clock clock = null;
+		try {
+			simController.pause();
+			Thread.sleep(500);
+			Project project = stateController.loadProject(projectName+".dat");
+			clock = project.getClock();
+			clock.setOneToOneSpeed();
+			stateController.saveProject(project);
+			Thread.sleep(500);
+			simController.resume();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return clock;
 	}
 
 	@PutMapping("/set1to5/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToFiveSpeed(@PathVariable("id") String projectName) {
-		Project project = stateController.loadProject(projectName+".dat");
-		Clock clock = project.getClock();
-		clock.setOneToFiveSpeed();
-		stateController.saveProject(project);
+		Clock clock = null;
+		try {
+			simController.pause();
+			Thread.sleep(500);
+			Project project = stateController.loadProject(projectName+".dat");
+			clock = project.getClock();
+			clock.setOneToFiveSpeed();
+			stateController.saveProject(project);
+			Thread.sleep(500);
+			simController.resume();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return clock;
+		
 	}
 
 	@PutMapping("/set1to10/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToTenSpeed(@PathVariable("id") String projectName) {
-		Project project = stateController.loadProject(projectName+".dat");
-		Clock clock = project.getClock();
-		clock.setOneToTenSpeed();
-		stateController.saveProject(project);
+		Clock clock = null;
+		try {
+			simController.pause();
+			Thread.sleep(500);
+			Project project = stateController.loadProject(projectName+".dat");
+			clock = project.getClock();
+			clock.setOneToTenSpeed();
+			stateController.saveProject(project);
+			Thread.sleep(500);
+			simController.resume();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return clock;
+		
+		
 	}
 
 	@PutMapping("/set1to30/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToThirtySpeed(@PathVariable("id") String projectName) {
-		Project project = stateController.loadProject(projectName+".dat");
-		Clock clock = project.getClock();
-		clock.setOneToThirtySpeed();
-		stateController.saveProject(project);
+		Clock clock = null;
+		try {
+			simController.pause();
+			Thread.sleep(500);
+			Project project = stateController.loadProject(projectName+".dat");
+			clock = project.getClock();
+			clock.setOneToThirtySpeed();
+			stateController.saveProject(project);
+			Thread.sleep(500);
+			simController.resume();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return clock;
 	}
 
 	@PutMapping("/set1to60/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setOneToSixtySpeed(@PathVariable("id") String projectName) {
-		Project project = stateController.loadProject(projectName+".dat");
-		Clock clock = project.getClock();
-		clock.setOneToSixtySpeed();
-		stateController.saveProject(project);
+		Clock clock = null;
+		try {
+			simController.pause();
+			Thread.sleep(500);
+			Project project = stateController.loadProject(projectName+".dat");
+			clock = project.getClock();
+			clock.setOneToSixtySpeed();
+			stateController.saveProject(project);
+			Thread.sleep(500);
+			simController.resume();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return clock;
 	}
 }
