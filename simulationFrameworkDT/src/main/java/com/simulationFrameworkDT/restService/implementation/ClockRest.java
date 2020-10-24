@@ -34,9 +34,9 @@ public class ClockRest implements IClockRest{
 		return project.getClock();
 	}
 	
-	@PutMapping("/setfast")
+	@PutMapping("/setfast/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Clock setFastSpeed(String projectName) {
+	public Clock setFastSpeed(@PathVariable("id") String projectName) {
 		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setFastSpeed();
@@ -44,9 +44,9 @@ public class ClockRest implements IClockRest{
 		return clock;
 	}
 
-	@PutMapping("/setnormal")
+	@PutMapping("/setnormal/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Clock setNormalSpeed(String projectName) {
+	public Clock setNormalSpeed(@PathVariable("id") String projectName) {
 		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setNormalSpeed();
@@ -54,9 +54,9 @@ public class ClockRest implements IClockRest{
 		return clock;
 	}
 
-	@PutMapping("/setslow")
+	@PutMapping("/setslow/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Clock setSlowSpeed(String projectName) {
+	public Clock setSlowSpeed(@PathVariable("id") String projectName) {
 		Project project = stateController.loadProject(projectName+".dat");
 		Clock clock = project.getClock();
 		clock.setSlowSpeed();
