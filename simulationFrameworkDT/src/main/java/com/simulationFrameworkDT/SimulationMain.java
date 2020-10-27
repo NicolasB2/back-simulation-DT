@@ -19,6 +19,7 @@ import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessor
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
+import com.simulationFrameworkDT.analytics.*;
 
 public class SimulationMain {
 
@@ -65,7 +66,7 @@ public class SimulationMain {
 	public static void saveProject() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
-		Date last = new Date(dateFormat.parse("2019-06-20 18:10:00").getTime());
+		Date last = new Date(dateFormat.parse("2019-06-20 19:00:00").getTime());
 		
 		StateController pc = new StateController();
 		Project project = new Project();
@@ -77,14 +78,16 @@ public class SimulationMain {
 		project.setFileName("datagrams.csv");
 		project.setFileSplit(",");
 		project.setFileType(DataSourceSystem.FILE_CSV);
-		project.getClock().setSlowSpeed();
-		project.getClock().setOneToOneSpeed();;
+		project.getClock().setFastSpeed();
+		project.getClock().setOneToFiveSpeed();
 		pc.saveProject(project);
 	}
 	
 	public static void startTest() throws ParseException{
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
+		sm.setAnalytics(new Analytics());
+		sm.getAnalytics().setDataSource(sm.getDataSource());
 		sm.setProjectController(new StateController());
 		sm.setEventProcessorController(new EventProcessorController());
 		sm.setEventProvirderController(new EventProviderController());

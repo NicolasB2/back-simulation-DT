@@ -1,7 +1,5 @@
 package com.simulationFrameworkDT.restService.dataTransfer;
 
-import java.sql.Date;
-
 import lombok.Data;
 
 @Data

@@ -3,6 +3,9 @@ package com.simulationFrameworkDT.simulation;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.simulationFrameworkDT.analytics.Analytics;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
@@ -18,6 +21,9 @@ class ExecutionThread extends Thread {
 	private SimController simController;
 	private StateController projectController;
 	
+	@Autowired
+	private Analytics analytics;
+	
 	private volatile boolean pause = false;
 	private volatile boolean killed = false;
 	
@@ -26,9 +32,10 @@ class ExecutionThread extends Thread {
 		killed = true;
 	}
 	
-	public ExecutionThread(SimController simController,Project project) {
+	public ExecutionThread(SimController simController,Project project, Analytics analytics) {
 		this.simController = simController;
 		this.project = project;
+		this.analytics = analytics;
 		projectController = new StateController();
 	}
 
@@ -43,7 +50,9 @@ class ExecutionThread extends Thread {
 			System.out.println("=======> simulation finished");
 			
 		}else {
-			System.out.println(project.getInitialDate().toGMTString());
+			
+//			System.out.println(project.getInitialDate().toGMTString());
+			
 			project.setNextDate(nextDate);
 			events = simController.getNextEvent(project);
 			project.setInitialDate(nextDate);
@@ -70,11 +79,12 @@ class ExecutionThread extends Thread {
 						
 						for (int i = 0; i < events.size(); i++) {
 							simController.getEventProcessorController().processEvent(events.get(i),project.getTargetSystem());
+							analytics.analysisPerBus(events.get(i));
 						}
 						
 						project.updateVariables(simController.getLastRow(project));
 
-						System.out.println();
+//						System.out.println();
 						projectController.saveProject(project);
 						sleep(project.getClock().getAnimationSpeed());
 					}

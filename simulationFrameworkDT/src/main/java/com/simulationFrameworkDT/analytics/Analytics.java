@@ -1,0 +1,216 @@
+package com.simulationFrameworkDT.analytics;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.simulation.event.Event;
+import com.simulationFrameworkDT.simulation.state.Project;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Service
+@Getter
+@Setter
+public class Analytics {
+	
+	@Autowired
+	private DataSourceSystem dataSource;
+	
+	public HashMap<Long, SITMStop> stops; //HashMap with the stops
+	public HashMap<Long, ArrayList<Datagram>> stopsBuses; // HashMap with the array of buses in one stop
+
+	public HashMap<Long, ArrayList<Long[]>> stopsWaitingTimes; // Excess Waiting Time at Bus stop
+	public HashMap<Long, ArrayList<Long[]>> busesWaitingTimes; // Bus Stop Time 
+
+	/*
+	 * This method initialize the hash maps with the necessaries stop ids and arrays
+	 */
+	public void init(Project project) {
+
+		ArrayList<SITMStop> stopsQuery = dataSource.findAllStopsByLine(project.getFileType(),project.getPlanVersionId(), project.getLineId());
+		stops = new HashMap<>();
+		stopsBuses = new HashMap<>();
+		
+		stopsWaitingTimes = new HashMap<>();
+		busesWaitingTimes = new HashMap<>();
+
+		for (int i = 0; i < stopsQuery.size(); i++) {
+			if (!stops.containsKey(stopsQuery.get(i).getStopId())) {
+				stops.put(stopsQuery.get(i).getStopId(), stopsQuery.get(i));
+				stopsBuses.put(stopsQuery.get(i).getStopId(), new ArrayList<Datagram>());
+
+				stopsWaitingTimes.put(stopsQuery.get(i).getStopId(), new ArrayList<Long[]>());
+				busesWaitingTimes.put(stopsQuery.get(i).getStopId(), new ArrayList<Long[]>());
+			}
+		}
+	}
+
+	/*
+	 * This method evaluates that the bus is inside the area of ​​the stop or station
+	 */
+	public static boolean isInTheStop(Datagram datagram, SITMStop stop) {
+
+		double lat1 = stop.getDecimalLatitude();
+		double lng1 = stop.getDecimalLongitude();
+		double lat2 = datagram.getLatitude();
+		double lng2 = datagram.getLongitude();
+
+		double dLat = Math.toRadians(lat2 - lat1);
+		double dLng = Math.toRadians(lng2 - lng1);
+		double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))* Math.cos(Math.toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+		return c <= 0.00003 ? true : false;
+	}
+	
+	public void analysisPerBus(Event event){
+		
+		if(! event.getContext().isEmpty()) {
+			
+			String datagramDate = event.getContext().get("eventDate");;
+//			long datagramDateTime = dateFormat.parse(datagramData).getTime() / 1000;
+			long busId = Long.parseLong(event.getContext().get("busId"));
+			long stopId = Long.parseLong(event.getContext().get("stopId"));
+			double longitude = Double.parseDouble(event.getContext().get("longitude"));
+			double latitude = Double.parseDouble(event.getContext().get("latitude"));
+			long lineId = Long.parseLong(event.getContext().get("lineId"));
+		
+			Datagram datagram = new Datagram(0, datagramDate, busId, stopId, 0, longitude, latitude, 0, lineId, 0);
+			try {
+				analysisPerBus(datagram);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	/*
+	 * This method analyze one datagram
+	 */
+	public void analysisPerBus(Datagram datagram) throws ParseException {
+
+		long stopId = datagram.getStopId();
+		ArrayList<Datagram> buses = stopsBuses.get(stopId);
+		SITMStop stop = stops.get(stopId);
+
+		boolean isInStation = false;
+		int datagramIndex = -1;
+
+		for (int i = 0; i < buses.size(); i++) {
+			if (buses.get(i).getBusId() == datagram.getBusId()) {
+				isInStation = true;
+				datagramIndex = i;
+				i = buses.size();
+			}
+		}
+
+		boolean x = isInTheStop(datagram, stop);
+
+		
+		if (x) {// the bus is inside the polygon
+
+			if(stopId==502300)
+				System.out.println("inside "+datagram.getBusId()+" "+datagram.getDatagramDate());
+
+			if (!isInStation) { // The bus arrive the stop
+				stopsBuses.get(stopId).add(datagram);
+				Long[] times = new Long[3];
+				times[1] = datagram.getDatagramDateTime();
+				stopsWaitingTimes.get(stopId).add(times);
+			}
+			
+		} else if (!x && isInStation) { // The bus is outside the polygon
+
+			if (!buses.isEmpty()) { // The stop isn't empty
+				
+				if(stopId==502300)
+					System.out.println("=====> outside "+datagram.getBusId()+" "+datagram.getDatagramDate());
+				
+				Long[] times = new Long[3];
+				times[0] = datagram.getBusId();
+				times[1] = buses.get(datagramIndex).getDatagramDateTime();
+				times[2] = datagram.getDatagramDateTime();
+				busesWaitingTimes.get(stopId).add(times);
+			}
+
+			buses.remove(datagramIndex);
+
+			if (buses.isEmpty()) {// The stop is empty
+
+				if(stopId==502300)
+					System.out.println("==============> Empty stop "+datagram.getBusId()+"-"+datagram.getDatagramDate());
+
+				int lastPosition = stopsWaitingTimes.get(stopId).size() - 1;
+				Long[] times = stopsWaitingTimes.get(stopId).get(lastPosition);
+				times[0] = datagram.getBusId();
+				times[2] = datagram.getDatagramDateTime();
+			}
+
+		}
+	}
+
+	/*
+	 * Post analysis, print the results in console 
+	 */
+	public void excessWaitingTime() {
+
+		// Excess Waiting Time at Bus stop results
+		
+		for (Map.Entry<Long, ArrayList<Long[]>> entry : busesWaitingTimes.entrySet()) {
+
+			System.out.println("WaitingTime " + entry.getKey());
+
+			for (Long[] data : entry.getValue()) {
+
+				if (data[1] != null && data[2] != null) {
+					long time = data[2]-data[1];
+					System.out.println(data[0]+": "+time);
+				}
+			}
+			System.out.println();
+		}
+		
+		System.out.println("---------------------------------------------------------------------------------");
+		
+		// Bus Stop Time results
+		
+		for (Map.Entry<Long, ArrayList<Long[]>> entry : stopsWaitingTimes.entrySet()) {
+
+			long initialTime = 0;
+			long lastTime = 0;
+
+			System.out.println("WaitingTime " + entry.getKey());
+
+			for (Long[] data : entry.getValue()) {
+
+				if (data[1] != null && data[2] != null) {
+
+					if (initialTime == 0 && lastTime == 0) {
+
+						initialTime = data[1];
+						lastTime = data[2];
+
+					} else if(data[1] > lastTime) {
+
+						long waitingTime = (data[1] - lastTime);
+						System.out.println(waitingTime);
+						initialTime = data[1];
+						lastTime = data[2];
+						
+					}
+				}
+			}
+			
+			System.out.println();
+		}
+	}
+}

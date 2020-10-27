@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simulationFrameworkDT.analytics.Analytics;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
@@ -23,6 +24,9 @@ public class SimController{
 
 	@Autowired 
 	private DataSourceSystem dataSource;
+	
+	@Autowired
+	private Analytics analytics;
 	
 	@Autowired 
 	private StateController projectController;
@@ -47,7 +51,9 @@ public class SimController{
 	public void start(String projectName) {
 		
 		Project project = projectController.loadProject(projectName);
-		executionThread = new ExecutionThread(this,project);
+		analytics.init(project);
+		executionThread = new ExecutionThread(this,project,analytics);
+		
 		
 		if(executionThread.isPause()) {
 			executionThread.setPause(false);

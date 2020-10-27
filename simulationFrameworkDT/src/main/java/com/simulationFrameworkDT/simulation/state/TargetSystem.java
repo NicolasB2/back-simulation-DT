@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import com.simulationFrameworkDT.model.factorySITM.SITMBus;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+
 
 
 public class TargetSystem implements Serializable {
@@ -13,19 +15,24 @@ public class TargetSystem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private HashMap<Long, SITMBus> buses ;
+	
+	public static HashMap<Long, SITMStop> stops; //HashMap with the stops
+	public static HashMap<Long, ArrayList<SITMBus>> stopsBuses; // HashMap with the array of buses in one stop
+
+	public static HashMap<Long, ArrayList<Long[]>> stopsWaitingTimes; // Excess Waiting Time at Bus stop
+	public static HashMap<Long, ArrayList<Long[]>> busesWaitingTimes; // Bus Stop Time 
 
 	public TargetSystem() {
 		buses = new HashMap<Long, SITMBus>();
 	}
 
-	public void moveBus(long busId, long stopId, long lineId, double longitude, double latitude) {
-		/*
-		System.out.println("Move Bus ===> "+
-				"BusId="+busId+"\t"+
-				"StopId="+stopId+"\t"+
-				"Longitude="+longitude+"\t"+
-				"Latitude="+latitude);
-		*/
+	public void moveBus(long busId, long lineId, double longitude, double latitude) {
+		
+//		System.out.println("Move Bus ===> "+
+//				"BusId="+busId+"  "+
+//				"Longitude="+longitude+"  "+
+//				"Latitude="+latitude);
+		
 		if(buses.containsKey(busId)) {
 			
 			buses.get(busId).setLatitude(latitude);
