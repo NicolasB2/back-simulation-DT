@@ -56,7 +56,7 @@ public class Analytics {
 	/*
 	 * This method evaluates that the bus is inside the area of ​​the stop or station
 	 */
-	public static boolean isInTheStop(Datagram datagram, SITMStop stop) {
+	private static boolean isInTheStop(Datagram datagram, SITMStop stop) {
 
 		double lat1 = stop.getDecimalLatitude();
 		double lng1 = stop.getDecimalLongitude();
@@ -71,12 +71,15 @@ public class Analytics {
 		return c <= 0.00003 ? true : false;
 	}
 	
+	/*
+	 * This method turn a hash into a datagram class
+	 */
 	public void analysisPerBus(Event event){
 		
 		if(! event.getContext().isEmpty()) {
 			
 			String datagramDate = event.getContext().get("eventDate");;
-//			long datagramDateTime = dateFormat.parse(datagramData).getTime() / 1000;
+			//long datagramDateTime = dateFormat.parse(datagramData).getTime() / 1000;
 			long busId = Long.parseLong(event.getContext().get("busId"));
 			long stopId = Long.parseLong(event.getContext().get("stopId"));
 			double longitude = Double.parseDouble(event.getContext().get("longitude"));
@@ -96,7 +99,7 @@ public class Analytics {
 	/*
 	 * This method analyze one datagram
 	 */
-	public void analysisPerBus(Datagram datagram) throws ParseException {
+	private void analysisPerBus(Datagram datagram) throws ParseException {
 
 		long stopId = datagram.getStopId();
 		ArrayList<Datagram> buses = stopsBuses.get(stopId);

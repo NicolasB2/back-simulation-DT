@@ -39,8 +39,9 @@ class ExecutionThread extends Thread {
 		projectController = new StateController();
 	}
 
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	public ArrayList<Event> getNextEvents(){	
+		
 		Date nextDate = new Date(project.getInitialDate().getTime()+project.getClock().getReadSpeed());
 		ArrayList<Event> events = new ArrayList<>();
 		
@@ -48,6 +49,9 @@ class ExecutionThread extends Thread {
 			
 			kill();
 			System.out.println("=======> simulation finished");
+			System.out.println();
+			
+			analytics.excessWaitingTime();
 			
 		}else {
 			
