@@ -1,6 +1,8 @@
 package com.simulationFrameworkDT.analytics;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,19 +76,21 @@ public class Analytics {
 	/*
 	 * This method turn a hash into a datagram class
 	 */
-	public void analysisPerBus(Event event){
+	public void analysisPerBus(Event event) throws ParseException{
+		
+//		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		if(! event.getContext().isEmpty()) {
 			
 			String datagramDate = event.getContext().get("eventDate");;
-			//long datagramDateTime = dateFormat.parse(datagramData).getTime() / 1000;
+			long datagramDateTime = Long.parseLong(datagramDate)/1000;
 			long busId = Long.parseLong(event.getContext().get("busId"));
 			long stopId = Long.parseLong(event.getContext().get("stopId"));
 			double longitude = Double.parseDouble(event.getContext().get("longitude"));
 			double latitude = Double.parseDouble(event.getContext().get("latitude"));
 			long lineId = Long.parseLong(event.getContext().get("lineId"));
 		
-			Datagram datagram = new Datagram(0, datagramDate, busId, stopId, 0, longitude, latitude, 0, lineId, 0);
+			Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0, lineId, 0);
 			try {
 				analysisPerBus(datagram);
 			} catch (ParseException e) {
