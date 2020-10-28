@@ -25,7 +25,7 @@ public class Clock implements Serializable {
 	// Animation Speed
 	public final static int FAST   = 10;
 	public final static int NORMAL = 100;
-	public final static int SLOW   = 1000;
+	public final static int SLOW   = 800;
 	
 	// Read Speed
 	public final static int ONE_TO_ONE  = 1000;
@@ -37,7 +37,7 @@ public class Clock implements Serializable {
 	public Clock() {
 		clockMode = DISCRET;
 		readSpeed = ONE_TO_FIVE;
-		animationSpeed = NORMAL;
+		animationSpeed = FAST;
 	}
 	
 	public void getNextTick(Date date) {

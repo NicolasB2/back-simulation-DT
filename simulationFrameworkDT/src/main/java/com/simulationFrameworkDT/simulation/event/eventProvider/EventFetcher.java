@@ -40,7 +40,6 @@ public class EventFetcher {
 			context.put("latitude", operationaTravels.get(i).getGPS_Y() + "");
 			context.put("lineId", operationaTravels.get(i).getLineId() + "");
 			context.put("eventDate", operationaTravels.get(i).getEventDate().getTime() + "");
-
 			event.setContext(context);
 			eventlist.add(event);
 

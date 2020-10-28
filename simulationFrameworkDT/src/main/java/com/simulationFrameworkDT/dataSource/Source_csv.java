@@ -27,24 +27,9 @@ import lombok.Setter;
 public class Source_csv implements IDateSource {
 	
 	public final static String DATAGRAMS_PATH = "datagrams";
-	private HashMap<String, Integer> systemDirectory;
 	
 	public File getSourceFile(String file) {
 		return new File(DATAGRAMS_PATH+File.separator+file);
-	}
-	
-	//================================================================================
-    // Constructor and initialize
-    //================================================================================
-	
-	public void setColumnNumberForSimulationVariables(int clock, int longitude, int latitude, int busId, int stopId, int lineId) {
-		systemDirectory = new HashMap<String, Integer>();
-		systemDirectory.put("clock", clock);
-		systemDirectory.put("busId", busId);
-		systemDirectory.put("stopId", stopId);
-		systemDirectory.put("lineId", lineId);
-		systemDirectory.put("longitude", longitude);
-		systemDirectory.put("latitude", latitude);
 	}
 	
 	//================================================================================
@@ -86,12 +71,12 @@ public class Source_csv implements IDateSource {
 			
 			String[] data = text.split(split);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			Long date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+			Long date = dateFormat.parse(data[0]).getTime();
 			
 			while(date<currentDate.getTime()){
 				text = br.readLine();
 				data = text.split(split);
-				date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+				date = dateFormat.parse(data[0]).getTime();
 			}
 
 			br.close();
@@ -109,20 +94,21 @@ public class Source_csv implements IDateSource {
 		return variables;
 	}
 	
+	// Clock: 0, BusId: 1, StopId: 2, Longitude: 4, Latitude: 5, LineId: 7
 	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(String file, String split, Date initialDate, Date lastDate, long lineId){
 		
 		ArrayList<SITMOperationalTravels> operationaTravels = new ArrayList<SITMOperationalTravels>();
-
 		File sourceFile = getSourceFile(file);
 		
 		try {
 
+			
 			BufferedReader br = new BufferedReader(new FileReader(sourceFile));
 			String text = br.readLine(); 
 			text = br.readLine();
 			String[] data = text.split(split);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			Long date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+			Long date = dateFormat.parse(data[0]).getTime();
 			
 				
 			if (text != null && !text.equals("")) {
@@ -132,7 +118,7 @@ public class Source_csv implements IDateSource {
 					
 					if(text!=null && text!="") {
 						data = text.split(split);
-						date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+						date = dateFormat.parse(data[0]).getTime();
 					}else {
 						break;
 					}
@@ -141,10 +127,10 @@ public class Source_csv implements IDateSource {
 				while (initialDate.getTime()<= date && date <=lastDate.getTime()) {
 					
 					Long opertravelId = System.currentTimeMillis();
-					Long busId = Long.parseLong(data[systemDirectory.get("busId")]);
-					Long stopId = Long.parseLong(data[systemDirectory.get("stopId")]);
-					double longitudeLng = Long.parseLong(data[systemDirectory.get("longitude")]);
-					double latitudeLng = Long.parseLong(data[systemDirectory.get("latitude")]);
+					Long busId = Long.parseLong(data[1]);
+					Long stopId = Long.parseLong(data[2]);
+					double longitudeLng = Long.parseLong(data[4]);
+					double latitudeLng = Long.parseLong(data[5]);
 					String longitude = longitudeLng / 10000000 + "";
 					String latitude = latitudeLng  / 10000000+ "";
 					
@@ -158,7 +144,7 @@ public class Source_csv implements IDateSource {
 					text = br.readLine();
 					if(text!=null && text!="") {
 						data = text.split(split);
-						date = dateFormat.parse(data[systemDirectory.get("clock")]).getTime();
+						date = dateFormat.parse(data[0]).getTime();
 					}else {
 						break;
 					}
@@ -174,7 +160,95 @@ public class Source_csv implements IDateSource {
 
 		return operationaTravels;
 	}
+	
+	// StopId: 2, Latitude: 4, Longitude: 5  LineId: 7, Clock: 10, BusId: 11
+	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange2(String file, String split, Date initialDate, Date lastDate, long lineId){
+		
+		ArrayList<SITMOperationalTravels> operationaTravels = new ArrayList<SITMOperationalTravels>();
+		File sourceFile = getSourceFile(file);
+		
+		try {
 
+			BufferedReader br = new BufferedReader(new FileReader(sourceFile));
+			String text = br.readLine(); 
+			text = br.readLine();
+			String[] data = text.split(split);
+			
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy HH.mm.ss");
+			String formatDate = data[10];
+			formatDate = formatDate.substring(0, 3) + "04" + formatDate.substring(6, 18) + formatDate.substring(25, 28);
+			Long date = dateFormat.parse(formatDate).getTime();
+			
+				
+			if (text != null && !text.equals("")) {
+				
+				while(initialDate.getTime()>date) {
+					text = br.readLine();
+					
+					if(text!=null && text!="") {
+						data = text.split(split);
+						formatDate = data[10];
+						formatDate = formatDate.substring(0, 3) + "04" + formatDate.substring(6, 18) + formatDate.substring(25, 28);
+						date = dateFormat.parse(formatDate).getTime();
+					}else {
+						break;
+					}
+				}
+				
+				while (initialDate.getTime()<= date && date <=lastDate.getTime()) {
+					
+					String datagramDate = data[10];
+					datagramDate = changeFormat(datagramDate);
+					
+					Long busId = Long.parseLong(data[11]);
+					Long stopId = Long.parseLong(data[2]);	
+					double longitudeLng = Long.parseLong(data[5]);
+					double latitudeLng = Long.parseLong(data[4]);
+					String longitude = longitudeLng / 10000000 + "";
+					String latitude = latitudeLng  / 10000000+ "";
+					
+					Date eventDate = new Date(date);
+
+					if(data[7].equals(lineId+"") &&longitudeLng!=-1 && latitudeLng!=-1) {
+						SITMOperationalTravels op = new SITMOperationalTravels(0, busId, stopId, lineId, longitude, latitude, eventDate);
+						operationaTravels.add(op);
+					}
+					
+					text = br.readLine();
+					if(text!=null && text!="") {
+						data = text.split(split);
+						formatDate = data[10];
+						formatDate = formatDate.substring(0, 3) + "04" + formatDate.substring(6, 18) + formatDate.substring(25, 28);
+						date = dateFormat.parse(formatDate).getTime();
+					}else {
+						break;
+					}
+					
+				}		
+			}
+
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return operationaTravels;
+	}
+
+	public static String changeFormat(String date) {
+		String day = date.substring(0, 3) + "04" + date.substring(6, 9);
+		String hour = date.substring(10, 12);
+		String minSec = date.substring(12, 18);
+		String meridians = date.substring(26, 28);
+		
+		if(meridians.equals("PM") && !hour.equals("12")) {
+			int hourNumber = Integer.parseInt(hour);
+			hourNumber += 12;
+			hour = hourNumber+"";
+		}
+		return day+" "+hour+minSec;
+	}
+	
 	//================================================================================
     // Queries
     //================================================================================

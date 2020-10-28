@@ -45,7 +45,6 @@ public class DataSourceSystem {
 	
 	public void initializeCsv() {
 		source_csv = new Source_csv();
-		source_csv.setColumnNumberForSimulationVariables(0, 4, 5, 1, 2, 7);
 	}
 	
 	//================================================================================
@@ -82,6 +81,7 @@ public class DataSourceSystem {
 		switch (project.getFileType()) {
 		case FILE_CSV:
 			return source_csv.findAllOperationalTravelsByRange(project.getFileName(),project.getFileSplit(),project.getInitialDate(), project.getNextDate(), project.getLineId());
+//			return source_csv.findAllOperationalTravelsByRange2(project.getFileName(),project.getFileSplit(),project.getInitialDate(), project.getNextDate(), project.getLineId());
 
 		case DATA_BASE:
 			return source_db.findAllOperationalTravelsByRange(project.getInitialDate(), project.getFinalDate(), project.getLineId());

@@ -66,8 +66,12 @@ public class SimulationMain {
 
 	public static void saveProject() throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		
 		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
 		Date last = new Date(dateFormat.parse("2019-06-20 19:00:00").getTime());
+		
+//		Date init = new Date(dateFormat.parse("2019-04-29 07:22:00").getTime());
+//		Date last = new Date(dateFormat.parse("2019-04-29 08:00:00").getTime());
 		
 		StateController pc = new StateController();
 		Project project = new Project();
@@ -77,10 +81,9 @@ public class SimulationMain {
 		project.setPlanVersionId(261);
 		project.setLineId(131);
 		project.setFileName("datagrams.csv");
+//		project.setFileName("30-APR-19-sorted.csv");
 		project.setFileSplit(",");
 		project.setFileType(DataSourceSystem.FILE_CSV);
-		project.getClock().setFastSpeed();
-		project.getClock().setOneToFiveSpeed();
 		pc.saveProject(project);
 	}
 	
