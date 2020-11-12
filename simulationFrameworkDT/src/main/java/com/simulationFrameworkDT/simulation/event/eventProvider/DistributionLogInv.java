@@ -1,18 +1,34 @@
 package com.simulationFrameworkDT.simulation.event.eventProvider;
 
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import rcaller.RCaller;
 
 public class DistributionLogInv {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		
-		System.out.println(getValue(415.5, 362.29));
+
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		
+		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
+		Date end = new Date(dateFormat.parse("2019-06-20 18:30:00").getTime());
+		
+		while(init.getTime() < end.getTime()) {
+			int value = (int) getValue(415.5, 362.29);
+			init = new Date(init.getTime() + (value*1000));
+			System.out.println(init.toString());
+		}
 		
 	}
 	
 	
 	@SuppressWarnings("deprecation")
-	public static String getValue(double meanlog, double sdlog  ) {
+	public static double getValue(double meanlog, double sdlog  ) {
 		String[] values = null;
 		try {
             RCaller caller = new RCaller();
@@ -48,7 +64,9 @@ public class DistributionLogInv {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-		return values[0];
+		
+		
+		return Double.parseDouble(values[0]);
 
 	}
 	
