@@ -28,7 +28,7 @@ public class DistributionLogInv {
 	
 	
 	@SuppressWarnings("deprecation")
-	public static double getValue(double meanlog, double sdlog  ) {
+	public static double getValue(double meanlog, double sdlog) {
 		String[] values = null;
 		try {
             RCaller caller = new RCaller();

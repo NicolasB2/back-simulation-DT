@@ -20,25 +20,26 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Analytics {
-	
+
 	@Autowired
 	private DataSourceSystem dataSource;
-	
-	public HashMap<Long, SITMStop> stops; //HashMap with the stops
+
+	public HashMap<Long, SITMStop> stops; // HashMap with the stops
 	public HashMap<Long, ArrayList<Datagram>> stopsBuses; // HashMap with the array of buses in one stop
 
 	public HashMap<Long, ArrayList<Long[]>> stopsWaitingTimes; // Excess Waiting Time at Bus stop
-	public HashMap<Long, ArrayList<Long[]>> busesWaitingTimes; // Bus Stop Time 
+	public HashMap<Long, ArrayList<Long[]>> busesWaitingTimes; // Bus Stop Time
 
 	/*
 	 * This method initialize the hash maps with the necessaries stop ids and arrays
 	 */
 	public void init(Project project) {
 
-		ArrayList<SITMStop> stopsQuery = dataSource.findAllStopsByLine(project.getFileType(),project.getPlanVersionId(), project.getLineId());
+		ArrayList<SITMStop> stopsQuery = dataSource.findAllStopsByLine(project.getFileType(),
+				project.getPlanVersionId(), project.getLineId());
 		stops = new HashMap<>();
 		stopsBuses = new HashMap<>();
-		
+
 		stopsWaitingTimes = new HashMap<>();
 		busesWaitingTimes = new HashMap<>();
 
@@ -54,7 +55,8 @@ public class Analytics {
 	}
 
 	/*
-	 * This method evaluates that the bus is inside the area of ​​the stop or station
+	 * This method evaluates that the bus is inside the area of ​​the stop or
+	 * station
 	 */
 	private static boolean isInTheStop(Datagram datagram, SITMStop stop) {
 
@@ -65,39 +67,41 @@ public class Analytics {
 
 		double dLat = Math.toRadians(lat2 - lat1);
 		double dLng = Math.toRadians(lng2 - lng1);
-		double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))* Math.cos(Math.toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+		double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
+				* Math.cos(Math.toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
 		return c <= 0.00003 ? true : false;
 	}
-	
+
 	/*
 	 * This method turn a hash into a datagram class
 	 */
-	public void analysisPerBus(Event event) throws ParseException{
-		
+	public void analysisPerBus(Event event) throws ParseException {
+
 //		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		
-		if(! event.getContext().isEmpty()) {
-			
-			String datagramDate = event.getContext().get("eventDate");;
-			long datagramDateTime = Long.parseLong(datagramDate)/1000;
+
+		if (!event.getContext().isEmpty()) {
+
+			String datagramDate = event.getContext().get("eventDate");
+			long datagramDateTime = Long.parseLong(datagramDate) / 1000;
 			long busId = Long.parseLong(event.getContext().get("busId"));
 			long stopId = Long.parseLong(event.getContext().get("stopId"));
 			double longitude = Double.parseDouble(event.getContext().get("longitude"));
 			double latitude = Double.parseDouble(event.getContext().get("latitude"));
 			long lineId = Long.parseLong(event.getContext().get("lineId"));
-		
-			Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0, lineId, 0);
+
+			Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,
+					lineId, 0);
 			try {
 				analysisPerBus(datagram);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
-	
+
 	/*
 	 * This method analyze one datagram
 	 */
@@ -120,11 +124,10 @@ public class Analytics {
 
 		boolean x = isInTheStop(datagram, stop);
 
-		
 		if (x) {// the bus is inside the polygon
 
-			if(stopId==502300)
-				System.out.println("inside "+datagram.getBusId()+" "+datagram.getDatagramDate());
+			if (stopId == 502300)
+				System.out.println("inside " + datagram.getBusId() + " " + datagram.getDatagramDate());
 
 			if (!isInStation) { // The bus arrive the stop
 				stopsBuses.get(stopId).add(datagram);
@@ -132,18 +135,19 @@ public class Analytics {
 				times[1] = datagram.getDatagramDateTime();
 				stopsWaitingTimes.get(stopId).add(times);
 			}
-			
+
 		} else if (!x && isInStation) { // The bus is outside the polygon
 
 			if (!buses.isEmpty()) { // The stop isn't empty
-				
-				if(stopId==502300)
-					System.out.println("=====> outside "+datagram.getBusId()+" "+datagram.getDatagramDate());
-				
-				Long[] times = new Long[3];
-				times[0] = datagram.getBusId();
-				times[1] = buses.get(datagramIndex).getDatagramDateTime();
-				times[2] = datagram.getDatagramDateTime();
+
+				if (stopId == 502300)
+					System.out.println("=====> outside " + datagram.getBusId() + " " + datagram.getDatagramDate());
+
+				Long[] times = new Long[4];
+				times[0] = datagram.getBusId();// busId
+				times[1] = buses.get(datagramIndex).getDatagramDateTime();// arrivalPolygon
+				times[2] = datagram.getDatagramDateTime();// leavePolygon
+				times[3] = (times[1] + times[2]) / 2;// Time of arrival, open doors
 				busesWaitingTimes.get(stopId).add(times);
 			}
 
@@ -151,8 +155,8 @@ public class Analytics {
 
 			if (buses.isEmpty()) {// The stop is empty
 
-				if(stopId==502300)
-					System.out.println("==============> Empty stop "+datagram.getBusId()+"-"+datagram.getDatagramDate());
+				if (stopId == 502300)
+					System.out.println("==============> Empty stop " + datagram.getBusId() + "-" + datagram.getDatagramDate());
 
 				int lastPosition = stopsWaitingTimes.get(stopId).size() - 1;
 				Long[] times = stopsWaitingTimes.get(stopId).get(lastPosition);
@@ -164,30 +168,12 @@ public class Analytics {
 	}
 
 	/*
-	 * Post analysis, print the results in console 
+	 * Post analysis, print the results in console
 	 */
-	public void excessWaitingTime() {
+	public void excess_Waiting_Time_at_Bus_stop() {
 
-		// Excess Waiting Time at Bus stop results
-		
-		for (Map.Entry<Long, ArrayList<Long[]>> entry : busesWaitingTimes.entrySet()) {
-
-			System.out.println("WaitingTime " + entry.getKey());
-
-			for (Long[] data : entry.getValue()) {
-
-				if (data[1] != null && data[2] != null) {
-					long time = data[2]-data[1];
-					System.out.println(data[0]+": "+time);
-				}
-			}
-			System.out.println();
-		}
-		
 		System.out.println("---------------------------------------------------------------------------------");
-		
-		// Bus Stop Time results
-		
+
 		for (Map.Entry<Long, ArrayList<Long[]>> entry : stopsWaitingTimes.entrySet()) {
 
 			long initialTime = 0;
@@ -204,17 +190,17 @@ public class Analytics {
 						initialTime = data[1];
 						lastTime = data[2];
 
-					} else if(data[1] > lastTime) {
+					} else if (data[1] > lastTime) {
 
 						long waitingTime = (data[1] - lastTime);
 						System.out.println(waitingTime);
 						initialTime = data[1];
 						lastTime = data[2];
-						
+
 					}
 				}
 			}
-			
+
 			System.out.println();
 		}
 	}

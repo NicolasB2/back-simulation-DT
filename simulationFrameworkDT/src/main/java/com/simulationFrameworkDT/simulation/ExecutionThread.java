@@ -51,7 +51,7 @@ class ExecutionThread extends Thread {
 			System.out.println("=======> simulation finished");
 			System.out.println();
 			
-			analytics.excessWaitingTime();
+			analytics.excess_Waiting_Time_at_Bus_stop();
 			
 		}else {
 			
