@@ -27,12 +27,6 @@ public class EventProviderController {
 	public ArrayList<Event> getNextEvent(Project project){
 		
 		ArrayList<Event> events = eventFecher.allFetch(project);
-		Event eventGenerated = eventGenerator.generate();
-
-		if (eventGenerated != null) {
-			events.add(eventGenerated);
-		}
-
 		return events;
 	}
 

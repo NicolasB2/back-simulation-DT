@@ -53,14 +53,12 @@ class ExecutionThread extends Thread {
 			
 			analytics.excess_Waiting_Time_at_Bus_stop();
 			
-		}else {
-			
-//			System.out.println(project.getInitialDate().toGMTString());
-			
+		}else {		
 			project.setNextDate(nextDate);
 			events = simController.getNextEvent(project);
 			project.setInitialDate(nextDate);
 			project.getClock().getNextTick(nextDate);
+			projectController.saveProject(project);
 		}
 		return events;
 	}
@@ -87,8 +85,6 @@ class ExecutionThread extends Thread {
 						}
 						
 						project.updateVariables(simController.getLastRow(project));
-
-//						System.out.println();
 						projectController.saveProject(project);
 						sleep(project.getClock().getAnimationSpeed());
 					}

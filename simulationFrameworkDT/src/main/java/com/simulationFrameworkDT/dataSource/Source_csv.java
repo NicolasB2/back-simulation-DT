@@ -108,9 +108,8 @@ public class Source_csv implements IDateSource {
 			text = br.readLine();
 			String[] data = text.split(split);
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			Long date = dateFormat.parse(data[0]).getTime();
-			
-				
+			Long date = dateFormat.parse(data[0]).getTime()/1000;
+
 			if (text != null && !text.equals("")) {
 				
 				while(initialDate.getTime()>date) {
