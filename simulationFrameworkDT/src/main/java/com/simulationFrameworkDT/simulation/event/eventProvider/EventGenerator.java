@@ -1,31 +1,26 @@
 package com.simulationFrameworkDT.simulation.event.eventProvider;
 
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 import com.simulationFrameworkDT.simulation.event.Event;
+import com.simulationFrameworkDT.simulation.state.Project;
 
 public class EventGenerator {
 	
-	public Event generate() throws ParseException {
-
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	@SuppressWarnings("deprecation")
+	public Event generate(Project project){
 		
-		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
-		Date end = new Date(dateFormat.parse("2019-06-20 18:30:00").getTime());
-		
+		Date init = project.getInitialDate();
 		Queue<SITMBus> queueBus = new LinkedList<SITMBus>();
 		Queue<Long> queueServiceTime = new LinkedList<Long>();
 		
 		int interArrivalTime = 0;
 		int service = 0;
 		
-		while(init.getTime() < end.getTime()) {
+		while(init.getTime() < project.getNextDate().getTime()) {
 			
 			interArrivalTime = (int) DistributionLogInv.getValue(415.5, 362.29);
 			long actualTime = init.getTime() + (interArrivalTime*1000);
@@ -38,20 +33,20 @@ public class EventGenerator {
 				Date date = new Date(queueServiceTime.peek()); 
 				queueBus.poll();
 				queueServiceTime.poll();
-				System.err.println(date.toString()+" Buses"+queueBus.size());
+				System.err.println(date.toGMTString()+" Buses"+queueBus.size());
 			}
 			
 			queueBus.offer(new SITMBus());
 			queueServiceTime.offer(leaveTime);
 			init = new Date(actualTime);
-			System.out.println(init.toString()+" Buses"+queueBus.size());
+			System.out.println(init.toGMTString()+" Buses"+queueBus.size());
 		}
 		
 		while(!queueBus.isEmpty()) {
 			Date date = new Date(queueServiceTime.peek()); 
 			queueBus.poll();
 			queueServiceTime.poll();
-			System.err.println(date.toString()+" Buses"+queueBus.size());
+			System.err.println(date.toGMTString()+" Buses"+queueBus.size());
 		}
 		
 		return null;

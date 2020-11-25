@@ -81,7 +81,7 @@ class ExecutionThread extends Thread {
 						
 						for (int i = 0; i < events.size(); i++) {
 							simController.getEventProcessorController().processEvent(events.get(i),project.getTargetSystem());
-							analytics.analysisPerBus(events.get(i));
+//							analytics.analysisPerBus(events.get(i));
 						}
 						
 						project.updateVariables(simController.getLastRow(project));
