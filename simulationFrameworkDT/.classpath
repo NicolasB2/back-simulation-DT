@@ -25,6 +25,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry kind="lib" path="C:/Users/Nicolas Biojo Bermeo/Downloads/RCaller-2.0.7.jar"/>
+	<classpathentry kind="lib" path="src/RCaller-2.0.7.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>
