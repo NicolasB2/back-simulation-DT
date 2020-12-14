@@ -68,32 +68,23 @@ public class EventGenerator {
 			long actualTime = init.getTime() + (interArrivalTime*1000);
 			
 			init = new Date(actualTime);
+			
 			queueBus.offer(new SITMBus());
 			System.out.println(" ");
 			System.out.println("O: "+init.toGMTString()+" Buses "+queueBus.size());
 			
-			if(queueServiceTime.isEmpty()) {
-				service = (int) DistributionLogInv.getValue(92.95, 352.19);
-				long leaveTime = actualTime + (service*1000);
-				
-				Date date = new Date(leaveTime); 
-				queueServiceTime.offer(leaveTime);
-				System.out.println("X: "+date.toGMTString()+" Buses "+queueBus.size());
-			}else {
-				
+			if(!queueServiceTime.isEmpty()){
 				long lastServiceTime = queueServiceTime.poll();
-				if(actualTime < lastServiceTime) {
+				if(actualTime < lastServiceTime)
 					actualTime = lastServiceTime;
-				}
-				
-				service = (int) DistributionLogInv.getValue(92.95, 352.19);
-				long leaveTime = actualTime + (service*1000);
-				
-				Date date = new Date(leaveTime); 
-				queueServiceTime.offer(leaveTime);
-				System.out.println("X: "+date.toGMTString()+" Buses "+queueBus.size());
 			}
 			
+			service = (int) DistributionLogInv.getValue(92.95, 352.19);
+			long leaveTime = actualTime + (service*1000);
+			
+			Date date = new Date(leaveTime); 
+			queueServiceTime.offer(leaveTime);
+			System.out.println("X: "+date.toGMTString()+" Buses "+queueBus.size());
 			
 		}
 		
