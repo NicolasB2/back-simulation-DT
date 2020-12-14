@@ -28,7 +28,7 @@ public class EventProviderController {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		Date initialDate = new Date(dateFormat.parse("2019-06-20 00:00:00").getTime());
-		Date nextDate    = new Date(dateFormat.parse("2019-06-20 00:10:00").getTime());
+		Date nextDate    = new Date(dateFormat.parse("2019-06-20 01:00:00").getTime());
 		project.setInitialDate(initialDate);
 		project.setNextDate(nextDate);
 		
@@ -42,7 +42,7 @@ public class EventProviderController {
 	}
 
 	public ArrayList<Event> getNextEvent(Project project){
-		System.out.println("====>"+project.getInitialDate().toGMTString()+" "+project.getNextDate().toGMTString());
+//		System.out.println("====>"+project.getInitialDate().toGMTString()+" "+project.getNextDate().toGMTString());
 		ArrayList<Event> events = eventFecher.allFetch(project);
 		eventGenerator.generate(project);
 		return events;
