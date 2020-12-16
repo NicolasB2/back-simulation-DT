@@ -1,6 +1,8 @@
-package com.simulationFrameworkDT.analytics;
+package com.simulationFrameworkDT.model;
 
-public class Datagram {
+import com.simulationFrameworkDT.simulation.event.Event;
+
+public class Datagram extends Event{
 	
 	private long datagramDateTime;
 	private String datagramDate;

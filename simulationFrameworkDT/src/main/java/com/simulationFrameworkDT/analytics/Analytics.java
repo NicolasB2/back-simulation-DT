@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.Datagram;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.Project;
@@ -76,23 +77,9 @@ public class Analytics {
 	 */
 	public void analysisPerBus(Event event) throws ParseException {
 
-		if (!event.getContext().isEmpty()) {
-
-			String datagramDate = event.getContext().get("eventDate");
-			long datagramDateTime = Long.parseLong(datagramDate) / 1000;
-			long busId = Long.parseLong(event.getContext().get("busId"));
-			long stopId = Long.parseLong(event.getContext().get("stopId"));
-			double longitude = Double.parseDouble(event.getContext().get("longitude"));
-			double latitude = Double.parseDouble(event.getContext().get("latitude"));
-			long lineId = Long.parseLong(event.getContext().get("lineId"));
-
-			Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,lineId, 0);
-			try {
-				analysisPerBus(datagram);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-
+		if (event instanceof Datagram) {
+			Datagram datagram = (Datagram) event;
+			analysisPerBus(datagram);
 		}
 	}
 

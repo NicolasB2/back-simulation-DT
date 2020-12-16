@@ -12,13 +12,15 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 
-import com.simulationFrameworkDT.analytics.Datagram;
+import com.simulationFrameworkDT.model.Datagram;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMLineStop;
 import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.simulation.event.Event;
+import com.simulationFrameworkDT.simulation.event.EventType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -96,9 +98,9 @@ public class Source_csv implements IDateSource {
 	}
 	
 	// Clock: 0, BusId: 1, StopId: 2, Longitude: 4, Latitude: 5, LineId: 7
-	public ArrayList<Datagram> findAllOperationalTravelsByRange(String file, String split, Date initialDate, Date lastDate, long lineId){
+	public ArrayList<Event> findAllOperationalTravelsByRange(String file, String split, Date initialDate, Date lastDate, long lineId){
 		
-		ArrayList<Datagram> datagrams = new ArrayList<Datagram>();
+		ArrayList<Event> datagrams = new ArrayList<Event>();
 		File sourceFile = getSourceFile(file);
 		
 		try {
@@ -139,6 +141,7 @@ public class Source_csv implements IDateSource {
 
 					if (longitude != -1 && latitude != -1 && stopId != -1 && data[7].equals(lineId+"")) {
 						Datagram datagram = new Datagram(datagramDateTime,datagramData, busId, stopId, odometer,longitude / 10000000, latitude / 10000000, taskId, lineId, tripId);
+						datagram.setType(EventType.POSICIONAMIENTO_GPS);
 						datagrams.add(datagram);
 					}
 					

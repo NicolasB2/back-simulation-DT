@@ -12,17 +12,19 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.simulationFrameworkDT.analytics.Datagram;
 import com.simulationFrameworkDT.dataSource.persistence.CalendarRepository;
 import com.simulationFrameworkDT.dataSource.persistence.LineRepository;
 import com.simulationFrameworkDT.dataSource.persistence.OperationalTravelsRepository;
 import com.simulationFrameworkDT.dataSource.persistence.PlanVersionRepository;
 import com.simulationFrameworkDT.dataSource.persistence.StopRepository;
+import com.simulationFrameworkDT.model.Datagram;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.simulation.event.Event;
+import com.simulationFrameworkDT.simulation.event.EventType;
 
 @Service
 public class Source_db implements IDateSource {
@@ -92,9 +94,9 @@ public class Source_db implements IDateSource {
 		return null;
 	}
 	
-	public ArrayList<Datagram> findAllOperationalTravelsByRange(Date initialDate, Date lastDate, long lineId){
+	public ArrayList<Event> findAllOperationalTravelsByRange(Date initialDate, Date lastDate, long lineId){
 		
-		ArrayList<Datagram> returnAnswer = new ArrayList<Datagram>();
+		ArrayList<Event> returnAnswer = new ArrayList<Event>();
 		
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 		DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
@@ -123,6 +125,7 @@ public class Source_db implements IDateSource {
 					double latitude =  Double.parseDouble(element.getGPS_Y());
 
 					Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,lineId, 0);
+					datagram.setType(EventType.POSICIONAMIENTO_GPS);
 					returnAnswer.add(datagram);
 				}	
 
