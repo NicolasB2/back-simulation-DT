@@ -39,7 +39,6 @@ class ExecutionThread extends Thread {
 		projectController = new StateController();
 	}
 
-//	@SuppressWarnings("deprecation")
 	public ArrayList<Event> getNextEvents(){	
 		
 		Date nextDate = new Date(project.getInitialDate().getTime()+project.getClock().getReadSpeed());
@@ -50,8 +49,6 @@ class ExecutionThread extends Thread {
 			kill();
 			System.out.println("=======> simulation finished");
 			System.out.println();
-			
-			analytics.excess_Waiting_Time_at_Bus_stop();
 			
 		}else {		
 			project.setNextDate(nextDate);
@@ -81,7 +78,7 @@ class ExecutionThread extends Thread {
 						
 						for (int i = 0; i < events.size(); i++) {
 							simController.getEventProcessorController().processEvent(events.get(i),project.getTargetSystem());
-//							analytics.analysisPerBus(events.get(i));
+							analytics.analysisPerBus(events.get(i));
 						}
 						
 						project.updateVariables(simController.getLastRow(project));

@@ -37,7 +37,6 @@ public class SimController{
 	@Autowired 
 	private EventProcessorController eventProcessorController;
 
-	// execution thread
 	private ExecutionThread executionThread;
 
 	public HashMap<String,String> getLastRow(Project project){

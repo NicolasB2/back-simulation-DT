@@ -3,7 +3,6 @@ package com.simulationFrameworkDT.analytics;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,8 +34,7 @@ public class Analytics {
 	 */
 	public void init(Project project) {
 
-		ArrayList<SITMStop> stopsQuery = dataSource.findAllStopsByLine(project.getFileType(),
-				project.getPlanVersionId(), project.getLineId());
+		ArrayList<SITMStop> stopsQuery = dataSource.findAllStopsByLine(project.getFileType(),project.getPlanVersionId(), project.getLineId());
 		stops = new HashMap<>();
 		stopsBuses = new HashMap<>();
 
@@ -55,8 +53,7 @@ public class Analytics {
 	}
 
 	/*
-	 * This method evaluates that the bus is inside the area of ​​the stop or
-	 * station
+	 * This method evaluates if the bus is inside the area of station
 	 */
 	private static boolean isInTheStop(Datagram datagram, SITMStop stop) {
 
@@ -78,8 +75,6 @@ public class Analytics {
 	 * This method turn a hash into a datagram class
 	 */
 	public void analysisPerBus(Event event) throws ParseException {
-
-//		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 		if (!event.getContext().isEmpty()) {
 
@@ -164,44 +159,6 @@ public class Analytics {
 				times[2] = datagram.getDatagramDateTime();
 			}
 
-		}
-	}
-
-	/*
-	 * Post analysis, print the results in console
-	 */
-	public void excess_Waiting_Time_at_Bus_stop() {
-
-		System.out.println("---------------------------------------------------------------------------------");
-
-		for (Map.Entry<Long, ArrayList<Long[]>> entry : stopsWaitingTimes.entrySet()) {
-
-			long initialTime = 0;
-			long lastTime = 0;
-
-			System.out.println("WaitingTime " + entry.getKey());
-
-			for (Long[] data : entry.getValue()) {
-
-				if (data[1] != null && data[2] != null) {
-
-					if (initialTime == 0 && lastTime == 0) {
-
-						initialTime = data[1];
-						lastTime = data[2];
-
-					} else if (data[1] > lastTime) {
-
-						long waitingTime = (data[1] - lastTime);
-						System.out.println(waitingTime);
-						initialTime = data[1];
-						lastTime = data[2];
-
-					}
-				}
-			}
-
-			System.out.println();
 		}
 	}
 }

@@ -1,55 +1,33 @@
 package com.simulationFrameworkDT.simulation.event.eventProvider;
 
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 public class EventGenerator {
 	
-	@SuppressWarnings("deprecation")
-	public Event generate0(Project project){
+	public static void main(String[] args) throws ParseException {
 		
-		Date init = project.getInitialDate();
-		Queue<SITMBus> queueBus = new LinkedList<SITMBus>();
-		Queue<Long> queueServiceTime = new LinkedList<Long>();
+		Project project = new Project();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
-		int interArrivalTime = 0;
-		int service = 0;
+		Date initialDate = new Date(dateFormat.parse("2019-06-20 00:00:00").getTime());
+		Date nextDate    = new Date(dateFormat.parse("2019-06-20 01:00:00").getTime());
+		project.setInitialDate(initialDate);
+		project.setNextDate(nextDate);
 		
-		while(init.getTime() < project.getNextDate().getTime()) {
-			
-			interArrivalTime = (int) DistributionLogInv.getValue(415.5, 362.29);
-			long actualTime = init.getTime() + (interArrivalTime*1000);
-			
-			service = (int) DistributionLogInv.getValue(92.95, 352.19);
-			long leaveTime = actualTime + (service*1000);
-			
-			
-			if(!queueServiceTime.isEmpty() && queueServiceTime.peek()<actualTime) {
-				Date date = new Date(queueServiceTime.peek()); 
-				queueBus.poll();
-				queueServiceTime.poll();
-				System.err.println(date.toGMTString()+" Buses "+queueBus.size());
-			}
-			
-			queueBus.offer(new SITMBus());
-			queueServiceTime.offer(leaveTime);
-			init = new Date(actualTime);
-			System.out.println(init.toGMTString()+" Buses "+queueBus.size());
-		}
+		EventGenerator eg = new EventGenerator();
+		eg.generate(project);
 		
-		while(!queueBus.isEmpty()) {
-			Date date = new Date(queueServiceTime.peek()); 
-			queueBus.poll();
-			queueServiceTime.poll();
-			System.err.println(date.toGMTString()+" Buses "+queueBus.size());
-		}
-		
-		return null;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -64,7 +42,7 @@ public class EventGenerator {
 		
 		while(init.getTime() < project.getNextDate().getTime()) {
 			
-			interArrivalTime = (int) DistributionLogInv.getValue(415.5, 362.29);
+			interArrivalTime = (int) WeibullDistribution(2.14908, 63.81296);
 			long actualTime = init.getTime() + (interArrivalTime*1000);
 			
 			init = new Date(actualTime);
@@ -79,7 +57,7 @@ public class EventGenerator {
 					actualTime = lastServiceTime;
 			}
 			
-			service = (int) DistributionLogInv.getValue(92.95, 352.19);
+			service = (int) WeibullDistribution(2.14908, 63.81296);
 			long leaveTime = actualTime + (service*1000);
 			
 			Date date = new Date(leaveTime); 
@@ -89,6 +67,21 @@ public class EventGenerator {
 		}
 		
 		return null;
+	}
+	
+	public double WeibullDistribution(double alpha, double beta ) {
+		
+		String type = "WeibullDistribution";
+ 		
+        Hashtable<String, Object> params = new Hashtable<>();
+        
+        params.put("alpha", 2.14908); //Shape
+        params.put("beta", 63.81296); //Scale
+        
+		ProbabilisticDistribution pd = new ProbabilisticDistribution(type, params);
+		
+		
+		return pd.getNextDistributionValue();
 	}
 
 }
