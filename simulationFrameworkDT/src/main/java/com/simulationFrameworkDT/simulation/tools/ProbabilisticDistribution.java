@@ -68,8 +68,13 @@ public class ProbabilisticDistribution {
             dist = new WeibullDistribution(alpha, beta);
         } else if(type.equals("EmpiricalDistribution")){
             int binCount = (Integer)args.get("binCount");
-            dist = new EmpiricalDistribution(binCount);
-        } else {
+            dist = new EmpiricalDistribution(binCount);	
+        } else if(type.equals("LogNormalDistribution")){
+        	double scale = (Double)args.get("scale");
+        	double shape = (Double)args.get("shape");
+        	dist = new LogNormalDistribution(scale, shape);
+        	
+        } else {	
             throw new InvalidParameterException("Invalid type, cannot create a distribution " +
                     "object with the given type");
         }

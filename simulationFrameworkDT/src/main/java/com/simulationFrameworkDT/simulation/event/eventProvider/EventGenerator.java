@@ -14,7 +14,7 @@ import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 public class EventGenerator {
-	
+	/*
 	public static void main(String[] args) throws ParseException {
 		
 		Project project = new Project();
@@ -28,6 +28,28 @@ public class EventGenerator {
 		EventGenerator eg = new EventGenerator();
 		eg.generate(project);
 		
+	}*/
+	public static void main(String[] args) {
+		
+		EventGenerator eg = new EventGenerator();
+		
+		Double num1 = eg.LogNormalDistribution(111.67682, 1.09809);
+		System.out.println(num1);
+		Double num2 = eg.LogNormalDistribution(111.67682, 1.09809);
+		System.out.println(num2);
+		Double num3 = eg.LogNormalDistribution(111.67682, 1.09809);
+		System.out.println(num3);
+		Double num4 = eg.LogNormalDistribution(111.67682, 1.09809);
+		System.out.println(num4);
+		Double num5 = eg.LogNormalDistribution(111.67682, 1.09809);
+		System.out.println(num5);
+		Double num6 = eg.LogNormalDistribution(111.67682, 1.09809);
+		System.out.println(num6);
+		Double num7 = eg.LogNormalDistribution(111.67682, 1.09809);
+		System.out.println(num7);
+		Double num8 = eg.LogNormalDistribution(111.67682, 1.09809);
+		System.out.println(num8);
+			
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -75,8 +97,23 @@ public class EventGenerator {
  		
         Hashtable<String, Object> params = new Hashtable<>();
         
-        params.put("alpha", 2.14908); //Shape
-        params.put("beta", 63.81296); //Scale
+        params.put("alpha", alpha); //Shape
+        params.put("beta", beta); //Scale
+        
+		ProbabilisticDistribution pd = new ProbabilisticDistribution(type, params);
+		
+		
+		return pd.getNextDistributionValue();
+	}
+	
+	public double LogNormalDistribution (double scale, double shape) {
+		
+		String type = "LogNormalDistribution";
+ 		
+        Hashtable<String, Object> params = new Hashtable<>();
+        
+        params.put("shape", shape);
+        params.put("scale", scale);
         
 		ProbabilisticDistribution pd = new ProbabilisticDistribution(type, params);
 		
