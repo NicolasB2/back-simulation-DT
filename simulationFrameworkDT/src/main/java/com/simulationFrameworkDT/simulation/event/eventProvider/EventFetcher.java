@@ -6,8 +6,8 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simulationFrameworkDT.analytics.Datagram;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.EventType;
 import com.simulationFrameworkDT.simulation.state.Project;
@@ -24,22 +24,22 @@ public class EventFetcher {
 	private DataSourceSystem dataSource;
 
 	public ArrayList<Event> allFetch(Project project) {
-		ArrayList<SITMOperationalTravels> operationaTravels = dataSource.findAllOperationalTravelsByRange(project);
+		ArrayList<Datagram> datagrams = dataSource.findAllOperationalTravelsByRange(project);
 		ArrayList<Event> eventlist = new ArrayList<>();
 
-		for (int i = 0; i < operationaTravels.size(); i++) {
+		for (int i = 0; i < datagrams.size(); i++) {
 
 			Event event = new Event();
 			event.setType(EventType.POSICIONAMIENTO_GPS);
 
 			HashMap<String, String> context = new HashMap<String, String>();
-			context.put("opertravelId", operationaTravels.get(i).getOpertravelId() + "");
-			context.put("busId", operationaTravels.get(i).getBusId() + "");
-			context.put("stopId", operationaTravels.get(i).getLaststopId() + "");
-			context.put("longitude", operationaTravels.get(i).getGPS_X() + "");
-			context.put("latitude", operationaTravels.get(i).getGPS_Y() + "");
-			context.put("lineId", operationaTravels.get(i).getLineId() + "");
-			context.put("eventDate", operationaTravels.get(i).getEventDate().getTime() + "");
+			context.put("opertravelId", 261 + "");
+			context.put("busId", datagrams.get(i).getBusId() + "");
+			context.put("stopId", datagrams.get(i).getStopId() + "");
+			context.put("longitude", datagrams.get(i).getLongitude() + "");
+			context.put("latitude", datagrams.get(i).getLatitude() + "");
+			context.put("lineId", datagrams.get(i).getLineId() + "");
+			context.put("eventDate", datagrams.get(i).getDatagramDateTime() + "");
 			event.setContext(context);
 			eventlist.add(event);
 

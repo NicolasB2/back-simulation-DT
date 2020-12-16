@@ -12,6 +12,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simulationFrameworkDT.analytics.Datagram;
 import com.simulationFrameworkDT.dataSource.persistence.CalendarRepository;
 import com.simulationFrameworkDT.dataSource.persistence.LineRepository;
 import com.simulationFrameworkDT.dataSource.persistence.OperationalTravelsRepository;
@@ -91,15 +92,14 @@ public class Source_db implements IDateSource {
 		return null;
 	}
 	
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Date initialDate, Date lastDate, long lineId){
+	public ArrayList<Datagram> findAllOperationalTravelsByRange(Date initialDate, Date lastDate, long lineId){
 		
-		ArrayList<SITMOperationalTravels> returnAnswer = new ArrayList<SITMOperationalTravels>();
+		ArrayList<Datagram> returnAnswer = new ArrayList<Datagram>();
 		
 		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
 		DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
 		
 		if(initialDate.toString().equals(lastDate.toString())) {
-			
 			
 			String date = dateFormat.format(initialDate);
 
@@ -114,7 +114,16 @@ public class Source_db implements IDateSource {
 				System.out.println(date);
 			
 				for (SITMOperationalTravels element : operationalTravelsRepository.findAllOPDay(date, startHour, endHour)) {
-					returnAnswer.add(element);
+					
+					String datagramDate = element.getEventDate().toString();
+					long datagramDateTime = element.getEventTime();
+					long busId = element.getBusId();
+					long stopId = element.getNearestStopId();
+					double longitude =  Double.parseDouble(element.getGPS_X());
+					double latitude =  Double.parseDouble(element.getGPS_Y());
+
+					Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,lineId, 0);
+					returnAnswer.add(datagram);
 				}	
 
 			} catch (ParseException e) {
@@ -124,7 +133,16 @@ public class Source_db implements IDateSource {
 			
 		}else {
 			for (SITMOperationalTravels element : operationalTravelsRepository.findAllOP("01/08/19","01/08/19")) {
-				returnAnswer.add(element);
+				
+				String datagramDate = element.getEventDate().toString();
+				long datagramDateTime = element.getEventTime();
+				long busId = element.getBusId();
+				long stopId = element.getNearestStopId();
+				double longitude =  Double.parseDouble(element.getGPS_X());
+				double latitude =  Double.parseDouble(element.getGPS_Y());
+
+				Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,lineId, 0);
+				returnAnswer.add(datagram);
 			}
 		}
 		

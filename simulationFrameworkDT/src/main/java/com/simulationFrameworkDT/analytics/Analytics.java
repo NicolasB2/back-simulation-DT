@@ -86,8 +86,7 @@ public class Analytics {
 			double latitude = Double.parseDouble(event.getContext().get("latitude"));
 			long lineId = Long.parseLong(event.getContext().get("lineId"));
 
-			Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,
-					lineId, 0);
+			Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,lineId, 0);
 			try {
 				analysisPerBus(datagram);
 			} catch (ParseException e) {

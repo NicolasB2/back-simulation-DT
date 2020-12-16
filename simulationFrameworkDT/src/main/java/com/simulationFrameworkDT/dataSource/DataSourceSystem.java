@@ -7,9 +7,9 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.simulationFrameworkDT.analytics.Datagram;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
-import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.state.Project;
@@ -76,7 +76,7 @@ public class DataSourceSystem {
 		return null;
 	}
 	
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(Project project) {
+	public ArrayList<Datagram> findAllOperationalTravelsByRange(Project project) {
 
 		switch (project.getFileType()) {
 		case FILE_CSV:

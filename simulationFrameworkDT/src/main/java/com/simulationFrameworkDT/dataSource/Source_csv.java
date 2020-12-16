@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 
+import com.simulationFrameworkDT.analytics.Datagram;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMLineStop;
@@ -95,9 +96,9 @@ public class Source_csv implements IDateSource {
 	}
 	
 	// Clock: 0, BusId: 1, StopId: 2, Longitude: 4, Latitude: 5, LineId: 7
-	public ArrayList<SITMOperationalTravels> findAllOperationalTravelsByRange(String file, String split, Date initialDate, Date lastDate, long lineId){
+	public ArrayList<Datagram> findAllOperationalTravelsByRange(String file, String split, Date initialDate, Date lastDate, long lineId){
 		
-		ArrayList<SITMOperationalTravels> operationaTravels = new ArrayList<SITMOperationalTravels>();
+		ArrayList<Datagram> datagrams = new ArrayList<Datagram>();
 		File sourceFile = getSourceFile(file);
 		
 		try {
@@ -125,19 +126,20 @@ public class Source_csv implements IDateSource {
 				
 				while (initialDate.getTime()<= date && date <=lastDate.getTime()) {
 					
-					Long opertravelId = System.currentTimeMillis();
-					Long busId = Long.parseLong(data[1]);
-					Long stopId = Long.parseLong(data[2]);
-					double longitudeLng = Long.parseLong(data[4]);
-					double latitudeLng = Long.parseLong(data[5]);
-					String longitude = longitudeLng / 10000000 + "";
-					String latitude = latitudeLng  / 10000000+ "";
-					
-					Date eventDate = new Date(date);
+					String datagramData = data[0];
+					long datagramDateTime = dateFormat.parse(datagramData).getTime()/1000;
+					//Date datagramDate = new Date(dateFormat.parse(data[0]).getTime());
+					long busId = Long.parseLong(data[1]);
+					long stopId = Long.parseLong(data[2]);
+					long odometer = Long.parseLong(data[3]);
+					double longitude = Long.parseLong(data[4]);
+					double latitude = Long.parseLong(data[5]);
+					long taskId = Long.parseLong(data[6]);
+					long tripId = Long.parseLong(data[8]);
 
-					if(data[7].equals(lineId+"") && longitudeLng!=-1 && latitudeLng!=-1) {
-						SITMOperationalTravels op = new SITMOperationalTravels(opertravelId, busId, stopId, lineId, longitude, latitude, eventDate);
-						operationaTravels.add(op);
+					if (longitude != -1 && latitude != -1 && stopId != -1 && data[7].equals(lineId+"")) {
+						Datagram datagram = new Datagram(datagramDateTime,datagramData, busId, stopId, odometer,longitude / 10000000, latitude / 10000000, taskId, lineId, tripId);
+						datagrams.add(datagram);
 					}
 					
 					text = br.readLine();
@@ -157,7 +159,7 @@ public class Source_csv implements IDateSource {
 			e.printStackTrace();
 		}
 
-		return operationaTravels;
+		return datagrams;
 	}
 	
 	// StopId: 2, Latitude: 4, Longitude: 5  LineId: 7, Clock: 10, BusId: 11
