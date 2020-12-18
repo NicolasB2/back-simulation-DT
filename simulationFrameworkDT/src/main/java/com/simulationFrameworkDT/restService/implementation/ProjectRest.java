@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.restService.dataTransfer.ProjectDTO;
 import com.simulationFrameworkDT.restService.interfaces.IProjectRest;
 import com.simulationFrameworkDT.simulation.state.Project;
@@ -28,13 +29,16 @@ public class ProjectRest implements IProjectRest {
 	@Autowired
 	private StateController stateController;
 	
+	@Autowired
+	private DataSourceSystem dataSource;
+	
 	@GetMapping("/names")
 	public String[] getProjectsNames() {
 		return stateController.getProjectsNames();
 	}
 	
 	@PostMapping("/save/oracle")
-	public void saveProjectOracle(@RequestBody ProjectDTO project) {
+	public long saveProjectOracle(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
 		
 		try {
@@ -50,10 +54,26 @@ public class ProjectRest implements IProjectRest {
 		newProject.setProjectName(project.getName());
 		newProject.setPlanVersionId(project.getPlanVersionId());
 		stateController.saveProject(newProject);	
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date initdate;
+		Date finaldate;
+		long planVersionId = 0;
+		
+		try {
+			initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
+			finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
+			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate).getPlanVersionId();
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return planVersionId;
 	}
 
 	@PostMapping("/save")
-	public void saveScv(@RequestBody ProjectDTO project) {
+	public long saveScv(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
 		
 		try {
@@ -73,6 +93,22 @@ public class ProjectRest implements IProjectRest {
 		newProject.setFileSplit(project.getFileSplit());
 		newProject.setFileName(project.getFileName());
 		stateController.saveProject(newProject);
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date initdate;
+		Date finaldate;
+		long planVersionId = 0;
+		
+		try {
+			initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
+			finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
+			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate).getPlanVersionId();
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		return planVersionId;
 	}
 
 	@SuppressWarnings("deprecation")

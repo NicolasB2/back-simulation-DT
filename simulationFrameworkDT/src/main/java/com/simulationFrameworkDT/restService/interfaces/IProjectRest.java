@@ -5,8 +5,8 @@ import com.simulationFrameworkDT.restService.dataTransfer.ProjectDTO;
 public interface IProjectRest {
 
 	public String[] getProjectsNames();
-	public void saveProjectOracle(ProjectDTO project);	
-	public void saveScv(ProjectDTO project);
+	public long saveProjectOracle(ProjectDTO project);	
+	public long saveScv(ProjectDTO project);
 	public ProjectDTO loadProject(String projectName);
 	public ProjectDTO setLineId(String projectName, long lineId);
 	
