@@ -41,11 +41,21 @@ public class DataSourceRest implements IDataSourceRest{
 	}
 	
 	@GetMapping("planversion")
-	public long findPlanVersion(@RequestBody ProjectDTO project) throws ParseException {
+	public long findPlanVersion(@RequestBody ProjectDTO project) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		Date initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
-		Date finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
-		long planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate).getPlanVersionId();
+		Date initdate;
+		Date finaldate;
+		long planVersionId = 0;
+		
+		try {
+			initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
+			finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
+			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate).getPlanVersionId();
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		return planVersionId;
 	}
 	

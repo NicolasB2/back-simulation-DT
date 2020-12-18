@@ -6,11 +6,12 @@ import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.restService.dataTransfer.ProjectDTO;
 
 public interface IDataSourceRest {
 
 	public String[] getFileNames();
-	public long findPlanVersion();
+	public long findPlanVersion( ProjectDTO project);
 	public ArrayList<SITMPlanVersion> findAllPlanVersions(String type) ;
 	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(String type, long planVersionId);
 	public ArrayList<SITMLine> findAllLinesByPlanVersion(String type, long planVersionId);
