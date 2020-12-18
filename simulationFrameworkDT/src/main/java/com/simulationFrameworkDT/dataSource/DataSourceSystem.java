@@ -1,6 +1,7 @@
 package com.simulationFrameworkDT.dataSource;
 
 import java.io.File;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -107,6 +108,18 @@ public class DataSourceSystem {
 		return null;
 	}
 
+	public SITMPlanVersion findPlanVersionByDate(String type,Date initialDate, Date lastDate) {
+		switch (type) {
+		case FILE_CSV:
+			return source_csv.findPlanVersionByDate(initialDate,lastDate);
+
+		case DATA_BASE:
+			return source_db.findPlanVersionByDate(initialDate,lastDate);
+		}
+
+		return null;
+	}
+	
 	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(String type, long planVersionId) {
 
 		switch (type) {

@@ -168,6 +168,10 @@ public class Source_db implements IDateSource {
 		return returnAnswer;
 	}
 
+	public SITMPlanVersion findPlanVersionByDate(Date initialDate, Date lastDate){
+		return null;
+	}
+	
 	@Override
 	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(long planVersionId) {
 

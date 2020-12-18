@@ -68,7 +68,6 @@ public class ProjectRest implements IProjectRest {
 		
 		newProject.setProjectName(project.getName());
 		newProject.setPlanVersionId(project.getPlanVersionId());
-		System.out.println(project.getLineId());
 		newProject.setLineId(project.getLineId());
 		newProject.setFileType(project.getFileType());
 		newProject.setFileSplit(project.getFileSplit());
@@ -88,7 +87,6 @@ public class ProjectRest implements IProjectRest {
 		dto.setInitialDate(initdate);
 		dto.setFinalDate(finaldate);
 		dto.setName(project.getProjectName());
-		dto.setPlanVersionId(project.getPlanVersionId());
 		dto.setLineId(project.getLineId());
 		dto.setFileType(project.getFileType());
 		dto.setFileSplit(project.getFileSplit());
@@ -111,11 +109,11 @@ public class ProjectRest implements IProjectRest {
 		dto.setName(project.getProjectName());
 		dto.setInitialDate(initdate);
 		dto.setFinalDate(finaldate);
-		dto.setPlanVersionId(project.getPlanVersionId());
 		dto.setLineId(project.getLineId());
 		dto.setFileType(project.getFileType());
 		dto.setFileSplit(project.getFileSplit());
 		dto.setFileName(project.getFileName());
+		dto.setPlanVersionId(project.getPlanVersionId());
 		return dto;
 	}
 }

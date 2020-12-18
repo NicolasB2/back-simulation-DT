@@ -7,8 +7,10 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -294,6 +296,74 @@ public class Source_csv implements IDateSource {
 		return plans;
 	}
 
+	@SuppressWarnings({ "resource", "deprecation" })
+	@Override
+	public SITMPlanVersion findPlanVersionByDate(Date initialDate, Date lastDate){
+		
+		
+		ArrayList<SITMPlanVersion> plans = findAllPlanVersions();
+		long planVersionId = 0;
+		BufferedReader br;
+		
+		Calendar initcalendar = GregorianCalendar.getInstance();
+		initcalendar.setTime(initialDate);
+		
+		Calendar lastcalendar = GregorianCalendar.getInstance();
+		lastcalendar.setTime(lastDate);
+
+		try {
+
+			String path = new File("dataCSV/calendar.csv").getAbsolutePath();
+			br = new BufferedReader(new FileReader(path));
+			String[] columns = null;
+			String line = br.readLine();
+			line = br.readLine();
+
+			while (line != null) {
+				columns = line.split(";");
+
+				if (!columns[0].isEmpty()) {
+					DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy", Locale.US);
+					Date operationDate = new Date(dateFormat.parse(columns[1]).getTime());
+					
+					Calendar currentcalendar = GregorianCalendar.getInstance();
+					currentcalendar.setTime(operationDate);
+					
+					
+					boolean year = lastcalendar.get(Calendar.YEAR) >= currentcalendar.get(Calendar.YEAR) && initcalendar.get(Calendar.YEAR) <= currentcalendar.get(Calendar.YEAR);
+					boolean mounth = lastcalendar.get(Calendar.MONTH) >= currentcalendar.get(Calendar.MONTH) && initcalendar.get(Calendar.MONTH) <= currentcalendar.get(Calendar.MONTH);
+					boolean day = lastcalendar.get(Calendar.DAY_OF_MONTH) >= currentcalendar.get(Calendar.DAY_OF_MONTH) && initcalendar.get(Calendar.DAY_OF_MONTH) <= currentcalendar.get(Calendar.DAY_OF_MONTH);
+					
+					if(year && mounth && day) {
+						
+						planVersionId = Long.parseLong(columns[3]);
+						
+						System.out.println("O "+initialDate.toGMTString());
+						System.out.println("X "+lastDate.toGMTString());
+						System.out.println("G "+operationDate.toGMTString());
+						System.out.println(planVersionId);
+						System.out.println();
+						
+						
+						for(SITMPlanVersion pv: plans) {
+							if(pv.getPlanVersionId()==planVersionId) {
+								return pv;
+							}
+						}
+					}
+				}
+
+				line = br.readLine();
+			}
+
+			br.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public ArrayList<SITMCalendar> findAllCalendarsByPlanVersion(long planVersionId) {
 
