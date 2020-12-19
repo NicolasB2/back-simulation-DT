@@ -37,31 +37,22 @@ public class ClockRest implements IClockRest{
 	@PutMapping("/setfast/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setFastSpeed(@PathVariable("id") String projectName) {
-		Project project = stateController.loadProject(projectName+".dat");
-		Clock clock = project.getClock();
-		clock.setFastSpeed();
-		stateController.saveProject(project);
-		return clock;
+		stateController.setFastSpeed(projectName+".dat");
+		return null;
 	}
 
 	@PutMapping("/setnormal/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setNormalSpeed(@PathVariable("id") String projectName) {
-		Project project = stateController.loadProject(projectName+".dat");
-		Clock clock = project.getClock();
-		clock.setNormalSpeed();
-		stateController.saveProject(project);
-		return clock;
+		stateController.setNormalSpeed(projectName+".dat");
+		return null;
 	}
 
 	@PutMapping("/setslow/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public Clock setSlowSpeed(@PathVariable("id") String projectName) {
-		Project project = stateController.loadProject(projectName+".dat");
-		Clock clock = project.getClock();
-		clock.setSlowSpeed();
-		stateController.saveProject(project);
-		return clock;
+		stateController.setSlowSpeed(projectName+".dat");
+		return null;
 	}
 
 	@PutMapping("/set1to1/{id}")
@@ -71,10 +62,7 @@ public class ClockRest implements IClockRest{
 		try {
 			simController.pause();
 			Thread.sleep(500);
-			Project project = stateController.loadProject(projectName+".dat");
-			clock = project.getClock();
-			clock.setOneToOneSpeed();
-			stateController.saveProject(project);
+			stateController.setOneToOneSpeed(projectName+".dat");
 			Thread.sleep(500);
 			simController.resume();
 		} catch (InterruptedException e) {
@@ -91,10 +79,7 @@ public class ClockRest implements IClockRest{
 		try {
 			simController.pause();
 			Thread.sleep(500);
-			Project project = stateController.loadProject(projectName+".dat");
-			clock = project.getClock();
-			clock.setOneToFiveSpeed();
-			stateController.saveProject(project);
+			stateController.setOneToFiveSpeed(projectName+".dat");
 			Thread.sleep(500);
 			simController.resume();
 		} catch (InterruptedException e) {
@@ -112,10 +97,7 @@ public class ClockRest implements IClockRest{
 		try {
 			simController.pause();
 			Thread.sleep(500);
-			Project project = stateController.loadProject(projectName+".dat");
-			clock = project.getClock();
-			clock.setOneToTenSpeed();
-			stateController.saveProject(project);
+			stateController.setOneToTenSpeed(projectName+".dat");
 			Thread.sleep(500);
 			simController.resume();
 		} catch (InterruptedException e) {
@@ -134,10 +116,7 @@ public class ClockRest implements IClockRest{
 		try {
 			simController.pause();
 			Thread.sleep(500);
-			Project project = stateController.loadProject(projectName+".dat");
-			clock = project.getClock();
-			clock.setOneToThirtySpeed();
-			stateController.saveProject(project);
+			stateController.setOneToThirtySpeed(projectName+".dat");
 			Thread.sleep(500);
 			simController.resume();
 		} catch (InterruptedException e) {
@@ -154,10 +133,7 @@ public class ClockRest implements IClockRest{
 		try {
 			simController.pause();
 			Thread.sleep(500);
-			Project project = stateController.loadProject(projectName+".dat");
-			clock = project.getClock();
-			clock.setOneToSixtySpeed();
-			stateController.saveProject(project);
+			stateController.setOneToSixtySpeed(projectName+".dat");
 			Thread.sleep(500);
 			simController.resume();
 		} catch (InterruptedException e) {

@@ -49,9 +49,8 @@ public class SimController{
 	
 	public void start(String projectName) {
 		
-		Project project = projectController.loadProject(projectName);
-		analytics.init(project);
-		executionThread = new ExecutionThread(this,project,analytics);
+		Project pro = projectController.getProject();
+		executionThread = new ExecutionThread(this,pro,analytics);
 		
 		
 		if(executionThread.isPause()) {

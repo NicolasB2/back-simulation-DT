@@ -296,7 +296,7 @@ public class Source_csv implements IDateSource {
 		return plans;
 	}
 
-	@SuppressWarnings({ "resource", "deprecation" })
+	@SuppressWarnings({ "resource" })
 	@Override
 	public SITMPlanVersion findPlanVersionByDate(Date initialDate, Date lastDate){
 		
@@ -337,13 +337,6 @@ public class Source_csv implements IDateSource {
 					if(year && mounth && day) {
 						
 						planVersionId = Long.parseLong(columns[3]);
-						
-						System.out.println("O "+initialDate.toGMTString());
-						System.out.println("X "+lastDate.toGMTString());
-						System.out.println("G "+operationDate.toGMTString());
-						System.out.println(planVersionId);
-						System.out.println();
-						
 						
 						for(SITMPlanVersion pv: plans) {
 							if(pv.getPlanVersionId()==planVersionId) {

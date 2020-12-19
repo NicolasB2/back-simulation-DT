@@ -52,9 +52,7 @@ public class ProjectRest implements IProjectRest {
 		}
 		
 		newProject.setProjectName(project.getName());
-		newProject.setPlanVersionId(project.getPlanVersionId());
-		stateController.saveProject(newProject);	
-		
+		newProject.setPlanVersionId(project.getPlanVersionId());	
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date initdate;
 		Date finaldate;
@@ -69,6 +67,8 @@ public class ProjectRest implements IProjectRest {
 			e.printStackTrace();
 		}
 		
+		newProject.setPlanVersionId(planVersionId);
+		stateController.saveProject(newProject);
 		return planVersionId;
 	}
 
@@ -92,7 +92,7 @@ public class ProjectRest implements IProjectRest {
 		newProject.setFileType(project.getFileType());
 		newProject.setFileSplit(project.getFileSplit());
 		newProject.setFileName(project.getFileName());
-		stateController.saveProject(newProject);
+		
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date initdate;
@@ -108,6 +108,8 @@ public class ProjectRest implements IProjectRest {
 			e.printStackTrace();
 		}
 		
+		newProject.setPlanVersionId(planVersionId);
+		stateController.saveProject(newProject);
 		return planVersionId;
 	}
 
@@ -134,9 +136,8 @@ public class ProjectRest implements IProjectRest {
 	@PutMapping("/setline/{id}/{lineId}")
 	public ProjectDTO setLineId(@PathVariable("id") String projectName,@PathVariable("lineId") long lineId) {
 		
-		Project project = stateController.loadProject(projectName+".dat");
+		Project project = stateController.getProject();
 		project.setLineId(lineId);
-		stateController.saveProject(project);
 		ProjectDTO dto = new ProjectDTO();
 		
 		String initdate = project.getInitialDate().toGMTString();

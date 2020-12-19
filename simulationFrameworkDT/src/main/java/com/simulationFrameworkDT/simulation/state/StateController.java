@@ -8,11 +8,17 @@ import java.io.ObjectOutputStream;
 
 import org.springframework.stereotype.Service;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Service
+@Getter
+@Setter
 public class StateController {
 
 	public static final String FILE_EXTENSION = ".dat";
 	public static final String PROJECTS_PATH = "projects";
+	public Project project;
 	
 	//================================================================================
     // Project Controller
@@ -40,6 +46,7 @@ public class StateController {
 			objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
 			objectOutputStream.writeObject(project);
 	    	objectOutputStream.close();
+	    	 this.project = project;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -54,8 +61,8 @@ public class StateController {
 			objectinputstream = new ObjectInputStream(new FileInputStream(PROJECTS_PATH+File.separator+name));
 		    project = (Project) objectinputstream.readObject();
 		    objectinputstream.close();
-		    
-		} catch (Exception e) {
+		    this.project = project;
+		}catch (Exception e) {
 		    e.printStackTrace();
 		}
 		
@@ -88,31 +95,26 @@ public class StateController {
 	public void setOneToOneSpeed(String Projectname) {
 		Project project = loadProject(Projectname);
 		project.getClock().setOneToOneSpeed();
-		saveProject(project);
 	}
 
 	public void setOneToFiveSpeed(String Projectname) {
 		Project project = loadProject(Projectname);
 		project.getClock().setOneToFiveSpeed();
-		saveProject(project);
 	}
 
 	public void setOneToTenSpeed(String Projectname) {
 		Project project = loadProject(Projectname);
 		project.getClock().setOneToTenSpeed();
-		saveProject(project);
 	}
 
 	public void setOneToThirtySpeed(String Projectname) {
 		Project project = loadProject(Projectname);
 		project.getClock().setOneToThirtySpeed();
-		saveProject(project);
 	}
 
 	public void setOneToSixtySpeed(String Projectname) {
 		Project project = loadProject(Projectname);
 		project.getClock().setOneToSixtySpeed();
-		saveProject(project);
 	}
 	
 }

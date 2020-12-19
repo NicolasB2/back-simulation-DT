@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.simulationFrameworkDT.analytics.Analytics;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.Project;
-import com.simulationFrameworkDT.simulation.state.StateController;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +18,7 @@ class ExecutionThread extends Thread {
 
 	private Project project;
 	private SimController simController;
-	private StateController projectController;
-	
+
 	@Autowired
 	private Analytics analytics;
 	
@@ -32,14 +30,14 @@ class ExecutionThread extends Thread {
 		killed = true;
 	}
 	
-	public ExecutionThread(SimController simController,Project project, Analytics analytics) {
+	public ExecutionThread(SimController simController, Project project, Analytics analytics) {
 		this.simController = simController;
-		this.project = project;
 		this.analytics = analytics;
-		projectController = new StateController();
+		this.project = project;
+		analytics.init(project);
 	}
 
-	public ArrayList<Event> getNextEvents(){	
+	public ArrayList<Event> getNextEvents(){
 		
 		Date nextDate = new Date(project.getInitialDate().getTime()+project.getClock().getReadSpeed());
 		ArrayList<Event> events = new ArrayList<>();
@@ -55,7 +53,6 @@ class ExecutionThread extends Thread {
 			events = simController.getNextEvent(project);
 			project.setInitialDate(nextDate);
 			project.getClock().getNextTick(nextDate);
-			projectController.saveProject(project);
 		}
 		return events;
 	}
@@ -64,11 +61,11 @@ class ExecutionThread extends Thread {
 	public void run() {
 		while (!killed) {
 			while (!pause) {
-				try {
+				try {		
 					
-					this.project = projectController.loadProject(this.project.getProjectName()+".dat");
 					ArrayList<Event> events = getNextEvents();
-									
+								
+					
 					if(events==null) {
 						
 						kill();
@@ -78,11 +75,11 @@ class ExecutionThread extends Thread {
 						
 						for (int i = 0; i < events.size(); i++) {
 							simController.getEventProcessorController().processEvent(events.get(i),project.getTargetSystem());
-							analytics.analysisPerBus(events.get(i));
+							//analytics.analysisPerBus(events.get(i));
 						}
 						
 						project.updateVariables(simController.getLastRow(project));
-						projectController.saveProject(project);
+						simController.getProjectController().setProject(project);
 						sleep(project.getClock().getAnimationSpeed());
 					}
 					

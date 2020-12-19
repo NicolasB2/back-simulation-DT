@@ -26,7 +26,6 @@ public class SimulationMain {
 	public static void main(String[] args) throws IOException, ParseException {
 		
 		//dataTest();
-		saveProject();
 		startTest();
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -64,7 +63,7 @@ public class SimulationMain {
 		System.out.println();
 	}
 
-	public static void saveProject() throws ParseException {
+	public static void saveProject(SimController sm) throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
@@ -73,7 +72,7 @@ public class SimulationMain {
 //		Date init = new Date(dateFormat.parse("2019-04-29 07:22:00").getTime());
 //		Date last = new Date(dateFormat.parse("2019-04-29 08:00:00").getTime());
 		
-		StateController pc = new StateController();
+		StateController pc = sm.getProjectController();
 		Project project = new Project();
 		project.setProjectName("test");
 		project.setInitialDate(init);
@@ -96,7 +95,7 @@ public class SimulationMain {
 		sm.setEventProcessorController(new EventProcessorController());
 		sm.setEventProvirderController(new EventProviderController());
 		sm.getEventProvirderController().getEventFecher().setDataSource(sm.getDataSource());
-		saveProject();
+		saveProject(sm);
 		sm.start("test.dat");
 	}
 }
