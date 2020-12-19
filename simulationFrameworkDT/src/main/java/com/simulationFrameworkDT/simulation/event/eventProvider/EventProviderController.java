@@ -14,7 +14,7 @@ import lombok.Getter;
 @Getter
 @Service
 public class EventProviderController {
-
+	
 	@Autowired 
 	private EventFetcher eventFecher;
 	private EventGenerator eventGenerator;
@@ -27,6 +27,11 @@ public class EventProviderController {
 	public ArrayList<Event> getNextEvent(Project project){
 		ArrayList<Event> events = eventFecher.allFetch(project);
 		return events;
+	}
+	
+	public ArrayList<Event> getNextSimulation(Project project){
+		eventGenerator.generate(project);
+		return null;
 	}
 
 	public void setDataSource(DataSourceSystem dataSource) {

@@ -8,8 +8,6 @@ import java.util.Hashtable;
 
 public class ProbabilisticDistribution {
 
-    private AbstractRealDistribution dist;
-
 //    FDistribution(double numeratorDegreesOfFreedom, double denominatorDegreesOfFreedom),
 //    NormalDistribution(double mean, double sd), CauchyDistribution(double median, double scale),
 //    ChiSquaredDistribution(double degreesOfFreedom), BetaDistribution(double alpha, double beta)
@@ -17,15 +15,7 @@ public class ProbabilisticDistribution {
 //    TDistribution(double degreesOfFreedom), TriangularDistribution(double a, double c, double b),
 //    UniformRealDistribution(double lower, double upper), WeibullDistribution(double alpha, double beta),
 //    EmpiricalDistribution(int binCount).
-    public ProbabilisticDistribution(String type, Hashtable<String,Object> args) {
-        this.dist = typeHandler(type,args);
-    }
-
-    public double getNextDistributionValue(){
-        return dist.sample();
-    }
-
-    public AbstractRealDistribution typeHandler (String type, Hashtable<String,Object>args) throws InvalidParameterException {
+    private static AbstractRealDistribution typeHandler (String type, Hashtable<String,Object>args) throws InvalidParameterException {
         AbstractRealDistribution dist;
         if(type.equals("FDistribution")){
             double numeratorDegreesOfFreedom = (Double)args.get("numeratorDegreesOfFreedom");
@@ -81,4 +71,25 @@ public class ProbabilisticDistribution {
         return dist;
     }
 
+	public static double WeibullDistribution(double alpha, double beta) {
+		
+		String type = "WeibullDistribution";
+        Hashtable<String, Object> params = new Hashtable<>();
+        
+        params.put("alpha", alpha); //Shape
+        params.put("beta", beta); //Scale
+		
+		return typeHandler(type, params).sample();
+	}
+	
+	public static double LogNormalDistribution (double scale, double shape) {
+		
+		String type = "LogNormalDistribution";
+        Hashtable<String, Object> params = new Hashtable<>();
+        
+        params.put("shape", shape);
+        params.put("scale", scale);
+		
+		return typeHandler(type, params).sample();
+	}
 }

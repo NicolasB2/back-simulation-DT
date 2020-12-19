@@ -2,6 +2,11 @@ package com.simulationFrameworkDT.model;
 
 import com.simulationFrameworkDT.simulation.event.Event;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class Datagram extends Event{
 	
 	private long datagramDateTime;
@@ -27,91 +32,11 @@ public class Datagram extends Event{
 		this.lineId = lineId;
 		this.tripId = tripId;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Datagram [datagramDate=" + datagramDate + ", datagramDateTime=" + datagramDateTime + ", busId=" + busId
+		return "Datagram [datagramDateTime=" + datagramDateTime + ", datagramDate=" + datagramDate + ", busId=" + busId
 				+ ", stopId=" + stopId + ", odometer=" + odometer + ", longitude=" + longitude + ", latitude="
 				+ latitude + ", taskId=" + taskId + ", lineId=" + lineId + ", tripId=" + tripId + "]";
-	}
-	
-	public long getDatagramDateTime() {
-		return datagramDateTime;
-	}
-
-	public void setDatagramDateTime(long datagramDateTime) {
-		this.datagramDateTime = datagramDateTime;
-	}
-
-	public String getDatagramDate() {
-		return datagramDate;
-	}
-
-	public void setDatagramDate(String datagramDate) {
-		this.datagramDate = datagramDate;
-	}
-
-	public long getBusId() {
-		return busId;
-	}
-
-	public void setBusId(long busId) {
-		this.busId = busId;
-	}
-
-	public long getStopId() {
-		return stopId;
-	}
-
-	public void setStopId(long stopId) {
-		this.stopId = stopId;
-	}
-
-	public long getOdometer() {
-		return odometer;
-	}
-
-	public void setOdometer(long odometer) {
-		this.odometer = odometer;
-	}
-
-	public double getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
-
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-
-	public long getTaskId() {
-		return taskId;
-	}
-
-	public void setTaskId(long taskId) {
-		this.taskId = taskId;
-	}
-
-	public long getLineId() {
-		return lineId;
-	}
-
-	public void setLineId(long lineId) {
-		this.lineId = lineId;
-	}
-
-	public long getTripId() {
-		return tripId;
-	}
-
-	public void setTripId(long tripId) {
-		this.tripId = tripId;
 	}
 }
