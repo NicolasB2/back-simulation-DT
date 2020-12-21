@@ -33,7 +33,6 @@ public class SimulationThread extends Thread {
 	public SimulationThread(Project project) {
 		this.project = project;
 		this.eventGenerator = new EventGenerator();
-//		eventGenerator.generateTest(project);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -42,7 +41,7 @@ public class SimulationThread extends Thread {
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
 		
-		while (initialDate.getTime() < lastDate.getTime()) { // while between initial and final time
+		while (initialDate.getTime() < lastDate.getTime()) {
 
 			// ==========================================
 			// simulation of first station
@@ -59,6 +58,11 @@ public class SimulationThread extends Thread {
 			project.setInitialDate(arrive.getDate());
 			project.setNextDate(leave.getDate());
 			initialDate = arrive.getDate();
+			
+
+			// ==========================================
+			// simulation of next stations
+			// ==========================================
 			
 			String tab = "";
 			
