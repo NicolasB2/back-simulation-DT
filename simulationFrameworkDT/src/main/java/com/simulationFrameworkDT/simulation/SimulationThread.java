@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import com.simulationFrameworkDT.model.SimulationEvent;
+import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventGenerator;
 import com.simulationFrameworkDT.simulation.state.Project;
 
@@ -25,7 +26,6 @@ public class SimulationThread extends Thread {
 
 		SimulationThread st = new SimulationThread(project);
 		st.start();
-
 	}
 
 	private Project project;
@@ -39,35 +39,41 @@ public class SimulationThread extends Thread {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
-
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
 		
-		//Queue<SimulationEvent> queueBus = new LinkedList<SimulationEvent>();
-
 		while (initialDate.getTime() < lastDate.getTime()) { // while between initial and final time
 
 			// ==========================================
 			// simulation of first station
 			// ==========================================
 
-			SimulationEvent simulationEvent = (SimulationEvent) eventGenerator.generateFirstStation(project);
+			Event simulationEvents[] = (Event[]) eventGenerator.generateFirstStation(project);		
+			SimulationEvent arrive = (SimulationEvent) simulationEvents[0];
+			SimulationEvent leave = (SimulationEvent) simulationEvents[1];
 			
-			project.setInitialDate(simulationEvent.getArriveDate());
-			project.setNextDate(simulationEvent.getLeaveDate());
-			
-			System.out.println("O: "+simulationEvent.getArriveDate().toGMTString()+" Buses "+simulationEvent.getBusId());
-			System.out.println("X: "+simulationEvent.getLeaveDate().toGMTString()+" Buses "+simulationEvent.getBusId());
+			System.out.println("O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
+			System.out.println("X: " + leave.getDate().toGMTString()+" Buses " + leave.getBusId());
 			System.out.println(" ");
 			
-			simulationEvent = (SimulationEvent) eventGenerator.generateNextStation(simulationEvent);
+			project.setInitialDate(arrive.getDate());
+			project.setNextDate(leave.getDate());
+			initialDate = arrive.getDate();
 			
-			System.out.println("	O: "+simulationEvent.getArriveDate().toGMTString()+" Buses "+simulationEvent.getBusId());
-			System.out.println("	X: "+simulationEvent.getLeaveDate().toGMTString()+" Buses "+simulationEvent.getBusId());
-			System.out.println(" ");
+			String tab = "";
 			
-			initialDate = simulationEvent.getArriveDate();
+			for (int i = 0; i < 2; i++) {
+				
+				tab += "	";
+				
+				simulationEvents = (Event[]) eventGenerator.generateNextStation(leave);
+				arrive = (SimulationEvent) simulationEvents[0];
+				leave = (SimulationEvent) simulationEvents[1];
+				
+				System.out.println(tab + "O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
+				System.out.println(tab + "X: " + leave.getDate().toGMTString()+" Buses " + leave.getBusId());
+				System.out.println(" ");
+			}
 		}
-
 	}
 }

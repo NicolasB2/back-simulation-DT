@@ -11,23 +11,23 @@ import lombok.Setter;
 @Setter
 public class SimulationEvent extends Event {
 
+	private boolean arrive;
 	private long busId;
 	private long stopId;
 	private int passengers;
-	private Date arriveDate;
-	private Date leaveDate;
+	private Date date;
 	
-	public SimulationEvent(long busId, long stopId, int passengers, Date arriveDate, Date leaveDate) {
+	public SimulationEvent(boolean arrive, long busId, long stopId, int passengers, Date date) {
+		this.arrive = arrive;
 		this.busId = busId;
 		this.stopId = stopId;
 		this.passengers = passengers;
-		this.arriveDate = arriveDate;
-		this.leaveDate = leaveDate;
+		this.date = date;
 	}
 
 	@Override
 	public String toString() {
-		return "SimulationEvent [busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", arriveDate=" + arriveDate + ", leaveDate=" + leaveDate + "]";
+		return "SimulationEvent [arrive=" + arrive + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", date=" + date + "]";
 	}
-	
+
 }

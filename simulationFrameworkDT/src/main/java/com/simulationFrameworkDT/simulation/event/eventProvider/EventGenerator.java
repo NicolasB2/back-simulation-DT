@@ -1,6 +1,7 @@
 package com.simulationFrameworkDT.simulation.event.eventProvider;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -12,7 +13,20 @@ import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 public class EventGenerator {
 	
-	public Event generateFirstStation(Project project){
+	private ArrayList<Long> ids = new ArrayList<>();
+	
+	private long generateId() {
+		
+		long id = (long) (Math.random()*(9999-1000+1)+1000);
+		
+		while(ids.contains(id)) {
+			id = (long) (Math.random()*(9999-1000+1)+1000);
+		}
+		
+		return id;
+	}
+	
+	public Event[] generateFirstStation(Project project){
 		
 		Date initialDate = project.getInitialDate();
 		Date nextDate = project.getNextDate();
@@ -34,12 +48,18 @@ public class EventGenerator {
 		long leaveTime = arriveTime + (serviceTime*1000); //calculate the moment which the bus leave the station
 		Date leaveDate = new Date(leaveTime); 
 		
-		return new SimulationEvent(System.currentTimeMillis(),0, 0, arrivetDate, leaveDate);
+		
+		long id = generateId();
+		SimulationEvent arrive = new SimulationEvent(true,id,500250, 0, arrivetDate);
+		SimulationEvent leave = new SimulationEvent(false,id,500250, 0, leaveDate);
+		Event events [] = {arrive,leave};
+		
+		return events;
 	}
 	
-	public Event generateNextStation(SimulationEvent simulationEvent){
+	public Event[] generateNextStation(SimulationEvent simulationEvent){
 		
-		Date initialDate = simulationEvent.getLeaveDate();
+		Date initialDate = simulationEvent.getDate();
 
 		int interArrivalTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the intern arrival time with the distribution
 		int serviceTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the service time with the distribution
@@ -50,9 +70,14 @@ public class EventGenerator {
 		Date arrivetDate = new Date(arriveTime);
 		
 		long leaveTime = arriveTime + (serviceTime*1000); //calculate the moment which the bus leave the station
-		Date date = new Date(leaveTime); 
+		Date leaveDate = new Date(leaveTime); 
 		
-		return new SimulationEvent(simulationEvent.getBusId(),0, 0, arrivetDate, date);
+		long id = simulationEvent.getBusId();
+		SimulationEvent arrive = new SimulationEvent(true,id,500250, 0, arrivetDate);
+		SimulationEvent leave = new SimulationEvent(false,id,500250, 0, leaveDate);
+		Event events [] = {arrive,leave};
+		
+		return events;
 	}
 	
 	@SuppressWarnings("deprecation")
