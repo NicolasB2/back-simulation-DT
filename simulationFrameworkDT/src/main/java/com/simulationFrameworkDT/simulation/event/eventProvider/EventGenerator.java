@@ -12,8 +12,7 @@ import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 public class EventGenerator {
 	
-	@SuppressWarnings("deprecation")
-	public Event generate(Project project){
+	public Event generateFirstStation(Project project){
 		
 		Date initialDate = project.getInitialDate();
 		Date nextDate = project.getNextDate();
@@ -21,24 +20,39 @@ public class EventGenerator {
 		int interArrivalTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the intern arrival time with the distribution
 		int serviceTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the service time with the distribution
 		
-		long currentTime = initialDate.getTime() + (interArrivalTime*1000); // current time
+		long initialTime = initialDate.getTime();
 		long lastService = nextDate.getTime();
 		
-		Date currentDate = new Date(currentTime); // update the initial time with the value of current time
-		System.out.println("O: "+currentDate.toGMTString()+" Buses ");
+		long arriveTime = initialTime + (interArrivalTime*1000); // calculate the arrive time
+		Date arrivetDate = new Date(arriveTime);
 		
 		//if current time less than last service time the current time change to last service
-		if(currentTime < lastService) {
-			currentTime = lastService;
+		if(arriveTime < lastService) {
+			arriveTime = lastService;
 		}
 		
-		long leaveTime = currentTime + (serviceTime*1000); //calculate the moment which the bus leave the station
+		long leaveTime = arriveTime + (serviceTime*1000); //calculate the moment which the bus leave the station
+		Date leaveDate = new Date(leaveTime); 
 		
+		return new SimulationEvent(System.currentTimeMillis(),0, 0, arrivetDate, leaveDate);
+	}
+	
+	public Event generateNextStation(SimulationEvent simulationEvent){
+		
+		Date initialDate = simulationEvent.getLeaveDate();
+
+		int interArrivalTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the intern arrival time with the distribution
+		int serviceTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the service time with the distribution
+		
+		long initialTime = initialDate.getTime();
+		
+		long arriveTime = initialTime + (interArrivalTime*1000); // calculate the arrive time
+		Date arrivetDate = new Date(arriveTime);
+		
+		long leaveTime = arriveTime + (serviceTime*1000); //calculate the moment which the bus leave the station
 		Date date = new Date(leaveTime); 
-		System.out.println("X: "+date.toGMTString()+" Buses ");
-		System.out.println(" ");
 		
-		return new SimulationEvent(System.currentTimeMillis(), 0, currentDate, date);
+		return new SimulationEvent(simulationEvent.getBusId(),0, 0, arrivetDate, date);
 	}
 	
 	@SuppressWarnings("deprecation")

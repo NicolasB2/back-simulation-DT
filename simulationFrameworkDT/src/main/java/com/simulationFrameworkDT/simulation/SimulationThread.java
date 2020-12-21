@@ -36,11 +36,14 @@ public class SimulationThread extends Thread {
 //		eventGenerator.generateTest(project);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void run() {
 
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
+		
+		//Queue<SimulationEvent> queueBus = new LinkedList<SimulationEvent>();
 
 		while (initialDate.getTime() < lastDate.getTime()) { // while between initial and final time
 
@@ -48,10 +51,20 @@ public class SimulationThread extends Thread {
 			// simulation of first station
 			// ==========================================
 
-			SimulationEvent simulationEvent = (SimulationEvent) eventGenerator.generate(project);
+			SimulationEvent simulationEvent = (SimulationEvent) eventGenerator.generateFirstStation(project);
 			
 			project.setInitialDate(simulationEvent.getArriveDate());
 			project.setNextDate(simulationEvent.getLeaveDate());
+			
+			System.out.println("O: "+simulationEvent.getArriveDate().toGMTString()+" Buses "+simulationEvent.getBusId());
+			System.out.println("X: "+simulationEvent.getLeaveDate().toGMTString()+" Buses "+simulationEvent.getBusId());
+			System.out.println(" ");
+			
+			simulationEvent = (SimulationEvent) eventGenerator.generateNextStation(simulationEvent);
+			
+			System.out.println("	O: "+simulationEvent.getArriveDate().toGMTString()+" Buses "+simulationEvent.getBusId());
+			System.out.println("	X: "+simulationEvent.getLeaveDate().toGMTString()+" Buses "+simulationEvent.getBusId());
+			System.out.println(" ");
 			
 			initialDate = simulationEvent.getArriveDate();
 		}
