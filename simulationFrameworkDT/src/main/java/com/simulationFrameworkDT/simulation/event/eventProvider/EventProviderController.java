@@ -30,7 +30,7 @@ public class EventProviderController {
 	}
 	
 	public ArrayList<Event> getNextSimulation(Project project){
-		eventGenerator.generateFirstStation(project);
+//		eventGenerator.generateFirstStation(project);
 		return null;
 	}
 

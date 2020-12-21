@@ -6,19 +6,19 @@ import java.util.ArrayList;
 import com.simulationFrameworkDT.model.SimulationEvent;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.Project;
-import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
+import com.simulationFrameworkDT.simulation.tools.IDistribution;
 
 public class EventGenerator {
 	
 	private ArrayList<Long> ids = new ArrayList<>();
 	
-	public Event[] generateFirstStation(Project project){
+	public Event[] generateFirstStation(Project project, IDistribution ai, IDistribution si){
 		
 		Date initialDate = project.getInitialDate();
 		Date nextDate = project.getNextDate();
 
-		int interArrivalTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the intern arrival time with the distribution
-		int serviceTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the service time with the distribution
+		int interArrivalTime = (int) ai.getSample(); //calculate the intern arrival time with the distribution
+		int serviceTime = (int) si.getSample(); //calculate the service time with the distribution
 		
 		long initialTime = initialDate.getTime();
 		long lastService = nextDate.getTime();
@@ -43,12 +43,12 @@ public class EventGenerator {
 		return events;
 	}
 	
-	public Event[] generateNextStation(SimulationEvent simulationEvent){
+	public Event[] generateNextStation(SimulationEvent simulationEvent, IDistribution ai, IDistribution si){
 		
 		Date initialDate = simulationEvent.getDate();
 
-		int interArrivalTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the intern arrival time with the distribution
-		int serviceTime = (int) ProbabilisticDistribution.WeibullDistribution(1.55075, 601.44131); //calculate the service time with the distribution
+		int interArrivalTime = (int) ai.getSample(); //calculate the intern arrival time with the distribution
+		int serviceTime = (int) si.getSample(); //calculate the service time with the distribution
 		
 		long initialTime = initialDate.getTime();
 		

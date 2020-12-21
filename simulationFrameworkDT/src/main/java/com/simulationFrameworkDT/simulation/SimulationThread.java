@@ -8,6 +8,7 @@ import com.simulationFrameworkDT.model.SimulationEvent;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventGenerator;
 import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 public class SimulationThread extends Thread {
 
@@ -41,13 +42,16 @@ public class SimulationThread extends Thread {
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
 		
+		ProbabilisticDistribution pd = new ProbabilisticDistribution();
+		pd.WeibullDistribution(1.55075, 601.44131);
+		
 		while (initialDate.getTime() < lastDate.getTime()) {
 
 			// ==========================================
 			// simulation of first station
 			// ==========================================
 
-			Event simulationEvents[] = (Event[]) eventGenerator.generateFirstStation(project);		
+			Event simulationEvents[] = (Event[]) eventGenerator.generateFirstStation(project,pd,pd);		
 			SimulationEvent arrive = (SimulationEvent) simulationEvents[0];
 			SimulationEvent leave = (SimulationEvent) simulationEvents[1];
 			
@@ -70,7 +74,7 @@ public class SimulationThread extends Thread {
 				
 				tab += "	";
 				
-				simulationEvents = (Event[]) eventGenerator.generateNextStation(leave);
+				simulationEvents = (Event[]) eventGenerator.generateNextStation(leave,pd,pd);
 				arrive = (SimulationEvent) simulationEvents[0];
 				leave = (SimulationEvent) simulationEvents[1];
 				

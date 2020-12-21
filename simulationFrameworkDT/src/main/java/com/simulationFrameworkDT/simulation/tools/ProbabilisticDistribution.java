@@ -1,22 +1,30 @@
 package com.simulationFrameworkDT.simulation.tools;
 
-import org.apache.commons.math3.distribution.*;
+import java.security.InvalidParameterException;
+import java.util.HashMap;
+
+import org.apache.commons.math3.distribution.AbstractRealDistribution;
+import org.apache.commons.math3.distribution.BetaDistribution;
+import org.apache.commons.math3.distribution.CauchyDistribution;
+import org.apache.commons.math3.distribution.ChiSquaredDistribution;
+import org.apache.commons.math3.distribution.EnumeratedRealDistribution;
+import org.apache.commons.math3.distribution.FDistribution;
+import org.apache.commons.math3.distribution.LogNormalDistribution;
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.TDistribution;
+import org.apache.commons.math3.distribution.TriangularDistribution;
+import org.apache.commons.math3.distribution.UniformRealDistribution;
+import org.apache.commons.math3.distribution.WeibullDistribution;
 import org.apache.commons.math3.random.EmpiricalDistribution;
 
-import java.security.InvalidParameterException;
-import java.util.Hashtable;
+public class ProbabilisticDistribution implements IDistribution{
 
-public class ProbabilisticDistribution {
-
-//    FDistribution(double numeratorDegreesOfFreedom, double denominatorDegreesOfFreedom),
-//    NormalDistribution(double mean, double sd), CauchyDistribution(double median, double scale),
-//    ChiSquaredDistribution(double degreesOfFreedom), BetaDistribution(double alpha, double beta)
-//    EnumeratedRealDistribution(double[] singletons, double[] probabilities),
-//    TDistribution(double degreesOfFreedom), TriangularDistribution(double a, double c, double b),
-//    UniformRealDistribution(double lower, double upper), WeibullDistribution(double alpha, double beta),
-//    EmpiricalDistribution(int binCount).
-    private static AbstractRealDistribution typeHandler (String type, Hashtable<String,Object>args) throws InvalidParameterException {
+	private AbstractRealDistribution distribution;
+	
+	public void typeHandler(String type, HashMap<String, Object> args) {
+    	
         AbstractRealDistribution dist;
+        
         if(type.equals("FDistribution")){
             double numeratorDegreesOfFreedom = (Double)args.get("numeratorDegreesOfFreedom");
             double denominatorDegreesOfFreedom = (Double)args.get("denominatorDegreesOfFreedom");
@@ -63,33 +71,35 @@ public class ProbabilisticDistribution {
         	double scale = (Double)args.get("scale");
         	double shape = (Double)args.get("shape");
         	dist = new LogNormalDistribution(scale, shape);
-        	
         } else {	
-            throw new InvalidParameterException("Invalid type, cannot create a distribution " +
-                    "object with the given type");
+            throw new InvalidParameterException("Invalid type, cannot create a distribution object with the given type");
         }
-        return dist;
+        distribution = dist;
     }
 
-	public static double WeibullDistribution(double alpha, double beta) {
+    public double getSample(){
+    	return distribution.sample();
+    }
+    
+	public void WeibullDistribution(double alpha, double beta) {
 		
 		String type = "WeibullDistribution";
-        Hashtable<String, Object> params = new Hashtable<>();
+        HashMap<String, Object> params = new HashMap<>();
         
         params.put("alpha", alpha); //Shape
         params.put("beta", beta); //Scale
 		
-		return typeHandler(type, params).sample();
+		typeHandler(type, params);
 	}
 	
-	public static double LogNormalDistribution (double scale, double shape) {
+	public void LogNormalDistribution (double scale, double shape) {
 		
 		String type = "LogNormalDistribution";
-        Hashtable<String, Object> params = new Hashtable<>();
+		HashMap<String, Object> params = new HashMap<>();
         
         params.put("shape", shape);
         params.put("scale", scale);
 		
-		return typeHandler(type, params).sample();
+		typeHandler(type, params);
 	}
 }
