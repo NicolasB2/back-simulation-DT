@@ -27,7 +27,7 @@ public class SimulationEvent extends Event {
 
 	@Override
 	public String toString() {
-		return "SimulationEvent [arrive=" + arrive + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", date=" + date + "]";
+		return "SimulationEvent [arrive=" + arrive + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", date=" + date.toGMTString() + "]";
 	}
 
 }
