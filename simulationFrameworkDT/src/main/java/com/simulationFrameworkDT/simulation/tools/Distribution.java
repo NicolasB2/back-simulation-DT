@@ -1,11 +1,5 @@
 package com.simulationFrameworkDT.simulation.tools;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.swing.ImageIcon;
-
 import rcaller.RCaller;
 
 public class Distribution implements IDistribution {
@@ -32,9 +26,9 @@ public class Distribution implements IDistribution {
 	}
 
 		
+	@SuppressWarnings("deprecation")
 	public void LogNormal(double meanlog, double sdlog) {
 		
-		String[] values = null;
 		try {
             RCaller caller = new RCaller();
             caller.cleanRCode();
@@ -55,17 +49,6 @@ public class Distribution implements IDistribution {
 		
 	}
 	
-	
-	@Override
-	public void typeHandler(String type, HashMap<String, Object> args) {
-		 
-		
-		
-		
-		
-	}
-	
-
 	public static void main(String[] args) {
 		
 		Distribution dt = new Distribution();

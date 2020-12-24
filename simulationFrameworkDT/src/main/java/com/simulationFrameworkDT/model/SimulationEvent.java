@@ -25,6 +25,7 @@ public class SimulationEvent extends Event {
 		this.date = date;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public String toString() {
 		return "SimulationEvent [arrive=" + arrive + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", date=" + date.toGMTString() + "]";
