@@ -18,6 +18,7 @@ import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 public class SimulationThread extends Thread {
 
 	private EventGenerator eventGenerator;
+	private ArrayList<Long> ids = new ArrayList<>();
 	private ArrayList<SimulationEvent> events = new ArrayList<>();
 	
 	public static void main(String[] args) throws Exception {
@@ -34,12 +35,6 @@ public class SimulationThread extends Thread {
 		SimulationThread st = new SimulationThread(project);
 		st.start();
 		
-//		ProbabilisticDistribution pd = new ProbabilisticDistribution();
-//		pd.WeibullDistribution(1.55075, 601.44131);
-//		
-//		for (int i = 0; i < 2980 ; i++) {
-//			System.out.println((int)pd.getSample());
-//		}
 	}
 
 	private Project project;
@@ -49,9 +44,121 @@ public class SimulationThread extends Thread {
 		this.eventGenerator = new EventGenerator();
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unused" })
 	@Override
 	public void run() {
+		
+		Date initialDate = project.getInitialDate();
+		Date lastDate = project.getFinalDate();
+		
+		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
+		passenger.WeibullDistribution(5,7);
+		eventGenerator.generateUsers(initialDate, lastDate, passenger);
+		
+		ProbabilisticDistribution pd = new ProbabilisticDistribution();
+		pd.WeibullDistribution(1.55075, 601.44131);
+		
+		Queue<SimulationEvent> station = new LinkedList<SimulationEvent>();
+		Queue<SimulationEvent> middle = new LinkedList<SimulationEvent>();
+		
+		while (initialDate.getTime() < lastDate.getTime()) {
+			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(initialDate, pd, generateId());
+			System.out.println("O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
+			initialDate = arrive.getDate();
+			station.offer(arrive);
+			events.add(arrive);
+		}
+		
+		System.out.println(" ");
+		
+		Date lastLeave = null;
+		Date lastArrive = null;
+		
+		while(!station.isEmpty()) {
+			
+			SimulationEvent arrive = station.poll();
+			Date currently = arrive.getDate();
+			
+			if(lastLeave != null && currently.getTime()<lastLeave.getTime()) {
+				currently = lastLeave;
+			}
+			
+			SimulationEvent leave = (SimulationEvent) eventGenerator.generateSi(currently, pd, arrive.getBusId());
+			System.out.println("X: " + leave.getDate().toGMTString()+" Buses " + arrive.getBusId());
+			lastLeave = leave.getDate();
+			middle.offer(leave);	
+			events.add(leave);
+		}
+
+		System.out.println(" ");
+		
+		for (int i = 0; i < 1; i++) {
+			
+			lastLeave = null;
+			lastArrive = null;
+			
+			while(!middle.isEmpty()) {
+				
+				SimulationEvent leave = middle.poll();
+				Date currently = leave.getDate();
+				
+				if(lastArrive!=null && currently.getTime()<lastArrive.getTime()) {
+					currently = lastArrive;
+				}
+				
+				SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(currently, pd, leave.getBusId());
+				System.out.println("O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
+				station.offer(arrive);
+				lastArrive = arrive.getDate();
+				events.add(arrive);
+			}
+			
+			System.out.println(" ");
+			
+			while(!station.isEmpty()) {
+				
+				SimulationEvent arrive = station.poll();
+				Date currently = arrive.getDate();
+				
+				if(lastLeave != null && currently.getTime()<lastLeave.getTime()) {
+					currently = lastLeave;
+				}
+				
+				SimulationEvent leave = (SimulationEvent) eventGenerator.generateSi(currently, pd, arrive.getBusId());
+				System.out.println("X: " + leave.getDate().toGMTString()+" Buses " + arrive.getBusId());
+				lastLeave = leave.getDate();
+				middle.offer(leave);
+				events.add(leave);
+			}
+		}
+	}
+	
+	public void allEvents() {
+		
+		Collections.sort(events, new Comparator<SimulationEvent>() {
+			public int compare(SimulationEvent o1, SimulationEvent o2) {
+					return o1.getDate().compareTo(o2.getDate());
+			}
+		});
+		
+		for (int i = 0; i < events.size(); i++) {
+			System.out.println(events.get(i));
+		}
+	}
+	
+	private long generateId() {
+		
+		long id = (long) (Math.random()*(9999-1000+1)+1000);
+		
+		while(ids.contains(id)) {
+			id = (long) (Math.random()*(9999-1000+1)+1000);
+		}
+		
+		return id;
+	}
+	
+	
+	private void test() {
 		
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
@@ -63,6 +170,7 @@ public class SimulationThread extends Thread {
 		passenger.WeibullDistribution(5,7);
 		
 		Queue<Date> passengersTime = new LinkedList<Date>();
+		Queue<Long> Hobsps = new LinkedList<Long>();
 		
 		// ==========================================
 		// simulation of passengers
@@ -97,17 +205,17 @@ public class SimulationThread extends Thread {
 			events.add(leave);
 			
 			
-//			Date passengerArrivetime = passengersTime.poll();
-//			int numPassengersPerBus = 0;
-//			
-//			while(!passengersTime.isEmpty() && passengerArrivetime.getTime()<=leave.getDate().getTime()) {
-//				numPassengersPerBus ++;
-//				long Hobsp = (leave.getDate().getTime() - passengerArrivetime.getTime())/1000;
-//				Hobsps.add(Hobsp);
-//				passengerArrivetime = passengersTime.poll();
-//			}
-//			
-//			System.out.println("Passengers per Bus "+numPassengersPerBus);
+			Date passengerArrivetime = passengersTime.poll();
+			int numPassengersPerBus = 0;
+			
+			while(!passengersTime.isEmpty() && passengerArrivetime.getTime()<=leave.getDate().getTime()) {
+				numPassengersPerBus ++;
+				long Hobsp = (leave.getDate().getTime() - passengerArrivetime.getTime())/1000;
+				Hobsps.add(Hobsp);
+				passengerArrivetime = passengersTime.poll();
+			}
+			
+			System.out.println("Passengers per Bus "+numPassengersPerBus);
 			
 			
 			System.out.println("O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
@@ -141,18 +249,5 @@ public class SimulationThread extends Thread {
 			}
 		}
 //		allEvents();
-	}
-	
-	public void allEvents() {
-		
-		Collections.sort(events, new Comparator<SimulationEvent>() {
-			public int compare(SimulationEvent o1, SimulationEvent o2) {
-					return o1.getDate().compareTo(o2.getDate());
-			}
-		});
-		
-		for (int i = 0; i < events.size(); i++) {
-			System.out.println(events.get(i));
-		}
 	}
 }
