@@ -74,58 +74,42 @@ public class SimulationThread extends Thread {
 		Queue<SimulationEvent> station = new LinkedList<SimulationEvent>();
 		Queue<SimulationEvent> middle = new LinkedList<SimulationEvent>();
 		
-		while (initialDate.getTime() < lastDate.getTime()) {
-			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(initialDate, pd, generateId());
-			System.out.println("O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
-			initialDate = arrive.getDate();
-			station.offer(arrive);
-			events.add(arrive);
-		}
 		
-		System.out.println(" ");
-		
-		Date lastLeave = null;
-		Date lastArrive = null;
-		
-		while(!station.isEmpty()) {
+		for (int i = 0; i < 2; i++) {
 			
-			SimulationEvent arrive = station.poll();
-			Date currently = arrive.getDate();
+			Date lastLeave = null;
+			Date lastArrive = null;
 			
-			if(lastLeave != null && currently.getTime()<lastLeave.getTime()) {
-				currently = lastLeave;
-			}
-			
-			SimulationEvent leave = (SimulationEvent) eventGenerator.generateSi(currently, pd, arrive.getBusId());
-			System.out.println("X: " + leave.getDate().toGMTString()+" Buses " + arrive.getBusId());
-			lastLeave = leave.getDate();
-			middle.offer(leave);	
-			events.add(leave);
-		}
-
-		System.out.println(" ");
-		
-		for (int i = 0; i < 1; i++) {
-			
-			lastLeave = null;
-			lastArrive = null;
-			
-			while(!middle.isEmpty()) {
+			if(i==0) {
 				
-				SimulationEvent leave = middle.poll();
-				Date currently = leave.getDate();
-				
-				if(lastArrive!=null && currently.getTime()<lastArrive.getTime()) {
-					currently = lastArrive;
+				while (initialDate.getTime() < lastDate.getTime()) {
+					SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(initialDate, pd, generateId());
+					System.out.println("O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
+					initialDate = arrive.getDate();
+					station.offer(arrive);
+					events.add(arrive);
 				}
 				
-				SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(currently, pd, leave.getBusId());
-				System.out.println("O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
-				station.offer(arrive);
-				lastArrive = arrive.getDate();
-				events.add(arrive);
+			}else {
+				
+				while(!middle.isEmpty()) {
+					
+					SimulationEvent leave = middle.poll();
+					Date currently = leave.getDate();
+					
+					if(lastArrive!=null && currently.getTime()<lastArrive.getTime()) {
+						currently = lastArrive;
+					}
+					
+					SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(currently, pd, leave.getBusId());
+					System.out.println("O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
+					station.offer(arrive);
+					lastArrive = arrive.getDate();
+					events.add(arrive);
+				}
+				
 			}
-			
+
 			System.out.println(" ");
 			
 			while(!station.isEmpty()) {
@@ -143,6 +127,8 @@ public class SimulationThread extends Thread {
 				middle.offer(leave);
 				events.add(leave);
 			}
+			
+			System.out.println(" ");
 		}
 	}
 	
