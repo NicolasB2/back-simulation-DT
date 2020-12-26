@@ -42,20 +42,6 @@ public class SimulationThread extends Thread {
 		this.project = project;
 		this.eventGenerator = new EventGenerator();
 	}
-	
-	public void test() {
-//		Date passengerArrivetime = passengersTime.poll();
-//		int numPassengersPerBus = 0;
-//		
-//		while(!passengersTime.isEmpty() && passengerArrivetime.getTime()<=leave.getDate().getTime()) {
-//			numPassengersPerBus ++;
-//			long Hobsp = (leave.getDate().getTime() - passengerArrivetime.getTime())/1000;
-//			Hobsps.add(Hobsp);
-//			passengerArrivetime = passengersTime.poll();
-//		}
-//		
-//		System.out.println("Passengers per Bus "+numPassengersPerBus);
-	}
 
 	@SuppressWarnings({ "deprecation"})
 	@Override
@@ -64,9 +50,14 @@ public class SimulationThread extends Thread {
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
 		
+		ArrayList<Queue<Date>> passengersTime = new  ArrayList<Queue<Date>>();
 		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
 		passenger.WeibullDistribution(5,7);
-		eventGenerator.generateUsers(initialDate, lastDate, passenger);
+		Queue<Date> pt1 = eventGenerator.generateUsers(initialDate, lastDate, passenger);
+		Queue<Date> pt2 = eventGenerator.generateUsers(initialDate, lastDate, passenger);
+		passengersTime.add(pt1);
+		passengersTime.add(pt2);
+		
 		
 		ProbabilisticDistribution pd = new ProbabilisticDistribution();
 		pd.WeibullDistribution(1.55075, 601.44131);
@@ -75,14 +66,14 @@ public class SimulationThread extends Thread {
 		Queue<SimulationEvent> middle = new LinkedList<SimulationEvent>();
 		
 		
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 2; i++) { // iterate between stations
 			
-			Date lastLeave = null;
-			Date lastArrive = null;
+			Date lastLeave = null; //initialize auxiliary variable which represent the last time that a bus leave the station
+			Date lastArrive = null; //initialize auxiliary variable which represent the last time that a bus arrive the station
 			
-			if(i==0) {
+			if(i==0) { // arrive the first station
 				
-				while (initialDate.getTime() < lastDate.getTime()) {
+				while (initialDate.getTime() < lastDate.getTime()) { // full the queue with the buses that arrive between the simulation time
 					SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(initialDate, pd, generateId());
 					System.out.println("O: " + arrive.getDate().toGMTString()+" Buses " + arrive.getBusId());
 					initialDate = arrive.getDate();
@@ -90,14 +81,16 @@ public class SimulationThread extends Thread {
 					events.add(arrive);
 				}
 				
-			}else {
+			}else { 
 				
-				while(!middle.isEmpty()) {
+				while(!middle.isEmpty()) { // generate the arrive time in next stations, clear the middle queue with the buses in it
 					
 					SimulationEvent leave = middle.poll();
 					Date currently = leave.getDate();
 					
-					if(lastArrive!=null && currently.getTime()<lastArrive.getTime()) {
+					// use the lasted time to generate the arrive time in this case the last arrive time at the station 
+					// or the time that the bus leave the previews station
+					if(lastArrive!=null && currently.getTime()<lastArrive.getTime()) { 
 						currently = lastArrive;
 					}
 					
@@ -112,7 +105,7 @@ public class SimulationThread extends Thread {
 
 			System.out.println(" ");
 			
-			while(!station.isEmpty()) {
+			while(!station.isEmpty()) { // generate the leave time, clear the station queue and enqueue in middle queue
 				
 				SimulationEvent arrive = station.poll();
 				Date currently = arrive.getDate();
@@ -121,11 +114,25 @@ public class SimulationThread extends Thread {
 					currently = lastLeave;
 				}
 				
+				// use the lasted time to generate the leave time in this case the last leave time at the station 
+				// or the time that the bus arrive the station
 				SimulationEvent leave = (SimulationEvent) eventGenerator.generateSi(currently, pd, arrive.getBusId());
 				System.out.println("X: " + leave.getDate().toGMTString()+" Buses " + arrive.getBusId());
 				lastLeave = leave.getDate();
 				middle.offer(leave);
 				events.add(leave);
+				
+				Date passengerArrivetime = passengersTime.get(i).poll();
+				int numPassengersPerBus = 0;
+				
+				while(!passengersTime.get(i).isEmpty() && passengerArrivetime.getTime()<=leave.getDate().getTime()) {
+					numPassengersPerBus ++;
+//					long Hobsp = (leave.getDate().getTime() - passengerArrivetime.getTime())/1000;
+//					Hobsps.add(Hobsp);
+					passengerArrivetime = passengersTime.get(i).poll();
+				}
+				
+				System.out.println("Passengers per Bus "+numPassengersPerBus);
 			}
 			
 			System.out.println(" ");
