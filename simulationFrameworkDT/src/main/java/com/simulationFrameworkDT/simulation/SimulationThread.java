@@ -53,6 +53,8 @@ public class SimulationThread extends Thread {
 		Date lastDate = project.getFinalDate();
 		
 		ArrayList<ArrayList<Long>> HobspList = new  ArrayList<ArrayList<Long>>();
+		ArrayList<ArrayList<Long>> HobssList = new  ArrayList<ArrayList<Long>>();
+		
 		ArrayList<Queue<Date>> passengersTime = new  ArrayList<Queue<Date>>();
 		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
 		passenger.WeibullDistribution(5,7);
@@ -67,6 +69,7 @@ public class SimulationThread extends Thread {
 			Queue<Date> pt = eventGenerator.generateUsers(initialDate, lastDate, passenger);
 			passengersTime.add(pt);
 			HobspList.add(new ArrayList<>());
+			HobssList.add(new ArrayList<>());
 		}
 		
 		for (int i = 0; i < numberOfStations; i++) { // iterate between stations
@@ -104,12 +107,20 @@ public class SimulationThread extends Thread {
 				}	
 			}
 
+			lastArrive=null;
 			System.out.println(" ");
 			
 			while(!station.isEmpty()) { // generate the leave time, clear the station queue and enqueue in middle queue
 				
 				SimulationEvent arrive = station.poll();
 				Date currently = arrive.getDate();
+				
+				//****************************************************************************************************
+				if(lastArrive!=null){
+					HobssList.get(i).add(arrive.getDate().getTime()-lastArrive.getTime());
+				}
+				lastArrive = arrive.getDate();
+				//****************************************************************************************************
 				
 				if(lastLeave != null && currently.getTime()<lastLeave.getTime()) {
 					currently = lastLeave;
