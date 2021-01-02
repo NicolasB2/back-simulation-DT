@@ -1,11 +1,17 @@
 package com.simulationFrameworkDT.restService.implementation;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.restService.dataTransfer.ProjectDTO;
@@ -152,5 +163,21 @@ public class ProjectRest implements IProjectRest {
 		dto.setFileName(project.getFileName());
 		dto.setPlanVersionId(project.getPlanVersionId());
 		return dto;
+	}
+
+	@PostMapping("/upload")
+	public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile[] file) {
+		if (null == file[0].getOriginalFilename()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		try {
+			byte[] bytes = file[0].getBytes();
+			Path path = Paths.get(file[0].getOriginalFilename());
+			Files.write(path, bytes);
+			System.out.println(path.getFileName());
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+		return new ResponseEntity<>("Good Job", HttpStatus.OK);
 	}
 }
