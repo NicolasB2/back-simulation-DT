@@ -18,6 +18,7 @@ import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 public class SimulationThread extends Thread {
 
 	private long[] stations;
+	private int headwayDesigned;
 	private Project project;
 	private EventGenerator eventGenerator;
 
@@ -39,13 +40,14 @@ public class SimulationThread extends Thread {
 		project.setNextDate(initialDate);
 		project.setFinalDate(nextDate);
 
-		SimulationThread st = new SimulationThread(project, new long[] { 500250, 500300 });
+		SimulationThread st = new SimulationThread(project, new long[] { 500250, 500300 },360);
 		st.start();
 	}
 
-	public SimulationThread(Project project, long[] stations) {
+	public SimulationThread(Project project, long[] stations,int headwayDesigned) {
 		this.project = project;
 		this.stations = stations;
+		this.headwayDesigned = headwayDesigned;
 		this.eventGenerator = new EventGenerator();
 		initializeStructures(this.stations);
 	}
@@ -81,10 +83,10 @@ public class SimulationThread extends Thread {
 		for (int i = 0; i < stations.length; i++) { // iterate between stations
 
 			if (i == 0) { // arrive the first station
-				stationQueue = arriveFirstStation(initialDate, lastDate, pd);
+				stationQueue = arriveFirstStation(initialDate, lastDate, stations[i]);
 
-			} else { // arrive the next stations
-				stationQueue = arriveNextStation(middleQueue, pd);
+			} else { // arrive the next stations 
+				stationQueue = arriveNextStation(middleQueue, pd,stations[i]);
 			}
 
 			// leave the station
@@ -97,15 +99,13 @@ public class SimulationThread extends Thread {
 	}
 
 	@SuppressWarnings("deprecation")
-	public LinkedList<SimulationEvent> arriveFirstStation(Date initialDate, Date lastDate,
-			ProbabilisticDistribution pd) {
+	public LinkedList<SimulationEvent> arriveFirstStation(Date initialDate, Date lastDate, long stopId) {
 
 		LinkedList<SimulationEvent> station = new LinkedList<SimulationEvent>();
 
-		while (initialDate.getTime() < lastDate.getTime()) { // full the queue with the buses that arrive between the
-																// simulation time
-			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(initialDate, pd, generateId());
-			System.out.println("O: " + arrive.getDate().toGMTString() + " Buses " + arrive.getBusId());
+		while (initialDate.getTime() < lastDate.getTime()) { // full the queue with the buses that arrive between the simulation time
+			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(initialDate, this.headwayDesigned, generateId());
+			System.out.println("O: " + arrive.getDate().toGMTString() + " BuseId " + arrive.getBusId());
 			initialDate = arrive.getDate();
 			station.offer(arrive);
 			events.add(arrive);
@@ -116,26 +116,22 @@ public class SimulationThread extends Thread {
 	}
 
 	@SuppressWarnings("deprecation")
-	public LinkedList<SimulationEvent> arriveNextStation(Queue<SimulationEvent> middleQueue,
-			ProbabilisticDistribution pd) {
+	public LinkedList<SimulationEvent> arriveNextStation(Queue<SimulationEvent> middleQueue,ProbabilisticDistribution pd, long stopId) {
 
-		Date lastArrive = null; // initialize auxiliary variable which represent the last time that a bus arrive
-								// the station
+		Date lastArrive = null; // initialize auxiliary variable which represent the last time that a bus arrive the station
 		LinkedList<SimulationEvent> station = new LinkedList<SimulationEvent>();
 
-		while (!middleQueue.isEmpty()) { // generate the arrive time in next stations, clear the middle queue with the
-											// buses in it
+		while (!middleQueue.isEmpty()) { // generate the arrive time in next stations, clear the middle queue with the buses in it
 
 			SimulationEvent leave = middleQueue.poll();
 			Date currently = leave.getDate();
 
-			if (lastArrive != null && currently.getTime() < lastArrive.getTime()) {// use the lasted time to generate
-																					// the arrive time
+			if (lastArrive != null && currently.getTime() < lastArrive.getTime()) {// use the lasted time to generate the arrive time
 				currently = lastArrive;
 			}
 
 			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(currently, pd, leave.getBusId());
-			System.out.println("O: " + arrive.getDate().toGMTString() + " Bus " + arrive.getBusId());
+			System.out.println("O: " + arrive.getDate().toGMTString() + " BusId " + arrive.getBusId());
 			station.offer(arrive);
 			lastArrive = arrive.getDate();
 			events.add(arrive);
@@ -146,21 +142,17 @@ public class SimulationThread extends Thread {
 	}
 
 	@SuppressWarnings("deprecation")
-	public LinkedList<SimulationEvent> leaveStation(Queue<SimulationEvent> stationQueue, ProbabilisticDistribution pd,
-			long stopId) {
+	public LinkedList<SimulationEvent> leaveStation(Queue<SimulationEvent> stationQueue, ProbabilisticDistribution pd, long stopId) {
 
-		Date lastLeave = null; // initialize auxiliary variable which represent the last time that a bus leave
-								// the station
+		Date lastLeave = null; // initialize auxiliary variable which represent the last time that a bus leave the station
 		LinkedList<SimulationEvent> middle = new LinkedList<SimulationEvent>();
 
-		while (!stationQueue.isEmpty()) { // generate the leave time, clear the station queue and enqueue in middle
-											// queue
+		while (!stationQueue.isEmpty()) { // generate the leave time, clear the station queue and enqueue in middle queue
 
 			SimulationEvent arrive = stationQueue.poll();
 			Date currently = arrive.getDate();
 
-			if (lastLeave != null && currently.getTime() < lastLeave.getTime()) {// use the lasted time to generate the
-																					// leave time
+			if (lastLeave != null && currently.getTime() < lastLeave.getTime()) {// use the lasted time to generate the leave time
 				currently = lastLeave;
 			}
 
@@ -239,13 +231,25 @@ public class SimulationThread extends Thread {
 		for (int i = 0; i < stations.length; i++) {
 
 			System.out.println("Stop Id " + stations[i]);
+//			ArrayList<Double> Hobss = HobssList.get(stations[i]);
 			ArrayList<Double> Hobsp = HobspList.get(stations[i]);
 			ArrayList<Double> hrs = new ArrayList<Double>();
 
+//			System.out.println("==================> Hobss");
+//			for (int j = 0; j < Hobss.size(); j++) {
+//				System.out.println(Hobss.get(j));
+//			}
+//			
+//			System.out.println("==================> Hobsp");
+//			for (int j = 0; j < Hobsp.size(); j++) {
+//				System.out.println(Hobsp.get(j));
+//			}
+			
+			System.out.println("==================> Hr");
 			for (int j = 0; j < Hobsp.size(); j++) {
 				double hr = ((double) Hobsp.get(j) / headwayDesigned) * 100;
 				hrs.add(hr);
-//				System.out.println("Hr : "+hr);
+//				System.out.println(hr);
 			}
 
 			double meanHobsp = mean(HobspList.get(stations[i]));

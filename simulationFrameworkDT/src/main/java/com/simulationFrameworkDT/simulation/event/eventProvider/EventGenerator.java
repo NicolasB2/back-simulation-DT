@@ -9,6 +9,14 @@ import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.tools.IDistribution;
 
 public class EventGenerator {
+
+	public Event generateAi(Date date,int headwayDesigned, long id){
+		long initialTime = date.getTime();
+		int interArrivalTime = headwayDesigned;
+		long arriveTime = initialTime + (interArrivalTime*1000); // calculate the arrive time
+		Date arrivetDate = new Date(arriveTime); // generate the date object
+		return new SimulationEvent(true,id,500250, 0, arrivetDate);//create the event for arrive
+	}
 	
 	public Event generateAi(Date date, IDistribution ai, long id){
 		long initialTime = date.getTime();
