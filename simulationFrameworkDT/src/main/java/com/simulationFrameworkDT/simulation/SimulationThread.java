@@ -67,7 +67,6 @@ public class SimulationThread extends Thread {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
 
@@ -90,13 +89,13 @@ public class SimulationThread extends Thread {
 			}
 
 			// leave the station
-			hobss((LinkedList<SimulationEvent>) stationQueue.clone(), stations[i]);
 			hobsp(stations[i]);
+			hobss(stationQueue, stations[i]);
 			middleQueue = leaveStation(stationQueue, pd, stations[i]);
 		}
 
 		allEvents(); // print all events order by time
-		calculatingExcessWaitingTimeatBusStops(360); // calculating Excess Waiting Time at Bus Stops
+		calculatingExcessWaitingTimeatBusStops(); // calculating Excess Waiting Time at Bus Stops
 	}
 
 	@SuppressWarnings("deprecation")
@@ -174,23 +173,23 @@ public class SimulationThread extends Thread {
 	// headway observed per bus
 	public void hobss(LinkedList<SimulationEvent> stationQueue, long stopId) {
 
-		SimulationEvent arrive = stationQueue.poll();
-		SimulationEvent nextArrive = stationQueue.poll();
-
-		while (nextArrive != null) {
-			double hobss = (nextArrive.getDate().getTime() - arrive.getDate().getTime()) / 1000;
-			HobssList.get(stopId).add(hobss);
-			arrive = nextArrive;
-			nextArrive = stationQueue.poll();
-		}
-
+		SimulationEvent lastArrive = null;
+		for (SimulationEvent item: stationQueue) {
+			
+			if(lastArrive==null) {
+				lastArrive = item;
+			}else {
+				double headway = (item.getDate().getTime() - lastArrive.getDate().getTime()) / 1000;
+				HobssList.get(stopId).add(headway);
+				lastArrive = item;
+			}
+        }
 	}
 
 	// headway observed per passenger
 	public void hobsp(long stopId) {
 		
 		Date userArrive = null;
-		
 		for (Date item: passengersTime.get(stopId)) {
 			
 			if(userArrive==null) {
@@ -240,7 +239,7 @@ public class SimulationThread extends Thread {
 		System.out.println("");
 	}
 
-	public void calculatingExcessWaitingTimeatBusStops(long headwayDesigned) {
+	public void calculatingExcessWaitingTimeatBusStops() {
 
 		for (int i = 0; i < stations.length; i++) {
 
@@ -263,18 +262,20 @@ public class SimulationThread extends Thread {
 			for (int j = 0; j < Hobsp.size(); j++) {
 				double hr = ((double) Hobsp.get(j) / headwayDesigned) * 100;
 				hrs.add(hr);
-				System.out.println(hr);
+//				System.out.println(hr);
 			}
 
-			double meanHobsp = mean(HobspList.get(stations[i]));
 			double meanHobss = mean(HobssList.get(stations[i]));
-			double mean = mean(hrs);
-			double variance = variance(hrs);
-			double EWTaBS = (variance / (meanHobss*mean*100))*meanHobsp;
+			double meanHobsp = mean(HobspList.get(stations[i]));
+			double meanHr = mean(hrs);
+			double varianceHr = variance(hrs);
+			double EWTaBS = (varianceHr / (meanHobss*meanHr*100))*meanHobsp;
 			
-			System.out.println("mean Hr :" + mean);
-			System.out.println("variance Hr :" + variance);
-			System.out.println("EWTaBS :"+EWTaBS+"\n");
+			System.out.println("MeanHobss : "+meanHobss);
+			System.out.println("MeanHobsp : "+meanHobsp);
+			System.out.println("Mean Hr : " + meanHr);
+			System.out.println("variance Hr : " + varianceHr);
+			System.out.println("EWTaBS : "+EWTaBS+"\n");
 		}
 	}
 
