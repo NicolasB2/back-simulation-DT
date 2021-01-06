@@ -26,8 +26,8 @@ public class SimulationThread extends Thread {
 	private ArrayList<SimulationEvent> events = new ArrayList<>();
 
 	private HashMap<Long, Queue<Date>> passengersTime = new HashMap<Long, Queue<Date>>();
-	private HashMap<Long, ArrayList<Double>> HobspList = new HashMap<Long, ArrayList<Double>>();
-	private HashMap<Long, ArrayList<Double>> HobssList = new HashMap<Long, ArrayList<Double>>();
+	private HashMap<Long, ArrayList<Double>> HobspList = new HashMap<Long, ArrayList<Double>>();// passengers
+	private HashMap<Long, ArrayList<Double>> HobssList = new HashMap<Long, ArrayList<Double>>();// buses-stop
 
 	public static void main(String[] args) throws Exception {
 
@@ -55,13 +55,13 @@ public class SimulationThread extends Thread {
 	public void initializeStructures(long[] stops) {
 
 		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
-		passenger.WeibullDistribution(5, 7);
+		passenger.ExponentialDistribution(9.459459459);
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
 
 		for (int i = 0; i < stations.length; i++) {
 			Queue<Date> pt = eventGenerator.generateUsers(initialDate, lastDate, passenger);
-			passengersTime.put(stations[i], pt);
+			passengersTime.put(stations[i],  pt);
 			HobspList.put(stations[i], new ArrayList<>());
 			HobssList.put(stations[i], new ArrayList<>());
 		}
@@ -91,6 +91,7 @@ public class SimulationThread extends Thread {
 
 			// leave the station
 			hobss((LinkedList<SimulationEvent>) stationQueue.clone(), stations[i]);
+			hobsp(stations[i]);
 			middleQueue = leaveStation(stationQueue, pd, stations[i]);
 		}
 
@@ -157,10 +158,10 @@ public class SimulationThread extends Thread {
 			}
 
 			SimulationEvent leave = (SimulationEvent) eventGenerator.generateSi(currently, pd, arrive.getBusId());
-			int numPassengersPerBus = hobsp(middle, leave, stopId);
+			int numPassengersPerBus = passengersPerBus(leave, stopId);
+			leave.setPassengers(numPassengersPerBus);
 
-			System.out.println("X: " + leave.getDate().toGMTString() + " Bus " + arrive.getBusId() + " Passengers "
-					+ numPassengersPerBus);
+			System.out.println("X: " + leave.getDate().toGMTString() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
 			lastLeave = leave.getDate();
 			middle.offer(leave);
 			events.add(leave);
@@ -186,21 +187,34 @@ public class SimulationThread extends Thread {
 	}
 
 	// headway observed per passenger
-	public int hobsp(LinkedList<SimulationEvent> middle, SimulationEvent leave, long stopId) {
+	public void hobsp(long stopId) {
+		
+		Date userArrive = null;
+		
+		for (Date item: passengersTime.get(stopId)) {
+			
+			if(userArrive==null) {
+				userArrive = item;
+			}else {
+				double headway = (item.getTime()-userArrive.getTime())/1000;
+				HobspList.get(stopId).add(headway);
+				userArrive = item;
+			}
+        }
+	}
+
+	public int passengersPerBus(SimulationEvent leave, long stopId) {
 
 		Date passengerArrivetime = passengersTime.get(stopId).poll();
 		int numPassengersPerBus = 0;
 
 		while (!passengersTime.get(stopId).isEmpty() && passengerArrivetime.getTime() <= leave.getDate().getTime()) {
 			numPassengersPerBus++;
-			double hobsp = (leave.getDate().getTime() - passengerArrivetime.getTime()) / 1000;
 			passengerArrivetime = passengersTime.get(stopId).poll();
-			HobspList.get(stopId).add(hobsp);
 		}
 
 		return numPassengersPerBus;
 	}
-
 	private long generateId() {
 
 		long id = (long) (Math.random() * (9999 - 1000 + 1) + 1000);
@@ -249,7 +263,7 @@ public class SimulationThread extends Thread {
 			for (int j = 0; j < Hobsp.size(); j++) {
 				double hr = ((double) Hobsp.get(j) / headwayDesigned) * 100;
 				hrs.add(hr);
-//				System.out.println(hr);
+				System.out.println(hr);
 			}
 
 			double meanHobsp = mean(HobspList.get(stations[i]));
