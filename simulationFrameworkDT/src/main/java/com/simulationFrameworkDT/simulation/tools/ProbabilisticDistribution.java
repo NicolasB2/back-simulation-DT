@@ -8,8 +8,10 @@ import org.apache.commons.math3.distribution.BetaDistribution;
 import org.apache.commons.math3.distribution.CauchyDistribution;
 import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 import org.apache.commons.math3.distribution.EnumeratedRealDistribution;
+import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.FDistribution;
 import org.apache.commons.math3.distribution.LogNormalDistribution;
+import org.apache.commons.math3.distribution.LogisticDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.distribution.TDistribution;
 import org.apache.commons.math3.distribution.TriangularDistribution;
@@ -71,6 +73,13 @@ public class ProbabilisticDistribution implements IDistribution{
         	double scale = (Double)args.get("scale");
         	double shape = (Double)args.get("shape");
         	dist = new LogNormalDistribution(scale, shape);
+        } else if (type.equals("ExponentialDistribution")) {	
+            double mean = (Double)args.get("mean");
+            dist = new ExponentialDistribution(mean);
+        } else if (type.equals("LogisticDistribution")) {	
+            double mu = (Double)args.get("mu");
+            double s = (Double)args.get("s");
+            dist = new LogisticDistribution(mu,s);
         } else {	
             throw new InvalidParameterException("Invalid type, cannot create a distribution object with the given type");
         }
@@ -101,5 +110,26 @@ public class ProbabilisticDistribution implements IDistribution{
         params.put("scale", scale);
 		
 		typeHandler(type, params);
+	}
+	
+	public void ExponentialDistribution (double mean) {
+		
+		String type = "ExponentialDistribution";
+		HashMap<String, Object> params = new HashMap<>();
+        
+        params.put("mean", mean);
+        
+        typeHandler(type, params);
+	}
+	
+	public void LogLogisticDistribution (double mu, double s) {
+		
+		String type = "LogisticDistribution";
+		HashMap<String, Object> params = new HashMap<>();
+        
+        params.put("mu", mu);
+        params.put("s", s);
+        
+        typeHandler(type, params);
 	}
 }
