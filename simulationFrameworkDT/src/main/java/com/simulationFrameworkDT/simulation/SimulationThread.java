@@ -51,7 +51,7 @@ public class SimulationThread extends Thread {
 		ai.WeibullDistribution(1.55075, 601.44131);
 		
 		ProbabilisticDistribution si = new ProbabilisticDistribution();
-		si.WeibullDistribution(1.55075, 601.44131);
+		si.LogLogisticDistribution(41.56875, 2.83267);
 		
 		SITMStop stop1 = new SITMStop(500250, passenger, ai, si);
 		SITMStop stop2 = new SITMStop(500250, passenger, ai, si);
@@ -220,7 +220,8 @@ public class SimulationThread extends Thread {
 		Date passengerArrivetime = passengersTime.get(stopId).poll();
 		int numPassengersPerBus = 0;
 
-		while (!passengersTime.get(stopId).isEmpty() && passengerArrivetime.getTime() <= leave.getDate().getTime()) {
+		// the number of passengers exceed the bus capacity
+		while (!passengersTime.get(stopId).isEmpty() && passengerArrivetime.getTime() <= leave.getDate().getTime() && numPassengersPerBus<160) {
 			numPassengersPerBus++;
 			passengerArrivetime = passengersTime.get(stopId).poll();
 		}
