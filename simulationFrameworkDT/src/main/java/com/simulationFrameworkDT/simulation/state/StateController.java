@@ -18,7 +18,7 @@ public class StateController {
 
 	public static final String FILE_EXTENSION = ".dat";
 	public static final String PROJECTS_PATH = "projects";
-	public Project project;
+	private Project project;
 	
 	//================================================================================
     // Project Controller

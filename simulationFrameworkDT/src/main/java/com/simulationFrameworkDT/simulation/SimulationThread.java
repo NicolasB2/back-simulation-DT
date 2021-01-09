@@ -1,8 +1,6 @@
 package com.simulationFrameworkDT.simulation;
 
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,7 +13,6 @@ import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventGenerator;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.tools.IDistribution;
-import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 public class SimulationThread extends Thread {
 
@@ -30,38 +27,6 @@ public class SimulationThread extends Thread {
 	private HashMap<Long, Queue<Date>> passengersTime = new HashMap<Long, Queue<Date>>();
 	private HashMap<Long, ArrayList<Double>> HobspList = new HashMap<Long, ArrayList<Double>>();// passengers
 	private HashMap<Long, ArrayList<Double>> HobssList = new HashMap<Long, ArrayList<Double>>();// buses-stop
-
-	public static void main(String[] args) throws Exception {
-
-		Project project = new Project();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-		Date initialDate = new Date(dateFormat.parse("2019-06-20 00:00:00").getTime());
-		Date nextDate = new Date(dateFormat.parse("2019-06-20 01:00:00").getTime());
-		project.setInitialDate(initialDate);
-		project.setNextDate(initialDate);
-		project.setFinalDate(nextDate);
-
-		SITMStop[] stops = new SITMStop[2];
-		
-		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
-		passenger.ExponentialDistribution(9.459459459);
-		
-		ProbabilisticDistribution ai = new ProbabilisticDistribution();
-		ai.WeibullDistribution(1.55075, 601.44131);
-		
-		ProbabilisticDistribution si = new ProbabilisticDistribution();
-		si.LogLogisticDistribution(41.56875, 2.83267);
-		
-		SITMStop stop1 = new SITMStop(500250, passenger, ai, si);
-		SITMStop stop2 = new SITMStop(500250, passenger, ai, si);
-		
-		stops[0]=stop1;
-		stops[1]=stop2;
-		
-		SimulationThread st = new SimulationThread(project, stops ,360);
-		st.start();
-	}
 
 	public SimulationThread(Project project, SITMStop[] stations, int headwayDesigned) {
 		this.project = project;
@@ -83,8 +48,6 @@ public class SimulationThread extends Thread {
 
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
-
-		
 
 		LinkedList<SimulationEvent> stationQueue = new LinkedList<SimulationEvent>();
 		LinkedList<SimulationEvent> middleQueue = new LinkedList<SimulationEvent>();

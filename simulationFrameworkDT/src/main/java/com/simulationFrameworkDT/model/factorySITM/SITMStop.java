@@ -54,7 +54,6 @@ public class SITMStop implements IStop,Serializable  {
 	private IDistribution interArrivalDistribution;
 	private IDistribution serviceDistribution;
 	
-	
 	public SITMStop () {
 		super();
 	}
