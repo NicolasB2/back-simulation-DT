@@ -20,6 +20,12 @@ public class SimulationRest implements ISimulationRest {
 	@Autowired
 	private SimController SimController;
 
+	@PutMapping("/simulation/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public void simulation(@PathVariable("id") String projectName, int headwayDesigned) {
+		SimController.startSimulation(projectName,headwayDesigned);
+	}
+	
 	@PutMapping("/start/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void start(@PathVariable("id") String projectName) {

@@ -1,8 +1,5 @@
 package com.simulationFrameworkDT.simulation;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -57,6 +54,11 @@ public class SimController{
 	public void start(String projectName) {
 		
 		Project pro = projectController.getProject();
+		
+		if(pro == null) {
+			projectController.loadProject(projectName);
+			pro = projectController.getProject();
+		}
 		executionThread = new ExecutionThread(this,pro,analytics);
 		
 		
@@ -84,27 +86,9 @@ public class SimController{
 		System.out.println("=======> simulation finished");
 	}
 	
-	public void startSimulation(StopDistribution[] stations, int headwayDesigned) {
-		SimulationThread st = new SimulationThread(projectController.getProject(), stations ,headwayDesigned);
-		st.start();
-	}
-	public static void main(String[] args) throws Exception {
-
-		Project project = new Project();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-		Date initialDate = new Date(dateFormat.parse("2019-06-20 00:00:00").getTime());
-		Date nextDate = new Date(dateFormat.parse("2019-06-20 01:00:00").getTime());
-		project.setInitialDate(initialDate);
-		project.setNextDate(initialDate);
-		project.setFinalDate(nextDate);
+	public void startSimulation(String projectName, int headwayDesigned) {
 		
-		SimController simController = new SimController();
-		StateController stateController = new StateController();
-		stateController.setProject(project);
-		simController.setProjectController(stateController);
-
-		StopDistribution[] stops = new StopDistribution[2];
+		StopDistribution[] stations = new StopDistribution[2];
 		
 		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
 		passenger.ExponentialDistribution(9.459459459);
@@ -119,9 +103,22 @@ public class SimController{
 		
 		StopDistribution stop2 = new StopDistribution(500250, passenger, ai, si);
 		
-		stops[0]=stop1;
-		stops[1]=stop2;
+		stations[0]=stop1;
+		stations[1]=stop2;
 		
-		simController.startSimulation(stops ,360);
+		startSimulation(stations, projectName, headwayDesigned);
+	}
+	
+	private void startSimulation(StopDistribution[] stations, String projectName, int headwayDesigned) {
+		
+		Project pro = projectController.getProject();
+		
+		if(pro == null) {
+			projectController.loadProject(projectName);
+			pro = projectController.getProject();
+		}
+		
+		SimulationThread st = new SimulationThread(projectController.getProject(), stations ,headwayDesigned);
+		st.start();
 	}
 }
