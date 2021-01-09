@@ -37,19 +37,13 @@ public class EventGenerator {
 	public Queue<Date> generateUsers(Date initialDate, Date lastDate, IDistribution passenger){
 
 		Queue<Date> passengersTime = new LinkedList<Date>();
-		int simulationTime =  (int) ((lastDate.getTime()-initialDate.getTime())/1000)/60;
-		
-		for (int i = 1; i <= simulationTime+60; i++) {
+
+		while(initialDate.getTime() <= lastDate.getTime()+(1000*60*60)) {
 			
-			int numPassenger = (int) Math.round(passenger.getSample());
-			//System.out.println("numPassenger "+numPassenger);
-			
-			for (int j = 0; j < numPassenger; j++) {
-				Date passengerArrivetime = new Date(initialDate.getTime() + (i * 60 * 1000));
-				passengersTime.offer(passengerArrivetime);
-				//System.out.println(time.toGMTString());
-			}
-			
+			double aiPassenger = passenger.getSample()*1000;
+			Date passengerArrivetime = new Date((long) (initialDate.getTime()+aiPassenger));
+			passengersTime.offer(passengerArrivetime);
+			initialDate = passengerArrivetime;
 		}
 		
 		return passengersTime;

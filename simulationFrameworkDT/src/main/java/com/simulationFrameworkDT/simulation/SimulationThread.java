@@ -11,14 +11,16 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import com.simulationFrameworkDT.model.SimulationEvent;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventGenerator;
 import com.simulationFrameworkDT.simulation.state.Project;
+import com.simulationFrameworkDT.simulation.tools.IDistribution;
 import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 public class SimulationThread extends Thread {
 
-	private long[] stations;
 	private int headwayDesigned;
+	private SITMStop[] stations;
 	private Project project;
 	private EventGenerator eventGenerator;
 
@@ -26,8 +28,8 @@ public class SimulationThread extends Thread {
 	private ArrayList<SimulationEvent> events = new ArrayList<>();
 
 	private HashMap<Long, Queue<Date>> passengersTime = new HashMap<Long, Queue<Date>>();
-	private HashMap<Long, ArrayList<Double>> HobspList = new HashMap<Long, ArrayList<Double>>();
-	private HashMap<Long, ArrayList<Double>> HobssList = new HashMap<Long, ArrayList<Double>>();
+	private HashMap<Long, ArrayList<Double>> HobspList = new HashMap<Long, ArrayList<Double>>();// passengers
+	private HashMap<Long, ArrayList<Double>> HobssList = new HashMap<Long, ArrayList<Double>>();// buses-stop
 
 	public static void main(String[] args) throws Exception {
 
@@ -40,11 +42,28 @@ public class SimulationThread extends Thread {
 		project.setNextDate(initialDate);
 		project.setFinalDate(nextDate);
 
-		SimulationThread st = new SimulationThread(project, new long[] { 500250, 500300 },360);
+		SITMStop[] stops = new SITMStop[2];
+		
+		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
+		passenger.ExponentialDistribution(9.459459459);
+		
+		ProbabilisticDistribution ai = new ProbabilisticDistribution();
+		ai.WeibullDistribution(1.55075, 601.44131);
+		
+		ProbabilisticDistribution si = new ProbabilisticDistribution();
+		si.LogLogisticDistribution(41.56875, 2.83267);
+		
+		SITMStop stop1 = new SITMStop(500250, passenger, ai, si);
+		SITMStop stop2 = new SITMStop(500250, passenger, ai, si);
+		
+		stops[0]=stop1;
+		stops[1]=stop2;
+		
+		SimulationThread st = new SimulationThread(project, stops ,360);
 		st.start();
 	}
 
-	public SimulationThread(Project project, long[] stations,int headwayDesigned) {
+	public SimulationThread(Project project, SITMStop[] stations, int headwayDesigned) {
 		this.project = project;
 		this.stations = stations;
 		this.headwayDesigned = headwayDesigned;
@@ -52,50 +71,44 @@ public class SimulationThread extends Thread {
 		initializeStructures(this.stations);
 	}
 
-	public void initializeStructures(long[] stops) {
-
-		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
-		passenger.WeibullDistribution(5, 7);
-		Date initialDate = project.getInitialDate();
-		Date lastDate = project.getFinalDate();
-
+	public void initializeStructures(SITMStop[] stations) {
 		for (int i = 0; i < stations.length; i++) {
-			Queue<Date> pt = eventGenerator.generateUsers(initialDate, lastDate, passenger);
-			passengersTime.put(stations[i], pt);
-			HobspList.put(stations[i], new ArrayList<>());
-			HobssList.put(stations[i], new ArrayList<>());
+			HobspList.put(stations[i].getStopId(), new ArrayList<>());
+			HobssList.put(stations[i].getStopId(), new ArrayList<>());
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void run() {
 
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
 
-		ProbabilisticDistribution pd = new ProbabilisticDistribution();
-		pd.WeibullDistribution(1.55075, 601.44131);
+		
 
 		LinkedList<SimulationEvent> stationQueue = new LinkedList<SimulationEvent>();
 		LinkedList<SimulationEvent> middleQueue = new LinkedList<SimulationEvent>();
 
 		for (int i = 0; i < stations.length; i++) { // iterate between stations
 
+			Queue<Date> pt = eventGenerator.generateUsers(initialDate, lastDate, stations[i].getPassengersDistribution());
+			passengersTime.put(stations[i].getStopId(),  pt);
+			
 			if (i == 0) { // arrive the first station
-				stationQueue = arriveFirstStation(initialDate, lastDate, stations[i]);
+				stationQueue = arriveFirstStation(initialDate, lastDate, stations[i].getStopId());
 
 			} else { // arrive the next stations 
-				stationQueue = arriveNextStation(middleQueue, pd,stations[i]);
+				stationQueue = arriveNextStation(middleQueue, stations[i].getInterArrivalDistribution(),stations[i].getStopId());
 			}
 
 			// leave the station
-			hobss((LinkedList<SimulationEvent>) stationQueue.clone(), stations[i]);
-			middleQueue = leaveStation(stationQueue, pd, stations[i]);
+			hobsp(stations[i].getStopId());
+			hobss(stationQueue, stations[i].getStopId());
+			middleQueue = leaveStation(stationQueue,stations[i].getServiceDistribution(), stations[i].getStopId());
 		}
 
 		allEvents(); // print all events order by time
-		calculatingExcessWaitingTimeatBusStops(360); // calculating Excess Waiting Time at Bus Stops
+		calculatingExcessWaitingTimeatBusStops(); // calculating Excess Waiting Time at Bus Stops
 	}
 
 	@SuppressWarnings("deprecation")
@@ -116,7 +129,7 @@ public class SimulationThread extends Thread {
 	}
 
 	@SuppressWarnings("deprecation")
-	public LinkedList<SimulationEvent> arriveNextStation(Queue<SimulationEvent> middleQueue,ProbabilisticDistribution pd, long stopId) {
+	public LinkedList<SimulationEvent> arriveNextStation(Queue<SimulationEvent> middleQueue,IDistribution pd, long stopId) {
 
 		Date lastArrive = null; // initialize auxiliary variable which represent the last time that a bus arrive the station
 		LinkedList<SimulationEvent> station = new LinkedList<SimulationEvent>();
@@ -142,7 +155,7 @@ public class SimulationThread extends Thread {
 	}
 
 	@SuppressWarnings("deprecation")
-	public LinkedList<SimulationEvent> leaveStation(Queue<SimulationEvent> stationQueue, ProbabilisticDistribution pd, long stopId) {
+	public LinkedList<SimulationEvent> leaveStation(Queue<SimulationEvent> stationQueue, IDistribution pd, long stopId) {
 
 		Date lastLeave = null; // initialize auxiliary variable which represent the last time that a bus leave the station
 		LinkedList<SimulationEvent> middle = new LinkedList<SimulationEvent>();
@@ -157,10 +170,10 @@ public class SimulationThread extends Thread {
 			}
 
 			SimulationEvent leave = (SimulationEvent) eventGenerator.generateSi(currently, pd, arrive.getBusId());
-			int numPassengersPerBus = hobsp(middle, leave, stopId);
+			int numPassengersPerBus = passengersPerBus(leave, stopId);
+			leave.setPassengers(numPassengersPerBus);
 
-			System.out.println("X: " + leave.getDate().toGMTString() + " Bus " + arrive.getBusId() + " Passengers "
-					+ numPassengersPerBus);
+			System.out.println("X: " + leave.getDate().toGMTString() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
 			lastLeave = leave.getDate();
 			middle.offer(leave);
 			events.add(leave);
@@ -173,34 +186,48 @@ public class SimulationThread extends Thread {
 	// headway observed per bus
 	public void hobss(LinkedList<SimulationEvent> stationQueue, long stopId) {
 
-		SimulationEvent arrive = stationQueue.poll();
-		SimulationEvent nextArrive = stationQueue.poll();
-
-		while (nextArrive != null) {
-			double hobss = (nextArrive.getDate().getTime() - arrive.getDate().getTime()) / 1000;
-			HobssList.get(stopId).add(hobss);
-			arrive = nextArrive;
-			nextArrive = stationQueue.poll();
-		}
-
+		SimulationEvent lastArrive = null;
+		for (SimulationEvent item: stationQueue) {
+			
+			if(lastArrive==null) {
+				lastArrive = item;
+			}else {
+				double headway = (item.getDate().getTime() - lastArrive.getDate().getTime()) / 1000;
+				HobssList.get(stopId).add(headway);
+				lastArrive = item;
+			}
+        }
 	}
 
 	// headway observed per passenger
-	public int hobsp(LinkedList<SimulationEvent> middle, SimulationEvent leave, long stopId) {
+	public void hobsp(long stopId) {
+		
+		Date userArrive = null;
+		for (Date item: passengersTime.get(stopId)) {
+			
+			if(userArrive==null) {
+				userArrive = item;
+			}else {
+				double headway = (item.getTime()-userArrive.getTime())/1000;
+				HobspList.get(stopId).add(headway);
+				userArrive = item;
+			}
+        }
+	}
+
+	public int passengersPerBus(SimulationEvent leave, long stopId) {
 
 		Date passengerArrivetime = passengersTime.get(stopId).poll();
 		int numPassengersPerBus = 0;
 
-		while (!passengersTime.get(stopId).isEmpty() && passengerArrivetime.getTime() <= leave.getDate().getTime()) {
+		// the number of passengers exceed the bus capacity
+		while (!passengersTime.get(stopId).isEmpty() && passengerArrivetime.getTime() <= leave.getDate().getTime() && numPassengersPerBus<160) {
 			numPassengersPerBus++;
-			double hobsp = (leave.getDate().getTime() - passengerArrivetime.getTime()) / 1000;
 			passengerArrivetime = passengersTime.get(stopId).poll();
-			HobspList.get(stopId).add(hobsp);
 		}
 
 		return numPassengersPerBus;
 	}
-
 	private long generateId() {
 
 		long id = (long) (Math.random() * (9999 - 1000 + 1) + 1000);
@@ -226,13 +253,13 @@ public class SimulationThread extends Thread {
 		System.out.println("");
 	}
 
-	public void calculatingExcessWaitingTimeatBusStops(long headwayDesigned) {
+	public void calculatingExcessWaitingTimeatBusStops() {
 
 		for (int i = 0; i < stations.length; i++) {
 
-			System.out.println("Stop Id " + stations[i]);
-//			ArrayList<Double> Hobss = HobssList.get(stations[i]);
-			ArrayList<Double> Hobsp = HobspList.get(stations[i]);
+			System.out.println("Stop Id " + stations[i].getStopId());
+//			ArrayList<Double> Hobss = HobssList.get(stations[i].getStopId());
+			ArrayList<Double> Hobsp = HobspList.get(stations[i].getStopId());
 			ArrayList<Double> hrs = new ArrayList<Double>();
 
 //			System.out.println("==================> Hobss");
@@ -252,15 +279,17 @@ public class SimulationThread extends Thread {
 //				System.out.println(hr);
 			}
 
-			double meanHobsp = mean(HobspList.get(stations[i]));
-			double meanHobss = mean(HobssList.get(stations[i]));
-			double mean = mean(hrs);
-			double variance = variance(hrs);
-			double EWTaBS = (variance / (meanHobss*mean*100))*meanHobsp;
+			double meanHobss = mean(HobssList.get(stations[i].getStopId()));
+			double meanHobsp = mean(HobspList.get(stations[i].getStopId()));
+			double meanHr = mean(hrs);
+			double varianceHr = variance(hrs);
+			double EWTaBS = (varianceHr / (meanHobss*meanHr*100))*meanHobsp;
 			
-			System.out.println("mean Hr :" + mean);
-			System.out.println("variance Hr :" + variance);
-			System.out.println("EWTaBS :"+EWTaBS+"\n");
+			System.out.println("MeanHobss : "+meanHobss);
+			System.out.println("MeanHobsp : "+meanHobsp);
+			System.out.println("Mean Hr : " + meanHr);
+			System.out.println("variance Hr : " + varianceHr);
+			System.out.println("EWTaBS : "+EWTaBS+"\n");
 		}
 	}
 
