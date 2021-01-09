@@ -5,7 +5,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
@@ -26,7 +25,6 @@ public class DataSourceSystem {
 	public final static String FILE_CSV = "FileCSV";
 	public final static String DATA_BASE = "DataBase";
 
-	@Autowired
 	public Source_db source_db;
 	public Source_csv source_csv;
 	

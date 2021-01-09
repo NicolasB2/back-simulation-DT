@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.dataSource.persistence.CalendarRepository;
 import com.simulationFrameworkDT.dataSource.persistence.LineRepository;
@@ -26,7 +25,6 @@ import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.EventType;
 
-@Service
 public class Source_db implements IDateSource {
 
 	private static final String dbURL = "jdbc:oracle:thin:@192.168.161.43:1521:liason";
