@@ -1,6 +1,9 @@
 package com.simulationFrameworkDT.restService.implementation;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -8,8 +11,13 @@ import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 
+import javax.servlet.http.HttpServletRequest;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.http.MediaType;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.restService.dataTransfer.ProjectDTO;
 import com.simulationFrameworkDT.restService.interfaces.IProjectRest;
@@ -39,19 +47,19 @@ public class ProjectRest implements IProjectRest {
 
 	@Autowired
 	private StateController stateController;
-	
+
 	@Autowired
 	private DataSourceSystem dataSource;
-	
+
 	@GetMapping("/names")
 	public String[] getProjectsNames() {
 		return stateController.getProjectsNames();
 	}
-	
+
 	@PostMapping("/save/oracle")
 	public long saveProjectOracle(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
-		
+
 		try {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			Date initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
@@ -61,23 +69,24 @@ public class ProjectRest implements IProjectRest {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		newProject.setProjectName(project.getName());
-		newProject.setPlanVersionId(project.getPlanVersionId());	
+		newProject.setPlanVersionId(project.getPlanVersionId());
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date initdate;
 		Date finaldate;
 		long planVersionId = 0;
-		
+
 		try {
 			initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
 			finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
-			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate).getPlanVersionId();
-			
+			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate)
+					.getPlanVersionId();
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		newProject.setPlanVersionId(planVersionId);
 		stateController.saveProject(newProject);
 		return planVersionId;
@@ -86,7 +95,7 @@ public class ProjectRest implements IProjectRest {
 	@PostMapping("/save")
 	public long saveScv(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
-		
+
 		try {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			Date initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
@@ -96,29 +105,29 @@ public class ProjectRest implements IProjectRest {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		newProject.setProjectName(project.getName());
 		newProject.setPlanVersionId(project.getPlanVersionId());
 		newProject.setLineId(project.getLineId());
 		newProject.setFileType(project.getFileType());
 		newProject.setFileSplit(project.getFileSplit());
 		newProject.setFileName(project.getFileName());
-		
-		
+
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		Date initdate;
 		Date finaldate;
 		long planVersionId = 0;
-		
+
 		try {
 			initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
 			finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
-			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate).getPlanVersionId();
-			
+			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate)
+					.getPlanVersionId();
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		newProject.setPlanVersionId(planVersionId);
 		stateController.saveProject(newProject);
 		return planVersionId;
@@ -127,12 +136,12 @@ public class ProjectRest implements IProjectRest {
 	@SuppressWarnings("deprecation")
 	@GetMapping("/load")
 	public ProjectDTO loadProject(String projectName) {
-		Project project = stateController.loadProject(projectName+".dat");
+		Project project = stateController.loadProject(projectName + ".dat");
 		ProjectDTO dto = new ProjectDTO();
-		
+
 		String initdate = project.getInitialDate().toGMTString();
 		String finaldate = project.getFinalDate().toGMTString();
-		
+
 		dto.setInitialDate(initdate);
 		dto.setFinalDate(finaldate);
 		dto.setName(project.getProjectName());
@@ -145,15 +154,15 @@ public class ProjectRest implements IProjectRest {
 
 	@SuppressWarnings("deprecation")
 	@PutMapping("/setline/{id}/{lineId}")
-	public ProjectDTO setLineId(@PathVariable("id") String projectName,@PathVariable("lineId") long lineId) {
-		
+	public ProjectDTO setLineId(@PathVariable("id") String projectName, @PathVariable("lineId") long lineId) {
+
 		Project project = stateController.getProject();
 		project.setLineId(lineId);
 		ProjectDTO dto = new ProjectDTO();
-		
+
 		String initdate = project.getInitialDate().toGMTString();
 		String finaldate = project.getFinalDate().toGMTString();
-		
+
 		dto.setName(project.getProjectName());
 		dto.setInitialDate(initdate);
 		dto.setFinalDate(finaldate);
@@ -180,4 +189,38 @@ public class ProjectRest implements IProjectRest {
 		}
 		return new ResponseEntity<>("Good Job", HttpStatus.OK);
 	}
+	@GetMapping("/download")
+	public ResponseEntity<Resource> downloadFile(@RequestParam("projectName") String projectName, HttpServletRequest request) {
+		String fileName = "";
+		Resource resource = null;
+		if (fileName != null && !fileName.isEmpty()) {
+			try {
+				//TODO
+		        // Aqui va el path normalizado , aqui iria el path del archivo .dat, apartir del nombre que llega por parametro projectName
+				Path filePath = Paths.get("/projects/"+projectName+".dat").normalize();
+		        resource = new UrlResource(filePath.toUri());
+		        if(!resource.exists()) {
+		        	throw new FileNotFoundException("File not found " + fileName);
+		        }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			String contentType = null;
+			try {
+				contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			if (contentType == null) {
+				contentType = "application/octet-stream";
+			}
+			return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+					.body(resource);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
 }
