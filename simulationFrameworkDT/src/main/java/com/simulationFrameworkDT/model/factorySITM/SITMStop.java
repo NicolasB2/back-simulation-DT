@@ -10,7 +10,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.BatchSize;
 
 import com.simulationFrameworkDT.model.factoryInterfaces.IStop;
-import com.simulationFrameworkDT.simulation.tools.IDistribution;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -50,10 +49,6 @@ public class SITMStop implements IStop,Serializable  {
 	@Column(name="PLANVERSIONID")
 	private long planVersionId;
 	
-	private IDistribution passengersDistribution;
-	private IDistribution interArrivalDistribution;
-	private IDistribution serviceDistribution;
-	
 	public SITMStop () {
 		super();
 	}
@@ -67,13 +62,6 @@ public class SITMStop implements IStop,Serializable  {
 		this.decimalLongitude = decimalLongitude;
 		this.decimalLatitude = decimalLatitude;
 		this.planVersionId = planVersionId;
-	}
-
-	public SITMStop(long stopId, IDistribution passengersDistribution, IDistribution interArrivalDistribution, IDistribution serviceDistribution) {
-		this.stopId = stopId;
-		this.passengersDistribution = passengersDistribution;
-		this.interArrivalDistribution = interArrivalDistribution;
-		this.serviceDistribution = serviceDistribution;
 	}
 	
 	

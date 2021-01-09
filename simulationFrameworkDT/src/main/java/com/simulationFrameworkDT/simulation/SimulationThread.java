@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import com.simulationFrameworkDT.model.SimulationEvent;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.StopDistribution;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventGenerator;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.tools.IDistribution;
@@ -17,7 +17,7 @@ import com.simulationFrameworkDT.simulation.tools.IDistribution;
 public class SimulationThread extends Thread {
 
 	private int headwayDesigned;
-	private SITMStop[] stations;
+	private StopDistribution[] stations;
 	private Project project;
 	private EventGenerator eventGenerator;
 
@@ -28,7 +28,7 @@ public class SimulationThread extends Thread {
 	private HashMap<Long, ArrayList<Double>> HobspList = new HashMap<Long, ArrayList<Double>>();// passengers
 	private HashMap<Long, ArrayList<Double>> HobssList = new HashMap<Long, ArrayList<Double>>();// buses-stop
 
-	public SimulationThread(Project project, SITMStop[] stations, int headwayDesigned) {
+	public SimulationThread(Project project, StopDistribution[] stations, int headwayDesigned) {
 		this.project = project;
 		this.stations = stations;
 		this.headwayDesigned = headwayDesigned;
@@ -36,7 +36,7 @@ public class SimulationThread extends Thread {
 		initializeStructures(this.stations);
 	}
 
-	public void initializeStructures(SITMStop[] stations) {
+	public void initializeStructures(StopDistribution[] stations) {
 		for (int i = 0; i < stations.length; i++) {
 			HobspList.put(stations[i].getStopId(), new ArrayList<>());
 			HobssList.put(stations[i].getStopId(), new ArrayList<>());

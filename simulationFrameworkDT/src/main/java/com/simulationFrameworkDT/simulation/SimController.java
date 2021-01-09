@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.analytics.Analytics;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.StopDistribution;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
@@ -84,7 +84,7 @@ public class SimController{
 		System.out.println("=======> simulation finished");
 	}
 	
-	public void startSimulation(SITMStop[] stations, int headwayDesigned) {
+	public void startSimulation(StopDistribution[] stations, int headwayDesigned) {
 		SimulationThread st = new SimulationThread(projectController.getProject(), stations ,headwayDesigned);
 		st.start();
 	}
@@ -104,7 +104,7 @@ public class SimController{
 		stateController.setProject(project);
 		simController.setProjectController(stateController);
 
-		SITMStop[] stops = new SITMStop[2];
+		StopDistribution[] stops = new StopDistribution[2];
 		
 		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
 		passenger.ExponentialDistribution(9.459459459);
@@ -115,9 +115,9 @@ public class SimController{
 		ProbabilisticDistribution si = new ProbabilisticDistribution();
 		si.LogLogisticDistribution(41.56875, 2.83267);
 		
-		SITMStop stop1 = new SITMStop(500250, passenger, ai, si);
+		StopDistribution stop1 = new StopDistribution(500250, passenger, ai, si);
 		
-		SITMStop stop2 = new SITMStop(500250, passenger, ai, si);
+		StopDistribution stop2 = new StopDistribution(500250, passenger, ai, si);
 		
 		stops[0]=stop1;
 		stops[1]=stop2;
