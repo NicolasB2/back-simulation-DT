@@ -186,15 +186,13 @@ public class ProjectRest implements IProjectRest {
 		}
 		return new ResponseEntity<>("Good Job", HttpStatus.OK);
 	}
-	@GetMapping("/download")
-	public ResponseEntity<Resource> downloadFile(@RequestParam("projectName") String projectName, HttpServletRequest request) {
-		String fileName = "";
+	@GetMapping("/download/{id}")
+	public ResponseEntity<Resource> downloadFile(@PathVariable("id") String projectName, HttpServletRequest request) {
+		String fileName = projectName;
 		Resource resource = null;
 		if (fileName != null && !fileName.isEmpty()) {
 			try {
-				//TODO
-		        // Aqui va el path normalizado , aqui iria el path del archivo .dat, apartir del nombre que llega por parametro projectName
-				Path filePath = Paths.get("/projects/"+projectName+".dat").normalize();
+				Path filePath = Paths.get("projects"+File.separator+fileName+".dat").normalize();
 		        resource = new UrlResource(filePath.toUri());
 		        if(!resource.exists()) {
 		        	throw new FileNotFoundException("File not found " + fileName);
