@@ -35,6 +35,10 @@ public class VariablesRest implements IVariablesRest{
 	@GetMapping("/load")
 	public ArrayList<Variable> getVariables(String projectName) {
 		Project project = stateController.loadProject(projectName+".dat");
+//		System.out.println("Variables value 0 "+ project.getVariables().get(0).getValue());
+//		System.out.println("Variables value 1"+ project.getVariables().get(1).getValue());
+//		System.out.println("Variables value 2"+ project.getVariables().get(2).getValue());
+//		System.out.println("Variables value 3"+ project.getVariables().get(3).getValue());
 		return project.getVariables();
 	}
 	

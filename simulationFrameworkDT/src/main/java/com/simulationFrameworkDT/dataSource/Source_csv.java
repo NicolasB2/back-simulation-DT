@@ -94,6 +94,7 @@ public class Source_csv implements IDateSource {
 		HashMap<String, String> variables = new HashMap<>();
 		
 		for (int i = 0; i < data.length; i++) {
+//			System.out.println("DATOS DE LA VARIABLE " + headers[i] + ", "+data[i]);
 			variables.put(headers[i], data[i]);
 		}
 		return variables;

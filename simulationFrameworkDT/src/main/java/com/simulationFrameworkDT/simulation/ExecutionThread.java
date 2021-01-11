@@ -80,6 +80,7 @@ class ExecutionThread extends Thread {
 						
 						project.updateVariables(simController.getLastRow(project));
 						simController.getProjectController().setProject(project);
+						simController.getProjectController().saveProject(project);
 						sleep(project.getClock().getAnimationSpeed());
 					}
 					
