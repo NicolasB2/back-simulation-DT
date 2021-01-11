@@ -22,8 +22,10 @@ public class SimulationRest implements ISimulationRest {
 
 	@PutMapping("/simulation/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public void simulation(@PathVariable("id") String projectName, int headwayDesigned) {
+	public String simulation(@PathVariable("id") String projectName, int headwayDesigned) throws Exception {
 		SimController.startSimulation(projectName,headwayDesigned);
+		SimController.getSimulationThread().join();
+		return SimController.getSimulationThread().allEvents()+"\n"+SimController.getSimulationThread().calculatingExcessWaitingTimeatBusStops();
 	}
 	
 	@PutMapping("/start/{id}")

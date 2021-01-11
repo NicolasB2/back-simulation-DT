@@ -201,8 +201,9 @@ public class SimulationThread extends Thread {
 		return id;
 	}
 
-	public void allEvents() {
+	public String allEvents() {
 
+		String message = "";
 		Collections.sort(events, new Comparator<SimulationEvent>() {
 			public int compare(SimulationEvent o1, SimulationEvent o2) {
 				return o1.getDate().compareTo(o2.getDate());
@@ -210,17 +211,19 @@ public class SimulationThread extends Thread {
 		});
 
 		for (int i = 0; i < events.size(); i++) {
-			System.out.println(events.get(i));
+			message += events.get(i);
 		}
 
-		System.out.println("");
+		message += "/n";
+		return message;
 	}
 
-	public void calculatingExcessWaitingTimeatBusStops() {
+	public String calculatingExcessWaitingTimeatBusStops() {
 
+		String message = "";
 		for (int i = 0; i < stations.length; i++) {
 
-			System.out.println("Stop Id " + stations[i].getStopId());
+			message += "Stop Id " + stations[i].getStopId();
 //			ArrayList<Double> Hobss = HobssList.get(stations[i].getStopId());
 			ArrayList<Double> Hobsp = HobspList.get(stations[i].getStopId());
 			ArrayList<Double> hrs = new ArrayList<Double>();
@@ -235,7 +238,7 @@ public class SimulationThread extends Thread {
 //				System.out.println(Hobsp.get(j));
 //			}
 			
-			System.out.println("==================> Hr");
+//			System.out.println("==================> Hr");
 			for (int j = 0; j < Hobsp.size(); j++) {
 				double hr = ((double) Hobsp.get(j) / headwayDesigned) * 100;
 				hrs.add(hr);
@@ -248,12 +251,14 @@ public class SimulationThread extends Thread {
 			double varianceHr = variance(hrs);
 			double EWTaBS = (varianceHr / (meanHobss*meanHr*100))*meanHobsp;
 			
-			System.out.println("MeanHobss : "+meanHobss);
-			System.out.println("MeanHobsp : "+meanHobsp);
-			System.out.println("Mean Hr : " + meanHr);
-			System.out.println("variance Hr : " + varianceHr);
-			System.out.println("EWTaBS : "+EWTaBS+"\n");
+			message += "MeanHobss : "+meanHobss;
+			message += "MeanHobsp : "+meanHobsp;
+			message += "Mean Hr : " + meanHr;
+			message += "variance Hr : " + varianceHr;
+			message += "EWTaBS : "+EWTaBS+"\n";
 		}
+		
+		return message;
 	}
 
 	public double variance(ArrayList<Double> v) {

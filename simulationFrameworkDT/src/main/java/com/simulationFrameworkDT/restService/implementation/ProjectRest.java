@@ -52,6 +52,26 @@ public class ProjectRest implements IProjectRest {
 		return stateController.getProjectsNames();
 	}
 
+	@PostMapping("/save/simulation")
+	public boolean saveSimulation(@RequestBody ProjectDTO project) {
+		Project newProject = new Project();
+
+		try {
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Date initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
+			Date finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
+			newProject.setInitialDate(initdate);
+			newProject.setFinalDate(finaldate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		newProject.setProjectName(project.getName());
+		stateController.saveProject(newProject);
+		
+		return true;
+	}
+	
 	@PostMapping("/save/oracle")
 	public long saveProjectOracle(@RequestBody ProjectDTO project) {
 		Project newProject = new Project();
@@ -76,8 +96,7 @@ public class ProjectRest implements IProjectRest {
 		try {
 			initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
 			finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
-			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate)
-					.getPlanVersionId();
+			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate).getPlanVersionId();
 
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -117,9 +136,7 @@ public class ProjectRest implements IProjectRest {
 		try {
 			initdate = new Date(dateFormat.parse(project.getInitialDate()).getTime());
 			finaldate = new Date(dateFormat.parse(project.getFinalDate()).getTime());
-			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate)
-					.getPlanVersionId();
-
+			planVersionId = dataSource.findPlanVersionByDate(project.getFileType(), initdate, finaldate).getPlanVersionId();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

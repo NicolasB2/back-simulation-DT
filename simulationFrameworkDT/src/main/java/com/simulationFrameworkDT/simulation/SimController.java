@@ -118,7 +118,11 @@ public class SimController{
 			pro = projectController.getProject();
 		}
 		
-		SimulationThread st = new SimulationThread(projectController.getProject(), stations ,headwayDesigned);
-		st.start();
+		simulationThread = new SimulationThread(projectController.getProject(), stations ,headwayDesigned);
+		simulationThread.start();
+	}
+	
+	public String simulationResults() {
+		return "";
 	}
 }
