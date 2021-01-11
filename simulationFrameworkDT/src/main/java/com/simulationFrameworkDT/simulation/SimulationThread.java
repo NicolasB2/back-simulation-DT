@@ -211,7 +211,7 @@ public class SimulationThread extends Thread {
 		});
 
 		for (int i = 0; i < events.size(); i++) {
-			message += events.get(i);
+			message += events.get(i)+"/n";
 		}
 
 		message += "/n";
@@ -223,7 +223,7 @@ public class SimulationThread extends Thread {
 		String message = "";
 		for (int i = 0; i < stations.length; i++) {
 
-			message += "Stop Id " + stations[i].getStopId();
+			message += "Stop Id " + stations[i].getStopId()+"\n";
 //			ArrayList<Double> Hobss = HobssList.get(stations[i].getStopId());
 			ArrayList<Double> Hobsp = HobspList.get(stations[i].getStopId());
 			ArrayList<Double> hrs = new ArrayList<Double>();
@@ -251,11 +251,11 @@ public class SimulationThread extends Thread {
 			double varianceHr = variance(hrs);
 			double EWTaBS = (varianceHr / (meanHobss*meanHr*100))*meanHobsp;
 			
-			message += "MeanHobss : "+meanHobss;
-			message += "MeanHobsp : "+meanHobsp;
-			message += "Mean Hr : " + meanHr;
-			message += "variance Hr : " + varianceHr;
-			message += "EWTaBS : "+EWTaBS+"\n";
+			message += "MeanHobss : "+meanHobss+"\n";
+			message += "MeanHobsp : "+meanHobsp+"\n";
+			message += "Mean Hr : " + meanHr+"\n";
+			message += "variance Hr : " + varianceHr+"\n";
+			message += "EWTaBS : "+EWTaBS+"\n\n";
 		}
 		
 		return message;
