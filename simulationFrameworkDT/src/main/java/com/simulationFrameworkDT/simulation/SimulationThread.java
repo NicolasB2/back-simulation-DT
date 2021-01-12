@@ -216,7 +216,10 @@ public class SimulationThread extends Thread {
 
 		for (int i = 0; i < events.size(); i++) {
 			result.add(events.get(i).toString());
+			System.out.println(events.get(i).toString());
 		}
+		
+		System.out.println("");
 	}
 
 	public void calculatingExcessWaitingTimeatBusStops() {
@@ -224,6 +227,7 @@ public class SimulationThread extends Thread {
 		for (int i = 0; i < stations.length; i++) {
 
 			result.add("Stop Id" + stations[i].getStopId());
+			System.out.println("Stop Id" + stations[i].getStopId());
 //			ArrayList<Double> Hobss = HobssList.get(stations[i].getStopId());
 			ArrayList<Double> Hobsp = HobspList.get(stations[i].getStopId());
 			ArrayList<Double> hrs = new ArrayList<Double>();
@@ -252,10 +256,16 @@ public class SimulationThread extends Thread {
 			double EWTaBS = (varianceHr / (meanHobss*meanHr*100))*meanHobsp;
 			
 			result.add("MeanHobss : "+meanHobss);
+			System.out.println("MeanHobss : "+meanHobss);
 			result.add("MeanHobsp : "+meanHobsp);
+			System.out.println("MeanHobsp : "+meanHobsp);
 			result.add("Mean Hr : " + meanHr);
+			System.out.println("Mean Hr : " + meanHr);
 			result.add("variance Hr : " + varianceHr);
+			System.out.println("variance Hr : " + varianceHr);
 			result.add("EWTaBS : "+EWTaBS);
+			System.out.println("EWTaBS : "+EWTaBS);
+			System.out.println("");
 		}
 	}
 

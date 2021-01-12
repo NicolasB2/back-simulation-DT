@@ -101,7 +101,7 @@ public class SimController{
 		
 		StopDistribution stop1 = new StopDistribution(500250, passenger, ai, si);
 		
-		StopDistribution stop2 = new StopDistribution(500250, passenger, ai, si);
+		StopDistribution stop2 = new StopDistribution(500300, passenger, ai, si);
 		
 		stations[0]=stop1;
 		stations[1]=stop2;
