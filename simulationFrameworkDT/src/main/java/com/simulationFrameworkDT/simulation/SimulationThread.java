@@ -63,7 +63,7 @@ public class SimulationThread extends Thread {
 
 			Queue<PassangerEvent> pt = eventGenerator.generateUsers(initialDate, lastDate, stations[i].getPassengersDistribution(),stations[i].getStopId());
 			passengersTime.put(stations[i].getStopId(),  pt);
-			System.out.println("============>"+pt.size());
+
 			if (i == 0) { // arrive the first station
 				stationQueue = arriveFirstStation(initialDate, lastDate, stations[i].getStopId());
 
@@ -85,11 +85,32 @@ public class SimulationThread extends Thread {
 	public LinkedList<SimulationEvent> arriveFirstStation(Date initialDate, Date lastDate, long stopId) {
 
 		LinkedList<SimulationEvent> station = new LinkedList<SimulationEvent>();
-
-		while (initialDate.getTime() < lastDate.getTime()) { // full the queue with the buses that arrive between the simulation time
-			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(initialDate, this.headwayDesigned, generateId(),stopId);
+		ArrayList<Long> idsAux = new ArrayList<Long>(); 
+		long timeOfTravel = 2 * 60 * 60 * 1000;
+		long currentDate = initialDate.getTime();
+		int aux = 0;
+		
+		while (currentDate < lastDate.getTime()) { // full the queue with the buses that arrive between the simulation time
+			
+			long id = 0;
+			
+			//Select id for the bus
+			if(currentDate<initialDate.getTime()+timeOfTravel) {//if the current time is less than time of travel, generate a new id
+				id = generateId();
+				idsAux.add(id);
+			}else {//if the current time is after of time of travel, use the id of the previews buses 
+				if(idsAux.size()>aux) {
+					id = idsAux.get(aux);
+					aux++;
+				}else {
+					id = idsAux.get(0);
+					aux=1;
+				}
+			}
+			
+			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(new Date(currentDate), this.headwayDesigned, id, stopId);
 			System.out.println("O: " + arrive.getDate().toGMTString() + " BuseId " + arrive.getBusId());
-			initialDate = arrive.getDate();
+			currentDate = arrive.getDate().getTime();
 			station.offer(arrive);
 			events.add(arrive);
 		}
@@ -220,10 +241,12 @@ public class SimulationThread extends Thread {
 		});
 
 		for (int i = 0; i < events.size(); i++) {
-			result.add(events.get(i).toString());
+			if (events.get(i) instanceof SimulationEvent) {
+				SimulationEvent item = (SimulationEvent) events.get(i);
+				result.add(item.toString());
+			}
 			System.out.println(events.get(i).toString());
 		}
-		
 		System.out.println("");
 	}
 

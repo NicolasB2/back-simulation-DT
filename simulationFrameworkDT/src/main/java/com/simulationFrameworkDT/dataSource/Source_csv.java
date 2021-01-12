@@ -22,7 +22,6 @@ import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
-import com.simulationFrameworkDT.simulation.event.EventType;
 
 import lombok.Getter;
 import lombok.Setter;

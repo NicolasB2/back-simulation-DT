@@ -39,8 +39,7 @@ public class EventGenerator {
 
 		Queue<PassangerEvent> passengersTime = new LinkedList<PassangerEvent>();
 
-		while(initialDate.getTime() <= lastDate.getTime()+(1000*60*60*3)) {
-			
+		while(initialDate.getTime() <= lastDate.getTime()+(1000*60*60*3)) {		
 			double aiPassenger = passenger.getSample()*1000;
 			Date passengerArrivetime = new Date((long) (initialDate.getTime()+aiPassenger));
 			passengersTime.offer(new PassangerEvent(passengerArrivetime,stopId));

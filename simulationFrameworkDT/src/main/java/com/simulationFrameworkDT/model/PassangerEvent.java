@@ -20,7 +20,7 @@ public class PassangerEvent extends Event {
 	@Override
 	public String toString() {
 		Timestamp dateTime= new Timestamp(getDate().getTime());
-		return "Passanger arrive=" + dateTime.toString()+ ", stopId=" + stopId;
+		return dateTime.toString()+ ", stopId=" + stopId;
 	}
 	
 }
