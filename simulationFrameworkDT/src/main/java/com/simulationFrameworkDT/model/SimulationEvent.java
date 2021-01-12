@@ -1,5 +1,6 @@
 package com.simulationFrameworkDT.model;
 
+import java.sql.Timestamp;
 import java.sql.Date;
 
 import com.simulationFrameworkDT.simulation.event.Event;
@@ -27,7 +28,8 @@ public class SimulationEvent extends Event {
 
 	@Override
 	public String toString() {
-		return "arrive=" + arrive + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", date=" + date.toString();
+		Timestamp dateTime= new Timestamp(date.getTime());
+		return "arrive=" + arrive + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", date=" + dateTime.toString();
 	}
 
 }
