@@ -14,6 +14,9 @@ import com.simulationFrameworkDT.simulation.event.eventProvider.EventGenerator;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.tools.IDistribution;
 
+import lombok.Getter;
+
+@Getter
 public class SimulationThread extends Thread {
 
 	private int headwayDesigned;
@@ -23,10 +26,12 @@ public class SimulationThread extends Thread {
 
 	private ArrayList<Long> ids = new ArrayList<>();
 	private ArrayList<SimulationEvent> events = new ArrayList<>();
+	private ArrayList<String> result = new ArrayList<String>();
 
 	private HashMap<Long, Queue<Date>> passengersTime = new HashMap<Long, Queue<Date>>();
 	private HashMap<Long, ArrayList<Double>> HobspList = new HashMap<Long, ArrayList<Double>>();// passengers
 	private HashMap<Long, ArrayList<Double>> HobssList = new HashMap<Long, ArrayList<Double>>();// buses-stop
+	
 
 	public SimulationThread(Project project, StopDistribution[] stations, int headwayDesigned) {
 		this.project = project;
@@ -201,9 +206,8 @@ public class SimulationThread extends Thread {
 		return id;
 	}
 
-	public String allEvents() {
+	public void allEvents() {
 
-		String message = "";
 		Collections.sort(events, new Comparator<SimulationEvent>() {
 			public int compare(SimulationEvent o1, SimulationEvent o2) {
 				return o1.getDate().compareTo(o2.getDate());
@@ -211,19 +215,15 @@ public class SimulationThread extends Thread {
 		});
 
 		for (int i = 0; i < events.size(); i++) {
-			message += events.get(i)+"/n";
+			result.add(events.get(i).toString());
 		}
-
-		message += "/n";
-		return message;
 	}
 
-	public String calculatingExcessWaitingTimeatBusStops() {
+	public void calculatingExcessWaitingTimeatBusStops() {
 
-		String message = "";
 		for (int i = 0; i < stations.length; i++) {
 
-			message += "Stop Id " + stations[i].getStopId()+"\n";
+			result.add("Stop Id" + stations[i].getStopId());
 //			ArrayList<Double> Hobss = HobssList.get(stations[i].getStopId());
 			ArrayList<Double> Hobsp = HobspList.get(stations[i].getStopId());
 			ArrayList<Double> hrs = new ArrayList<Double>();
@@ -251,14 +251,12 @@ public class SimulationThread extends Thread {
 			double varianceHr = variance(hrs);
 			double EWTaBS = (varianceHr / (meanHobss*meanHr*100))*meanHobsp;
 			
-			message += "MeanHobss : "+meanHobss+"\n";
-			message += "MeanHobsp : "+meanHobsp+"\n";
-			message += "Mean Hr : " + meanHr+"\n";
-			message += "variance Hr : " + varianceHr+"\n";
-			message += "EWTaBS : "+EWTaBS+"\n\n";
+			result.add("MeanHobss : "+meanHobss);
+			result.add("MeanHobsp : "+meanHobsp);
+			result.add("Mean Hr : " + meanHr);
+			result.add("variance Hr : " + varianceHr);
+			result.add("EWTaBS : "+EWTaBS);
 		}
-		
-		return message;
 	}
 
 	public double variance(ArrayList<Double> v) {

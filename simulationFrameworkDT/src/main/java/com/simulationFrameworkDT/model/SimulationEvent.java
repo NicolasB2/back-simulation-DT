@@ -25,10 +25,9 @@ public class SimulationEvent extends Event {
 		this.date = date;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public String toString() {
-		return "arrive=" + arrive + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", date=" + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+		return "arrive=" + arrive + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", date=" + date.toString();
 	}
 
 }
