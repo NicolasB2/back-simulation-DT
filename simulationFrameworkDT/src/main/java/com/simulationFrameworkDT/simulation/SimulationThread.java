@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.simulationFrameworkDT.model.PassangerEvent;
 import com.simulationFrameworkDT.model.SimulationEvent;
 import com.simulationFrameworkDT.model.StopDistribution;
+import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventGenerator;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.tools.IDistribution;
@@ -25,10 +27,10 @@ public class SimulationThread extends Thread {
 	private EventGenerator eventGenerator;
 
 	private ArrayList<Long> ids = new ArrayList<>();
-	private ArrayList<SimulationEvent> events = new ArrayList<>();
+	private ArrayList<Event> events = new ArrayList<>();
 	private ArrayList<String> result = new ArrayList<String>();
 
-	private HashMap<Long, Queue<Date>> passengersTime = new HashMap<Long, Queue<Date>>();
+	private HashMap<Long, Queue<PassangerEvent>> passengersTime = new HashMap<Long, Queue<PassangerEvent>>();
 	private HashMap<Long, ArrayList<Double>> HobspList = new HashMap<Long, ArrayList<Double>>();// passengers
 	private HashMap<Long, ArrayList<Double>> HobssList = new HashMap<Long, ArrayList<Double>>();// buses-stop
 	
@@ -59,9 +61,9 @@ public class SimulationThread extends Thread {
 
 		for (int i = 0; i < stations.length; i++) { // iterate between stations
 
-			Queue<Date> pt = eventGenerator.generateUsers(initialDate, lastDate, stations[i].getPassengersDistribution());
+			Queue<PassangerEvent> pt = eventGenerator.generateUsers(initialDate, lastDate, stations[i].getPassengersDistribution(),stations[i].getStopId());
 			passengersTime.put(stations[i].getStopId(),  pt);
-			
+			System.out.println("============>"+pt.size());
 			if (i == 0) { // arrive the first station
 				stationQueue = arriveFirstStation(initialDate, lastDate, stations[i].getStopId());
 
@@ -85,7 +87,7 @@ public class SimulationThread extends Thread {
 		LinkedList<SimulationEvent> station = new LinkedList<SimulationEvent>();
 
 		while (initialDate.getTime() < lastDate.getTime()) { // full the queue with the buses that arrive between the simulation time
-			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(initialDate, this.headwayDesigned, generateId());
+			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(initialDate, this.headwayDesigned, generateId(),stopId);
 			System.out.println("O: " + arrive.getDate().toGMTString() + " BuseId " + arrive.getBusId());
 			initialDate = arrive.getDate();
 			station.offer(arrive);
@@ -111,7 +113,7 @@ public class SimulationThread extends Thread {
 				currently = lastArrive;
 			}
 
-			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(currently, pd, leave.getBusId());
+			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(currently, pd, leave.getBusId(),stopId);
 			System.out.println("O: " + arrive.getDate().toGMTString() + " BusId " + arrive.getBusId());
 			station.offer(arrive);
 			lastArrive = arrive.getDate();
@@ -137,7 +139,7 @@ public class SimulationThread extends Thread {
 				currently = lastLeave;
 			}
 
-			SimulationEvent leave = (SimulationEvent) eventGenerator.generateSi(currently, pd, arrive.getBusId());
+			SimulationEvent leave = (SimulationEvent) eventGenerator.generateSi(currently, pd, arrive.getBusId(),stopId);
 			int numPassengersPerBus = passengersPerBus(leave, stopId);
 			leave.setPassengers(numPassengersPerBus);
 
@@ -171,27 +173,30 @@ public class SimulationThread extends Thread {
 	public void hobsp(long stopId) {
 		
 		Date userArrive = null;
-		for (Date item: passengersTime.get(stopId)) {
+		for (PassangerEvent item: passengersTime.get(stopId)) {
 			
 			if(userArrive==null) {
-				userArrive = item;
+				userArrive = item.getDate();
 			}else {
-				double headway = (item.getTime()-userArrive.getTime())/1000;
+				double headway = (item.getDate().getTime()-userArrive.getTime())/1000;
 				HobspList.get(stopId).add(headway);
-				userArrive = item;
+				userArrive = item.getDate();
+				events.add(item);
 			}
         }
 	}
 
 	public int passengersPerBus(SimulationEvent leave, long stopId) {
 
-		Date passengerArrivetime = passengersTime.get(stopId).poll();
+		PassangerEvent passangerEvent = passengersTime.get(stopId).poll();
+		Date passengerArrivetime = passangerEvent!=null?passangerEvent.getDate():null;
 		int numPassengersPerBus = 0;
 
 		// the number of passengers exceed the bus capacity
 		while (!passengersTime.get(stopId).isEmpty() && passengerArrivetime.getTime() <= leave.getDate().getTime() && numPassengersPerBus<160) {
 			numPassengersPerBus++;
-			passengerArrivetime = passengersTime.get(stopId).poll();
+			passangerEvent = passengersTime.get(stopId).poll();
+			passengerArrivetime = passangerEvent!=null?passangerEvent.getDate():null;
 		}
 
 		return numPassengersPerBus;
@@ -208,8 +213,8 @@ public class SimulationThread extends Thread {
 
 	public void allEvents() {
 
-		Collections.sort(events, new Comparator<SimulationEvent>() {
-			public int compare(SimulationEvent o1, SimulationEvent o2) {
+		Collections.sort(events, new Comparator<Event>() {
+			public int compare(Event o1, Event o2) {
 				return o1.getDate().compareTo(o2.getDate());
 			}
 		});

@@ -16,20 +16,20 @@ public class SimulationEvent extends Event {
 	private long busId;
 	private long stopId;
 	private int passengers;
-	private Date date;
 	
 	public SimulationEvent(boolean arrive, long busId, long stopId, int passengers, Date date) {
+		super(null,date);
 		this.arrive = arrive;
 		this.busId = busId;
 		this.stopId = stopId;
 		this.passengers = passengers;
-		this.date = date;
 	}
 
 	@Override
 	public String toString() {
-		Timestamp dateTime= new Timestamp(date.getTime());
-		return "arrive=" + arrive + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers + ", date=" + dateTime.toString();
+		Timestamp dateTime= new Timestamp(getDate().getTime());
+		String arriveText = arrive?"arrive":"leave";
+		return dateTime.toString()+", " + arriveText + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers;
 	}
 
 }

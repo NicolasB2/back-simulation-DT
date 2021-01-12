@@ -144,7 +144,6 @@ public class Source_csv implements IDateSource {
 
 					if (longitude != -1 && latitude != -1 && stopId != -1 && data[7].equals(lineId+"")) {
 						Datagram datagram = new Datagram(datagramDateTime,datagramData, busId, stopId, odometer,longitude / 10000000, latitude / 10000000, taskId, lineId, tripId);
-						datagram.setType(EventType.POSICIONAMIENTO_GPS);
 						datagrams.add(datagram);
 					}
 					

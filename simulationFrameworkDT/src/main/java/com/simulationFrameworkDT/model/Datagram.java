@@ -1,6 +1,9 @@
 package com.simulationFrameworkDT.model;
 
+import java.sql.Date;
+
 import com.simulationFrameworkDT.simulation.event.Event;
+import com.simulationFrameworkDT.simulation.event.EventType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +24,7 @@ public class Datagram extends Event{
 	private long tripId;
 	
 	public Datagram(long datagramDateTime, String datagramDate, long busId, long stopId, long odometer, double longitude, double latitude, long taskId, long lineId, long tripId) {
+		super(EventType.POSICIONAMIENTO_GPS, new Date(datagramDateTime));
 		this.datagramDateTime = datagramDateTime;
 		this.datagramDate = datagramDate;
 		this.busId = busId;
