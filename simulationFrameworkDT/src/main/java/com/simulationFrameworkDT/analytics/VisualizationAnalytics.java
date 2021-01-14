@@ -19,7 +19,7 @@ import lombok.Setter;
 @Service
 @Getter
 @Setter
-public class Analytics {
+public class VisualizationAnalytics {
 
 	@Autowired
 	private DataSourceSystem dataSource;

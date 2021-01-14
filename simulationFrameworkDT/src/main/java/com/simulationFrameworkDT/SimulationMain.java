@@ -85,7 +85,7 @@ public class SimulationMain {
 	public static void visualizationTest() throws ParseException{
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
-		sm.setAnalytics(new Analytics());
+		sm.setAnalytics(new VisualizationAnalytics());
 		sm.getAnalytics().setDataSource(sm.getDataSource());
 		sm.setProjectController(new StateController());
 		sm.setEventProcessorController(new EventProcessorController());
@@ -98,7 +98,7 @@ public class SimulationMain {
 	public static void simulationTest() throws ParseException {
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
-		sm.setAnalytics(new Analytics());
+		sm.setAnalytics(new VisualizationAnalytics());
 		sm.getAnalytics().setDataSource(sm.getDataSource());
 		sm.setProjectController(new StateController());
 		sm.setEventProcessorController(new EventProcessorController());

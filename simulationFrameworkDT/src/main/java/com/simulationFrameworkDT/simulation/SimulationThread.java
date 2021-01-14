@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import com.simulationFrameworkDT.analytics.SimulationAnalytics;
 import com.simulationFrameworkDT.model.PassangerEvent;
 import com.simulationFrameworkDT.model.SimulationEvent;
 import com.simulationFrameworkDT.model.StopDistribution;
@@ -29,13 +30,11 @@ public class SimulationThread extends Thread {
 
 	private ArrayList<Long> ids = new ArrayList<>();
 	private ArrayList<Event> events = new ArrayList<>();
-	private ArrayList<String> result = new ArrayList<String>();
 
 	private HashMap<Long, Queue<PassangerEvent>> passengersTime = new HashMap<Long, Queue<PassangerEvent>>();
-	private HashMap<Long, ArrayList<Double>> HobspList = new HashMap<Long, ArrayList<Double>>();// passengers
-	private HashMap<Long, ArrayList<Double>> HobssList = new HashMap<Long, ArrayList<Double>>();// buses-stop
+	private HashMap<Long, ArrayList<Double>> hobspList = new HashMap<Long, ArrayList<Double>>();// passengers
+	private HashMap<Long, ArrayList<Double>> hobssList = new HashMap<Long, ArrayList<Double>>();// buses-stop
 	
-
 	public SimulationThread(Project project, StopDistribution[] stations, int headwayDesigned) {
 		this.project = project;
 		this.stations = stations;
@@ -46,8 +45,8 @@ public class SimulationThread extends Thread {
 
 	public void initializeStructures(StopDistribution[] stations) {
 		for (int i = 0; i < stations.length; i++) {
-			HobspList.put(stations[i].getStopId(), new ArrayList<>());
-			HobssList.put(stations[i].getStopId(), new ArrayList<>());
+			hobspList.put(stations[i].getStopId(), new ArrayList<>());
+			hobssList.put(stations[i].getStopId(), new ArrayList<>());
 		}
 	}
 
@@ -56,13 +55,12 @@ public class SimulationThread extends Thread {
 		
 		simulation(); // generate the simulation
 		allEvents(); // all events order by time
-		Date currentDate = events.get(0).getDate();
 		
 		int usersStop1 = 0;
 		int usersStop2 = 0;
 		int busesStop1 = 0;
 		int busesStop2 = 0;
-		int busesRoad = 0;
+		int busesRoad  = 0;
 		
 		for (int i = 0; i < events.size(); i++) {
 			
@@ -114,22 +112,15 @@ public class SimulationThread extends Thread {
 				System.out.println();
 				
 				try {
-					currentDate = events.get(i).getDate();
 					sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}
-				 
-			}
-			
-			int minute = 60 * 1000;
-			if(events.get(i).getDate().getTime()-currentDate.getTime()>=minute) {
-				
+				} 
 			}
 		}
 		
 		System.out.println(" ");
-		calculatingExcessWaitingTimeatBusStops(); // calculating Excess Waiting Time at Bus Stops
+		evaluationMetrics(); // calculating Excess Waiting Time at Bus Stops
 	}
 	
 	public void simulation() {
@@ -259,7 +250,7 @@ public class SimulationThread extends Thread {
 				lastArrive = item;
 			}else {
 				double headway = (item.getDate().getTime() - lastArrive.getDate().getTime()) / 1000;
-				HobssList.get(stopId).add(headway);
+				hobssList.get(stopId).add(headway);
 				lastArrive = item;
 			}
         }
@@ -275,7 +266,7 @@ public class SimulationThread extends Thread {
 				userArrive = item.getDate();
 			}else {
 				double headway = (item.getDate().getTime()-userArrive.getTime())/1000;
-				HobspList.get(stopId).add(headway);
+				hobspList.get(stopId).add(headway);
 				userArrive = item.getDate();
 				events.add(item);
 			}
@@ -314,78 +305,12 @@ public class SimulationThread extends Thread {
 				return o1.getDate().compareTo(o2.getDate());
 			}
 		});
-
-		for (int i = 0; i < events.size(); i++) {
-			if (events.get(i) instanceof SimulationEvent) {
-				SimulationEvent item = (SimulationEvent) events.get(i);
-				result.add(item.toString());
-			}
-		}
 	}
 
-	public void calculatingExcessWaitingTimeatBusStops() {
-
-		for (int i = 0; i < stations.length; i++) {
-
-			result.add("Stop Id" + stations[i].getStopId());
-			System.out.println("Stop Id" + stations[i].getStopId());
-//			ArrayList<Double> Hobss = HobssList.get(stations[i].getStopId());
-			ArrayList<Double> Hobsp = HobspList.get(stations[i].getStopId());
-			ArrayList<Double> hrs = new ArrayList<Double>();
-
-//			System.out.println("==================> Hobss");
-//			for (int j = 0; j < Hobss.size(); j++) {
-//				System.out.println(Hobss.get(j));
-//			}
-//			
-//			System.out.println("==================> Hobsp");
-//			for (int j = 0; j < Hobsp.size(); j++) {
-//				System.out.println(Hobsp.get(j));
-//			}
-			
-//			System.out.println("==================> Hr");
-			for (int j = 0; j < Hobsp.size(); j++) {
-				double hr = ((double) Hobsp.get(j) / headwayDesigned) * 100;
-				hrs.add(hr);
-//				System.out.println(hr);
-			}
-
-			double meanHobss = mean(HobssList.get(stations[i].getStopId()));
-			double meanHobsp = mean(HobspList.get(stations[i].getStopId()));
-			double meanHr = mean(hrs);
-			double varianceHr = variance(hrs);
-			double EWTaBS = (varianceHr / (meanHobss*meanHr*100))*meanHobsp;
-			
-			result.add("MeanHobss : "+meanHobss);
-			System.out.println("MeanHobss : "+meanHobss);
-			result.add("MeanHobsp : "+meanHobsp);
-			System.out.println("MeanHobsp : "+meanHobsp);
-			result.add("Mean Hr : " + meanHr);
-			System.out.println("Mean Hr : " + meanHr);
-			result.add("variance Hr : " + varianceHr);
-			System.out.println("variance Hr : " + varianceHr);
-			result.add("EWTaBS : "+EWTaBS);
-			System.out.println("EWTaBS : "+EWTaBS);
-			System.out.println("");
-		}
+	public void evaluationMetrics() {
+		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
+		analytics.calculatingExcessWaitingTimeatBusStops();
 	}
 
-	public double variance(ArrayList<Double> v) {
-		double m = mean(v);
-		double sum = 0;
-		for (int i = 0; i < v.size(); i++) {
-			sum += Math.pow(v.get(i), 2.0);
-		}
 
-		return sum / v.size() - Math.pow(m, 2.0);
-	}
-
-	public double mean(ArrayList<Double> v) {
-		double res = 0;
-		for (int i = 0; i < v.size(); i++) {
-			res += v.get(i);
-		}
-
-		return res / v.size();
-	}
 }

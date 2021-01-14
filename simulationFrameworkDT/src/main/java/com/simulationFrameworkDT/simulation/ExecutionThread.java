@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.simulationFrameworkDT.analytics.Analytics;
+import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.Project;
 
@@ -20,7 +20,7 @@ class ExecutionThread extends Thread {
 	private SimController simController;
 
 	@Autowired
-	private Analytics analytics;
+	private VisualizationAnalytics analytics;
 	
 	private volatile boolean pause = false;
 	private volatile boolean killed = false;
@@ -30,7 +30,7 @@ class ExecutionThread extends Thread {
 		killed = true;
 	}
 	
-	public ExecutionThread(SimController simController, Project project, Analytics analytics) {
+	public ExecutionThread(SimController simController, Project project, VisualizationAnalytics analytics) {
 		this.simController = simController;
 		this.analytics = analytics;
 		this.project = project;
@@ -64,8 +64,7 @@ class ExecutionThread extends Thread {
 				try {		
 					
 					ArrayList<Event> events = getNextEvents();
-								
-					
+									
 					if(events==null) {
 						
 						kill();

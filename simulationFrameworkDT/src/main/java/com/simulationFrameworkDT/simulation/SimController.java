@@ -6,7 +6,7 @@ import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.simulationFrameworkDT.analytics.Analytics;
+import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.model.StopDistribution;
 import com.simulationFrameworkDT.simulation.event.Event;
@@ -28,7 +28,7 @@ public class SimController{
 	private DataSourceSystem dataSource;
 	
 	@Autowired
-	private Analytics analytics;
+	private VisualizationAnalytics analytics;
 	
 	@Autowired 
 	private StateController projectController;

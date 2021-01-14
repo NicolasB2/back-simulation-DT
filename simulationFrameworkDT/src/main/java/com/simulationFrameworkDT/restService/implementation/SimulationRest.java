@@ -1,7 +1,5 @@
 package com.simulationFrameworkDT.restService.implementation;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,10 +22,9 @@ public class SimulationRest implements ISimulationRest {
 
 	@PutMapping("/simulation/{id}/{headway}")
 	@ResponseStatus(HttpStatus.OK)
-	public ArrayList<String> simulation(@PathVariable("id") String projectName, @PathVariable("headway") int headwayDesigned) throws Exception {
+	public String simulation(@PathVariable("id") String projectName, @PathVariable("headway") int headwayDesigned) {
 		SimController.startSimulation(projectName,headwayDesigned*60);
-		SimController.getSimulationThread().join();
-		return SimController.getSimulationThread().getResult();
+		return projectName;
 	}
 	
 	@PutMapping("/start/{id}")
