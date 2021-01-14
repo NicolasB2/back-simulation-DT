@@ -96,7 +96,7 @@ public class ProbabilisticDistribution implements IDistribution{
     }
 
     public double getSample(){
-    	return distribution.sample();
+    	return Math.abs(distribution.sample());
     }
     
 	public void WeibullDistribution(double alpha, double beta) {
