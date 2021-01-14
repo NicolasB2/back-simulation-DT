@@ -34,7 +34,6 @@ public class SimulationMain {
 	}
 	
 	
-	
 	public static void dataTest(){
 		
 		DataSourceSystem ds = new DataSourceSystem();
@@ -68,7 +67,7 @@ public class SimulationMain {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		Date init = new Date(dateFormat.parse("2019-06-20 05:00:00").getTime());
-		Date last = new Date(dateFormat.parse("2019-06-20 11:00:00").getTime());
+		Date last = new Date(dateFormat.parse("2019-06-20 06:00:00").getTime());
 		
 		StateController pc = sm.getProjectController();
 		Project project = new Project();

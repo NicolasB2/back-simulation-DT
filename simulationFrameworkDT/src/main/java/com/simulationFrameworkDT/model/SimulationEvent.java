@@ -1,7 +1,7 @@
 package com.simulationFrameworkDT.model;
 
-import java.sql.Timestamp;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import com.simulationFrameworkDT.simulation.event.Event;
 
@@ -30,6 +30,11 @@ public class SimulationEvent extends Event {
 		Timestamp dateTime= new Timestamp(getDate().getTime());
 		String arriveText = arrive?"arrive":"leave";
 		return dateTime.toString()+", " + arriveText + ", busId=" + busId + ", stopId=" + stopId + ", passengers=" + passengers;
+	}
+	
+	public String getDateFormat() {
+		Timestamp dateTime= new Timestamp(getDate().getTime());
+		return dateTime.toString();
 	}
 
 }

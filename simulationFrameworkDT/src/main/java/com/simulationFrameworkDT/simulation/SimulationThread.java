@@ -1,6 +1,7 @@
 package com.simulationFrameworkDT.simulation;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -52,6 +53,86 @@ public class SimulationThread extends Thread {
 
 	@Override
 	public void run() {
+		
+		simulation(); // generate the simulation
+		allEvents(); // all events order by time
+		Date currentDate = events.get(0).getDate();
+		
+		int usersStop1 = 0;
+		int usersStop2 = 0;
+		int busesStop1 = 0;
+		int busesStop2 = 0;
+		int busesRoad = 0;
+		
+		for (int i = 0; i < events.size(); i++) {
+			
+			
+			if (events.get(i) instanceof PassangerEvent) {
+				
+				PassangerEvent item = (PassangerEvent) events.get(i);
+				
+				if(item.getStopId()==stations[0].getStopId()) {
+					usersStop1++;
+				}
+				
+				if(item.getStopId()==stations[1].getStopId()) {
+					usersStop2++;
+				}	
+			}
+
+			if (events.get(i) instanceof SimulationEvent) {
+				
+				SimulationEvent item = (SimulationEvent) events.get(i);
+				
+				if(item.getStopId()==stations[0].getStopId()) {
+					if(item.isArrive()) {
+						busesStop1++;
+					}else {
+						busesStop1--;
+						busesRoad++;
+					}
+					usersStop1-=item.getPassengers();
+				}
+				
+				if(item.getStopId()==stations[1].getStopId()) {
+					if(item.isArrive()) {
+						busesStop2++;
+						busesRoad--;
+					}else {
+						busesStop2--;
+					}
+					usersStop2-=item.getPassengers();
+				}
+				
+				Timestamp dateTime= new Timestamp(events.get(i).getDate().getTime());
+				System.out.println(dateTime);
+				System.out.println("Passenger stop A "+usersStop1);
+				System.out.println("Passenger stop B "+usersStop2);
+				System.out.println("Buses stop A "+busesStop1);
+				System.out.println("Buses - Road "+busesRoad);
+				System.out.println("Buses stop B "+busesStop2);
+				System.out.println();
+				
+				try {
+					currentDate = events.get(i).getDate();
+					sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				 
+			}
+			
+			int minute = 60 * 1000;
+			if(events.get(i).getDate().getTime()-currentDate.getTime()>=minute) {
+				
+			}
+		}
+		
+		System.out.println(" ");
+		calculatingExcessWaitingTimeatBusStops(); // calculating Excess Waiting Time at Bus Stops
+	}
+	
+	public void simulation() {
 
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
@@ -76,12 +157,8 @@ public class SimulationThread extends Thread {
 			hobss(stationQueue, stations[i].getStopId());
 			middleQueue = leaveStation(stationQueue,stations[i].getServiceDistribution(), stations[i].getStopId());
 		}
-
-		allEvents(); // print all events order by time
-		calculatingExcessWaitingTimeatBusStops(); // calculating Excess Waiting Time at Bus Stops
 	}
 
-	@SuppressWarnings("deprecation")
 	public LinkedList<SimulationEvent> arriveFirstStation(Date initialDate, Date lastDate, long stopId) {
 
 		LinkedList<SimulationEvent> station = new LinkedList<SimulationEvent>();
@@ -109,7 +186,7 @@ public class SimulationThread extends Thread {
 			}
 			
 			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(new Date(currentDate), this.headwayDesigned, id, stopId);
-			System.out.println("O: " + arrive.getDate().toGMTString() + " BuseId " + arrive.getBusId());
+			System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
 			currentDate = arrive.getDate().getTime();
 			station.offer(arrive);
 			events.add(arrive);
@@ -119,7 +196,6 @@ public class SimulationThread extends Thread {
 		return station;
 	}
 
-	@SuppressWarnings("deprecation")
 	public LinkedList<SimulationEvent> arriveNextStation(Queue<SimulationEvent> middleQueue,IDistribution pd, long stopId) {
 
 		Date lastArrive = null; // initialize auxiliary variable which represent the last time that a bus arrive the station
@@ -135,7 +211,7 @@ public class SimulationThread extends Thread {
 			}
 
 			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(currently, pd, leave.getBusId(),stopId);
-			System.out.println("O: " + arrive.getDate().toGMTString() + " BusId " + arrive.getBusId());
+			System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId());
 			station.offer(arrive);
 			lastArrive = arrive.getDate();
 			events.add(arrive);
@@ -145,7 +221,6 @@ public class SimulationThread extends Thread {
 		return station;
 	}
 
-	@SuppressWarnings("deprecation")
 	public LinkedList<SimulationEvent> leaveStation(Queue<SimulationEvent> stationQueue, IDistribution pd, long stopId) {
 
 		Date lastLeave = null; // initialize auxiliary variable which represent the last time that a bus leave the station
@@ -164,7 +239,7 @@ public class SimulationThread extends Thread {
 			int numPassengersPerBus = passengersPerBus(leave, stopId);
 			leave.setPassengers(numPassengersPerBus);
 
-			System.out.println("X: " + leave.getDate().toGMTString() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
+			System.out.println("Leave: " + leave.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
 			lastLeave = leave.getDate();
 			middle.offer(leave);
 			events.add(leave);
@@ -245,9 +320,7 @@ public class SimulationThread extends Thread {
 				SimulationEvent item = (SimulationEvent) events.get(i);
 				result.add(item.toString());
 			}
-			System.out.println(events.get(i).toString());
 		}
-		System.out.println("");
 	}
 
 	public void calculatingExcessWaitingTimeatBusStops() {
