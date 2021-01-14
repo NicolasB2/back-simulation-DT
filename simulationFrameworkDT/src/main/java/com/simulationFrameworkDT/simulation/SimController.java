@@ -91,17 +91,27 @@ public class SimController{
 		StopDistribution[] stations = new StopDistribution[2];
 		
 		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
-		passenger.ExponentialDistribution(9.459459459);
+		passenger.ExponentialDistribution(6.54763);
 		
 		ProbabilisticDistribution ai = new ProbabilisticDistribution();
 		ai.WeibullDistribution(1.55075, 601.44131);
 		
 		ProbabilisticDistribution si = new ProbabilisticDistribution();
-		si.LogLogisticDistribution(41.56875, 2.83267);
+		si.LogLogisticDistribution(24.19903, 8.97324);
 		
 		StopDistribution stop1 = new StopDistribution(500250, passenger, ai, si);
 		
-		StopDistribution stop2 = new StopDistribution(500300, passenger, ai, si);
+		//***************************************************************************
+		ProbabilisticDistribution passenger2 = new ProbabilisticDistribution();
+		passenger.ExponentialDistribution(7.41318);
+		
+		ProbabilisticDistribution ai2 = new ProbabilisticDistribution();
+		ai.WeibullDistribution(1.43247, 584.52700);
+		
+		ProbabilisticDistribution si2 = new ProbabilisticDistribution();
+		si.LogLogisticDistribution(38.32236, 2.765178);
+		
+		StopDistribution stop2 = new StopDistribution(500300, passenger2, ai2, si2);
 		
 		stations[0]=stop1;
 		stations[1]=stop2;

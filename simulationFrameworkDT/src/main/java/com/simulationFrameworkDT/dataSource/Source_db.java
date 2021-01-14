@@ -16,7 +16,7 @@ import com.simulationFrameworkDT.dataSource.persistence.LineRepository;
 import com.simulationFrameworkDT.dataSource.persistence.OperationalTravelsRepository;
 import com.simulationFrameworkDT.dataSource.persistence.PlanVersionRepository;
 import com.simulationFrameworkDT.dataSource.persistence.StopRepository;
-import com.simulationFrameworkDT.model.Datagram;
+import com.simulationFrameworkDT.model.DatagramEvent;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
@@ -122,7 +122,7 @@ public class Source_db implements IDateSource {
 					double longitude =  Double.parseDouble(element.getGPS_X());
 					double latitude =  Double.parseDouble(element.getGPS_Y());
 
-					Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,lineId, 0);
+					DatagramEvent datagram = new DatagramEvent(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,lineId, 0);
 					datagram.setType(EventType.POSICIONAMIENTO_GPS);
 					returnAnswer.add(datagram);
 				}	
@@ -142,7 +142,7 @@ public class Source_db implements IDateSource {
 				double longitude =  Double.parseDouble(element.getGPS_X());
 				double latitude =  Double.parseDouble(element.getGPS_Y());
 
-				Datagram datagram = new Datagram(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,lineId, 0);
+				DatagramEvent datagram = new DatagramEvent(datagramDateTime, datagramDate, busId, stopId, 0, longitude, latitude, 0,lineId, 0);
 				returnAnswer.add(datagram);
 			}
 		}

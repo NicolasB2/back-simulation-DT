@@ -14,7 +14,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-import com.simulationFrameworkDT.model.Datagram;
+import com.simulationFrameworkDT.model.DatagramEvent;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMLineStop;
@@ -142,7 +142,7 @@ public class Source_csv implements IDateSource {
 					long tripId = Long.parseLong(data[8]);
 
 					if (longitude != -1 && latitude != -1 && stopId != -1 && data[7].equals(lineId+"")) {
-						Datagram datagram = new Datagram(datagramDateTime,datagramData, busId, stopId, odometer,longitude / 10000000, latitude / 10000000, taskId, lineId, tripId);
+						DatagramEvent datagram = new DatagramEvent(datagramDateTime,datagramData, busId, stopId, odometer,longitude / 10000000, latitude / 10000000, taskId, lineId, tripId);
 						datagrams.add(datagram);
 					}
 					

@@ -48,7 +48,7 @@ public class SimulationAnalytics {
 		
 	}
 
-	public void excessWaitingTimeatBusStops() {
+	public void excessWaitingTime() {
 
 		ArrayList<Double> hrs = new ArrayList<Double>();
 
@@ -73,6 +73,14 @@ public class SimulationAnalytics {
 
 	public void fitness() {
 		double meanHobsp = mean(hobspLine);
+		
+		final CubicFitnessFunction cubicFitness = new CubicFitnessFunction(MIN_NUMBER_OF_BUSES, PLANED_NUMBER_OF_BUSES, MAX_NUMBER_OF_BUSES);
+		double fitnessBuses =  cubicFitness.evaluateNormalized(numberOfBuses);
+		System.out.println(fitnessBuses);
+		
+		final NormalizedFitnessFunction normalizedFitness = new NormalizedFitnessFunction(MIN_WAITING_TIME_PASSENGER, MAX_WAITING_TIME_PASSENGER);
+		double fitnessPassengers = normalizedFitness.evaluateNormalized(meanHobsp);
+		System.out.println(fitnessPassengers);
 		
 		final CompositeFitnessFunction function = new CompositeFitnessFunction()
 				.withFunction(new CubicFitnessFunction(MIN_NUMBER_OF_BUSES, PLANED_NUMBER_OF_BUSES, MAX_NUMBER_OF_BUSES), 0.4)

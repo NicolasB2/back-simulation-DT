@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.model.Datagram;
+import com.simulationFrameworkDT.model.DatagramEvent;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.Project;
@@ -25,7 +25,7 @@ public class VisualizationAnalytics {
 	private DataSourceSystem dataSource;
 
 	public HashMap<Long, SITMStop> stops; // HashMap with the stops
-	public HashMap<Long, ArrayList<Datagram>> stopsBuses; // HashMap with the array of buses in one stop
+	public HashMap<Long, ArrayList<DatagramEvent>> stopsBuses; // HashMap with the array of buses in one stop
 
 	public HashMap<Long, ArrayList<Long[]>> stopsWaitingTimes; // Excess Waiting Time at Bus stop
 	public HashMap<Long, ArrayList<Long[]>> busesWaitingTimes; // Bus Stop Time
@@ -45,7 +45,7 @@ public class VisualizationAnalytics {
 		for (int i = 0; i < stopsQuery.size(); i++) {
 			if (!stops.containsKey(stopsQuery.get(i).getStopId())) {
 				stops.put(stopsQuery.get(i).getStopId(), stopsQuery.get(i));
-				stopsBuses.put(stopsQuery.get(i).getStopId(), new ArrayList<Datagram>());
+				stopsBuses.put(stopsQuery.get(i).getStopId(), new ArrayList<DatagramEvent>());
 
 				stopsWaitingTimes.put(stopsQuery.get(i).getStopId(), new ArrayList<Long[]>());
 				busesWaitingTimes.put(stopsQuery.get(i).getStopId(), new ArrayList<Long[]>());
@@ -56,7 +56,7 @@ public class VisualizationAnalytics {
 	/*
 	 * This method evaluates if the bus is inside the area of station
 	 */
-	private static boolean isInTheStop(Datagram datagram, SITMStop stop) {
+	private static boolean isInTheStop(DatagramEvent datagram, SITMStop stop) {
 
 		double lat1 = stop.getDecimalLatitude();
 		double lng1 = stop.getDecimalLongitude();
@@ -77,8 +77,8 @@ public class VisualizationAnalytics {
 	 */
 	public void analysisPerBus(Event event) throws ParseException {
 
-		if (event instanceof Datagram) {
-			Datagram datagram = (Datagram) event;
+		if (event instanceof DatagramEvent) {
+			DatagramEvent datagram = (DatagramEvent) event;
 			analysisPerBus(datagram);
 		}
 	}
@@ -86,10 +86,10 @@ public class VisualizationAnalytics {
 	/*
 	 * This method analyze one datagram
 	 */
-	private void analysisPerBus(Datagram datagram) throws ParseException {
+	private void analysisPerBus(DatagramEvent datagram) throws ParseException {
 
 		long stopId = datagram.getStopId();
-		ArrayList<Datagram> buses = stopsBuses.get(stopId);
+		ArrayList<DatagramEvent> buses = stopsBuses.get(stopId);
 		SITMStop stop = stops.get(stopId);
 
 		boolean isInStation = false;

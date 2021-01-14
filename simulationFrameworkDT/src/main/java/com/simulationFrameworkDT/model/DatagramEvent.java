@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Datagram extends Event{
+public class DatagramEvent extends Event{
 	
 	private long datagramDateTime;
 	private String datagramDate;
@@ -23,7 +23,7 @@ public class Datagram extends Event{
 	private long lineId;
 	private long tripId;
 	
-	public Datagram(long datagramDateTime, String datagramDate, long busId, long stopId, long odometer, double longitude, double latitude, long taskId, long lineId, long tripId) {
+	public DatagramEvent(long datagramDateTime, String datagramDate, long busId, long stopId, long odometer, double longitude, double latitude, long taskId, long lineId, long tripId) {
 		super(EventType.POSICIONAMIENTO_GPS, new Date(datagramDateTime));
 		this.datagramDateTime = datagramDateTime;
 		this.datagramDate = datagramDate;

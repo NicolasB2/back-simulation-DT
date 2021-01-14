@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import com.simulationFrameworkDT.analytics.SimulationAnalytics;
+import com.simulationFrameworkDT.model.Operation;
 import com.simulationFrameworkDT.model.PassangerEvent;
 import com.simulationFrameworkDT.model.SimulationEvent;
 import com.simulationFrameworkDT.model.StopDistribution;
@@ -25,6 +26,7 @@ public class SimulationThread extends Thread {
 
 	private int headwayDesigned;
 	private int numberOfBuses;
+	private Operation operation;
 	private StopDistribution[] stations;
 	private Project project;
 	private EventGenerator eventGenerator;
@@ -41,6 +43,7 @@ public class SimulationThread extends Thread {
 		this.stations = stations;
 		this.headwayDesigned = headwayDesigned;
 		this.eventGenerator = new EventGenerator();
+		this.operation = new Operation();
 		initializeStructures(this.stations);
 	}
 
@@ -57,25 +60,31 @@ public class SimulationThread extends Thread {
 		simulation(); // generate the simulation
 		allEvents(); // all events order by time
 		
-		int usersStop1 = 0;
-		int usersStop2 = 0;
-		int busesStop1 = 0;
-		int busesStop2 = 0;
+		int usersSalomia = 0;
+		int usersFloraInd = 0;
+		int busesSalomia = 0;
+		int busesFloraInd = 0;
 		int busesRoad  = 0;
+		
+		long minute = 1000*60;
+		
+		Date lastDate = events.get(0).getDate();
+		Date currentDate = null;
 		
 		for (int i = 0; i < events.size(); i++) {
 			
+			currentDate = events.get(i).getDate();
 			
 			if (events.get(i) instanceof PassangerEvent) {
 				
 				PassangerEvent item = (PassangerEvent) events.get(i);
 				
 				if(item.getStopId()==stations[0].getStopId()) {
-					usersStop1++;
+					usersSalomia++;
 				}
 				
 				if(item.getStopId()==stations[1].getStopId()) {
-					usersStop2++;
+					usersFloraInd++;
 				}	
 			}
 
@@ -85,41 +94,39 @@ public class SimulationThread extends Thread {
 				
 				if(item.getStopId()==stations[0].getStopId()) {
 					if(item.isArrive()) {
-						busesStop1++;
+						busesSalomia++;
 					}else {
-						busesStop1--;
+						usersSalomia-=item.getPassengers();
+						busesSalomia--;
 						busesRoad++;
 					}
-					usersStop1-=item.getPassengers();
 				}
 				
 				if(item.getStopId()==stations[1].getStopId()) {
 					if(item.isArrive()) {
-						busesStop2++;
+						busesFloraInd++;
 						busesRoad--;
 					}else {
-						busesStop2--;
+						usersFloraInd-=item.getPassengers();
+						busesFloraInd--;
 					}
-					usersStop2-=item.getPassengers();
 				}
-				
-				Timestamp dateTime= new Timestamp(events.get(i).getDate().getTime());
-				System.out.println(dateTime);
-				System.out.println("Passenger stop A "+usersStop1);
-				System.out.println("Passenger stop B "+usersStop2);
-				System.out.println("Buses stop A "+busesStop1);
-				System.out.println("Buses - Road "+busesRoad);
-				System.out.println("Buses stop B "+busesStop2);
-				System.out.println();
-				
+			}
+			
+			if(currentDate.getTime()-lastDate.getTime()>minute) {
 				try {
+					Timestamp dateTime= new Timestamp(events.get(i).getDate().getTime());
+					this.operation.update(dateTime.toString(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
+					System.out.println(this.operation.toString());
 					sleep(100);
+					lastDate=currentDate;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} 
 			}
 		}
 		
+		System.out.println();
 		evaluationMetrics(); // calculating Excess Waiting Time at Bus Stops
 	}
 	
@@ -134,6 +141,7 @@ public class SimulationThread extends Thread {
 		for (int i = 0; i < stations.length; i++) { // iterate between stations
 
 			Queue<PassangerEvent> pt = eventGenerator.generateUsers(initialDate, lastDate, stations[i].getPassengersDistribution(),stations[i].getStopId());
+			addPassengersToEvents(pt);
 			passengersTime.put(stations[i].getStopId(),  pt);
 
 			if (i == 0) { // arrive the first station
@@ -261,6 +269,7 @@ public class SimulationThread extends Thread {
 
 		PassangerEvent passangerEvent = passengersTime.get(stopId).poll();
 		Date passengerArrivetime = passangerEvent!=null?passangerEvent.getDate():null;
+		events.add(passangerEvent);//added user event
 		int numPassengersPerBus = 0;
 
 		// the number of passengers exceed the bus capacity
@@ -272,13 +281,18 @@ public class SimulationThread extends Thread {
 			if(passangerEvent!=null) {
 				double headway = (leave.getDate().getTime()-passengerArrivetime.getTime())/1000; //headway observed per passenger
 				hobspList.get(stopId).add(headway);// added headway
-				events.add(passangerEvent);//added user event
 				passengerArrivetime = passangerEvent.getDate(); //update actual time
 			}
 			
 		}
 
 		return numPassengersPerBus;
+	}
+	
+	private void addPassengersToEvents(Queue<PassangerEvent>passengers) {
+		for (PassangerEvent item: passengers) {
+			events.add(item);//added user event
+        }
 	}
 	private long generateId() {
 
@@ -302,7 +316,7 @@ public class SimulationThread extends Thread {
 	public void evaluationMetrics() {
 		SimulationAnalytics analytics = new SimulationAnalytics(numberOfBuses,headwayDesigned, hobspList, hobssList);
 		analytics.headwayCoefficientOfVariation();
-		analytics.excessWaitingTimeatBusStops();
+		analytics.excessWaitingTime();
 		analytics.fitness();
 	}
 
