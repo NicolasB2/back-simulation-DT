@@ -111,6 +111,10 @@ public class SimulationThread extends Thread {
 						busesFloraInd--;
 					}
 				}
+				
+				Timestamp dateTime= new Timestamp(events.get(i).getDate().getTime());
+				this.operation.update(dateTime.toString(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
+				System.out.println(this.operation.toString());
 			}
 			
 			if(currentDate.getTime()-lastDate.getTime()>minute) {
@@ -148,12 +152,12 @@ public class SimulationThread extends Thread {
 				stationQueue = arriveFirstStation(initialDate, lastDate, stations[i].getStopId());
 
 			} else { // arrive the next stations 
-				stationQueue = arriveNextStation(middleQueue, stations[i].getInterArrivalDistribution(),stations[i].getStopId());
+				stationQueue = arriveNextStation(lastDate,middleQueue, stations[i].getInterArrivalDistribution(),stations[i].getStopId());
 			}
 
 			// leave the station
 			hobss(stationQueue, stations[i].getStopId());
-			middleQueue = leaveStation(stationQueue,stations[i].getServiceDistribution(), stations[i].getStopId());
+			middleQueue = leaveStation(lastDate, stationQueue,stations[i].getServiceDistribution(), stations[i].getStopId());
 		}
 	}
 
@@ -195,12 +199,12 @@ public class SimulationThread extends Thread {
 		return station;
 	}
 
-	public LinkedList<SimulationEvent> arriveNextStation(Queue<SimulationEvent> middleQueue,IDistribution pd, long stopId) {
+	public LinkedList<SimulationEvent> arriveNextStation(Date lastDate, Queue<SimulationEvent> middleQueue,IDistribution pd, long stopId) {
 
-		Date lastArrive = null; // initialize auxiliary variable which represent the last time that a bus arrive the station
+		Date lastArrive = middleQueue.peek().getDate(); // initialize auxiliary variable which represent the last time that a bus arrive the station
 		LinkedList<SimulationEvent> station = new LinkedList<SimulationEvent>();
 
-		while (!middleQueue.isEmpty()) { // generate the arrive time in next stations, clear the middle queue with the buses in it
+		while (!middleQueue.isEmpty()&&lastArrive.getTime()<=lastDate.getTime()) { // generate the arrive time in next stations, clear the middle queue with the buses in it
 
 			SimulationEvent leave = middleQueue.poll();
 			Date currently = leave.getDate();
@@ -220,12 +224,12 @@ public class SimulationThread extends Thread {
 		return station;
 	}
 
-	public LinkedList<SimulationEvent> leaveStation(Queue<SimulationEvent> stationQueue, IDistribution pd, long stopId) {
+	public LinkedList<SimulationEvent> leaveStation(Date lastDate, Queue<SimulationEvent> stationQueue, IDistribution pd, long stopId) {
 
-		Date lastLeave = null; // initialize auxiliary variable which represent the last time that a bus leave the station
+		Date lastLeave = stationQueue.peek().getDate(); // initialize auxiliary variable which represent the last time that a bus leave the station
 		LinkedList<SimulationEvent> middle = new LinkedList<SimulationEvent>();
 
-		while (!stationQueue.isEmpty()) { // generate the leave time, clear the station queue and enqueue in middle queue
+		while (!stationQueue.isEmpty() && lastLeave.getTime() <= lastDate.getTime()) { // generate the leave time, clear the station queue and enqueue in middle queue
 
 			SimulationEvent arrive = stationQueue.poll();
 			Date currently = arrive.getDate();

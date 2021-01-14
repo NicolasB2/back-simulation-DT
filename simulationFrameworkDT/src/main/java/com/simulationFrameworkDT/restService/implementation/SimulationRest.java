@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.simulationFrameworkDT.model.Operation;
 import com.simulationFrameworkDT.restService.interfaces.ISimulationRest;
 import com.simulationFrameworkDT.simulation.SimController;
 
@@ -25,6 +26,12 @@ public class SimulationRest implements ISimulationRest {
 	public String simulation(@PathVariable("id") String projectName, @PathVariable("headway") int headwayDesigned) {
 		SimController.startSimulation(projectName,headwayDesigned*60);
 		return projectName;
+	}
+	
+	@PutMapping("/operation/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public Operation getOperation(String projectName) {
+		return SimController.getSimulationThread().getOperation();
 	}
 	
 	@PutMapping("/start/{id}")

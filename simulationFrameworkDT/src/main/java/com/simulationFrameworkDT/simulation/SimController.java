@@ -104,13 +104,13 @@ public class SimController{
 		//***************************************************************************
 		
 		ProbabilisticDistribution ai2 = new ProbabilisticDistribution();
-		ai.WeibullDistribution(1.52116, 599.809135);
+		ai2.WeibullDistribution(1.52116, 599.809135);
 		
 		ProbabilisticDistribution si2 = new ProbabilisticDistribution();
-		si.LogLogisticDistribution(37.832223, 5.204677);
+		si2.LogLogisticDistribution(37.832223, 5.204677);
 		
 		ProbabilisticDistribution passenger2 = new ProbabilisticDistribution();
-		passenger.ExponentialDistribution(7.41318);
+		passenger2.ExponentialDistribution(7.41318);
 		
 		StopDistribution stop2 = new StopDistribution(500300, passenger2, ai2, si2);
 		
