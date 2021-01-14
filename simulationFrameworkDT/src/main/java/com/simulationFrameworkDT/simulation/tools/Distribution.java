@@ -5,6 +5,8 @@ import rcaller.RCaller;
 public class Distribution implements IDistribution {
 	
 	RCaller caller;
+	ProbabilisticDistribution pd;
+	
 
 	@Override
 	public double getSample() {
@@ -51,13 +53,43 @@ public class Distribution implements IDistribution {
 	
 	public static void main(String[] args) {
 		
-		Distribution dt = new Distribution();
 		
-		dt.LogNormal(100, 10);
+		ProbabilisticDistribution pd = new ProbabilisticDistribution();
+		pd.LogLaplaceDistribution(0.0000 ,480.00000);
 		
-		for (int i = 0; i < 10; i++) {
-			System.out.println(dt.getSample());			
+		for (int i = 0; i < 1000; i++) {
+			System.out.println(Math.abs(pd.getSample()));
 		}
+	System.out.println("----------------------------------------------");
+//		
+//		ProbabilisticDistribution si = new ProbabilisticDistribution();
+//		si.LogLogisticDistribution(41.56875, 2.83267); 
+//		for (int i = 0; i < 100; i++) {
+//			System.out.println(si.getSample());			
+//		}
+////		
+//		ProbabilisticDistribution ai = new ProbabilisticDistribution();
+//		ai.LogLogisticDistribution(38.32236	, 2.765178); 
+//		for (int i = 0; i < 100; i++) {
+//			System.out.println(ai.getSample());			
+//		}
+//		
+		/*
+		ProbabilisticDistribution ai = new ProbabilisticDistribution();
+		ai.GammaDistribution(254.37014,2.08500);
+		for (int i = 0; i < 100; i++) {
+			System.out.println(ai.getSample());			
+		}
+		
+		*/
+	System.out.println("--------------------------------------");
+		ProbabilisticDistribution ai = new ProbabilisticDistribution();
+		ai.WeibullDistribution(1.43247,584.52700);
+		for (int i = 0; i < 1000; i++) {
+			System.out.println(ai.getSample());			
+		}
+	
 	}
+	
 
 }

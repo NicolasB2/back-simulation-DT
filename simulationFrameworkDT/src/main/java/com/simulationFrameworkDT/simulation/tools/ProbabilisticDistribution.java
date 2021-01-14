@@ -10,6 +10,7 @@ import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 import org.apache.commons.math3.distribution.EnumeratedRealDistribution;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
 import org.apache.commons.math3.distribution.FDistribution;
+import org.apache.commons.math3.distribution.LaplaceDistribution;
 import org.apache.commons.math3.distribution.LogNormalDistribution;
 import org.apache.commons.math3.distribution.LogisticDistribution;
 import org.apache.commons.math3.distribution.NormalDistribution;
@@ -80,7 +81,15 @@ public class ProbabilisticDistribution implements IDistribution{
             double mu = (Double)args.get("mu");
             double s = (Double)args.get("s");
             dist = new LogisticDistribution(mu,s);
-        } else {	
+        } else if (type.equals("LaplaceDistribution")) {	
+            double mu = (Double)args.get("mu");
+            double beta = (Double)args.get("beta");
+            dist = new LaplaceDistribution(mu, beta);
+        } else if (type.equals("GammaDistribution")) {	
+            double shape = (Double)args.get("shape");
+            double scale = (Double)args.get("scale");
+            dist = new LaplaceDistribution(shape, scale);
+        } else{	
             throw new InvalidParameterException("Invalid type, cannot create a distribution object with the given type");
         }
         distribution = dist;
@@ -132,4 +141,29 @@ public class ProbabilisticDistribution implements IDistribution{
         
         typeHandler(type, params);
 	}
+	
+	public void LogLaplaceDistribution (double mu, double beta) {
+		
+		String type = "LaplaceDistribution";
+		HashMap<String, Object> params = new HashMap<>();
+        
+        params.put("mu", mu);
+        params.put("beta", beta);
+        
+        typeHandler(type, params);
+		
+	}
+	
+	public void GammaDistribution (double shape, double scale) {
+		
+		String type = "GammaDistribution";
+		HashMap<String, Object> params = new HashMap<>();
+        
+        params.put("shape", shape);
+        params.put("scale", scale);
+        
+        typeHandler(type, params);
+		
+	}
+	
 }
