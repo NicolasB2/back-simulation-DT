@@ -183,7 +183,8 @@ public class SimulationThread extends Thread {
 //			System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
 			currentDate = arrive.getDate().getTime();
 			station.offer(arrive);
-			events.add(arrive);
+			if(arrive!=null)
+				events.add(arrive);
 		}
 		return station;
 	}
@@ -206,7 +207,8 @@ public class SimulationThread extends Thread {
 //			System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId());
 			station.offer(arrive);
 			lastArrive = arrive.getDate();
-			events.add(arrive);
+			if(arrive!=null)
+				events.add(arrive);
 		}
 
 		return station;
@@ -233,7 +235,8 @@ public class SimulationThread extends Thread {
 //			System.out.println("Leave: " + simulationLeaveEvent.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
 			lastLeave = simulationLeaveEvent.getDate();
 			middle.offer(simulationLeaveEvent);
-			events.add(simulationLeaveEvent);
+			if(simulationLeaveEvent!=null)
+				events.add(simulationLeaveEvent);
 		}
 
 		return middle;
@@ -260,7 +263,6 @@ public class SimulationThread extends Thread {
 
 		PassangerEvent passangerEvent = passengersTime.get(stopId).poll();
 		Date passengerArrivetime = passangerEvent!=null?passangerEvent.getDate():null;
-		events.add(passangerEvent);//added user event
 		int numPassengersPerBus = 0;
 
 		// the number of passengers exceed the bus capacity
