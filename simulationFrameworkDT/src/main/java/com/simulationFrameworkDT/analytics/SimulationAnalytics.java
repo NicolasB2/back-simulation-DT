@@ -42,10 +42,7 @@ public class SimulationAnalytics {
 		HashMap<Long, Double> hs = new HashMap<Long, Double>();
 		
 		for (Long id: stopIds) {
-			
-			System.out.println("Stop Id "+id);
 			double meanHobsp = mean(hobspList.get(id));;	
-			System.out.println("meanHobsp: "+meanHobsp);
 			hs.put(id, meanHobsp);
 		}
 		return hs;
@@ -57,23 +54,17 @@ public class SimulationAnalytics {
 		HashMap<Long, Double> hs = new HashMap<Long, Double>();
 		
 		for (Long id: stopIds) {
-			
-			System.out.println("Stop Id "+id);
 			double meanHobss = mean(hobssList.get(id));
-			System.out.println("meanHobss: "+meanHobss);
 			hs.put(id, meanHobss);
 		}
 		return hs;
 	}
 	
-	public double headwayCoefficientOfVariation() {
-		
+	public double headwayCoefficientOfVariation() {	
 		double meanHobss = mean(hobssLine);
 		double variance = variance(hobssLine);
 		double standardDeviation = Math.sqrt(variance);
 		double HCV = standardDeviation / meanHobss;
-
-		System.out.println("HCV: " + HCV);
 		return HCV;
 		
 	}
@@ -99,14 +90,12 @@ public class SimulationAnalytics {
 		double meanHobsp = mean(hobspLine);
 		final NormalizedFitnessFunction normalizedFitness = new NormalizedFitnessFunction(MIN_WAITING_TIME_PASSENGER, MAX_WAITING_TIME_PASSENGER);
 		double fitnessPassengers = normalizedFitness.evaluateNormalized(meanHobsp);
-		System.out.println("Satisfacción de usuarios: "+fitnessPassengers);
 		return fitnessPassengers;
 	}
 
 	public double fitnessOperation() {
 		final CubicFitnessFunction cubicFitness = new CubicFitnessFunction(MIN_NUMBER_OF_BUSES, PLANED_NUMBER_OF_BUSES, MAX_NUMBER_OF_BUSES);
 		double fitnessBuses =  cubicFitness.evaluateNormalized(numberOfBuses);
-		System.out.println("Impacto por cantidad de buses: "+fitnessBuses);
 		return fitnessBuses;
 	}
 	

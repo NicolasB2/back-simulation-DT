@@ -307,6 +307,7 @@ public class SimulationThread extends Thread {
 	}
 
 	public void evaluationMetrics(Operation operation) {
+		
 		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
 		operation.setHeadwayCoefficientOfVariation(analytics.headwayCoefficientOfVariation());
 		operation.setExcessWaitingTime(analytics.excessWaitingTime());

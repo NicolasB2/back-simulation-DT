@@ -7,6 +7,7 @@ import lombok.Setter;
 public class Operation {
 	
 	//Simulation
+	private String date;
 	private int usersSalomia;
 	private int usersFloraInd;
 	private int busesSalomia;
@@ -14,7 +15,6 @@ public class Operation {
 	private int busesFloraInd;
 	
 	//Important Variables
-	private String date;
 	private int headwayDesigned;
 	private int numberOfBuses;
 	
