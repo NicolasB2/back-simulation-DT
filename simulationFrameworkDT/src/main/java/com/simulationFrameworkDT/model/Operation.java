@@ -6,28 +6,39 @@ import lombok.Setter;
 @Getter @Setter
 public class Operation {
 	
-	private String date;
-	private int headwayDesigned;
-	
-	private int numberOfBuses;
+	//Simulation
 	private int usersSalomia;
-	private int busesSalomia;
-	
-	private int busesRoad;	
 	private int usersFloraInd;
+	private int busesSalomia;
+	private int busesRoad;	
 	private int busesFloraInd;
 	
+	//Important Variables
+	private String date;
+	private int headwayDesigned;
+	private int numberOfBuses;
+	
+	private int maxUsersSalomia;
+	private int maxUsersFloraInd;
+	
+	private int maxbusSalomia;
+	private int maxbusFloraInd;
+	
+	//Analytics
 	private double headwayCoefficientOfVariation;
 	private double excessWaitingTime;
 	private double busesImpact;
 	private double passengerSatisfaction;
 	
-	private int maxUsersSalomia = 0;
-	private int maxUsersFloraInd = 0;
+	private double meanHOUsersSalomia;
+	private double meanHOUsersFloraInd;
 	
-	private int maxbusSalomia = 0;
-	private int maxbusFloraInd = 0;
+	private double meanHOBusSalomia;
+	private double meanHOBusFloraInd;
 	
+	public Operation(int headwayDesigned) {
+		this.headwayDesigned = headwayDesigned;
+	}
 	
 	public void update(String date, int usersSalomia, int busesSalomia, int busesRoad, int usersFloraInd,int busesFloraInd) {
 		
@@ -64,12 +75,6 @@ public class Operation {
 //				+ ", busesRoad=" + busesRoad + 
 //				", usersFloraInd=" + usersFloraInd + ", busesFloraInd=" + busesFloraInd;
 //	}
-	
-	
-
-	public Operation(int headwayDesigned) {
-		this.headwayDesigned = headwayDesigned;
-	}
 
 	@Override
 	public String toString() {

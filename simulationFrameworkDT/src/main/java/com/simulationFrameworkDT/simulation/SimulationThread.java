@@ -312,6 +312,19 @@ public class SimulationThread extends Thread {
 		operation.setExcessWaitingTime(analytics.excessWaitingTime());
 		operation.setBusesImpact(analytics.fitnessOperation());
 		operation.setPassengerSatisfaction(analytics.fitnessUsers());
+		
+		HashMap<Long, Double> meansHOBus = analytics.meansHOBus();
+		HashMap<Long, Double> meansHOPassengers = analytics.meansHOPassengers();
+		
+		long flora = 500250;
+		long salomia = 500300;
+		
+		operation.setMeanHOBusFloraInd(meansHOBus.get(flora));
+		operation.setMeanHOBusSalomia(meansHOBus.get(salomia));
+		
+		operation.setMeanHOUsersFloraInd(meansHOPassengers.get(flora));
+		operation.setMeanHOUsersSalomia(meansHOPassengers.get(salomia));
+		
 		System.out.println(operation);
 	}
 
