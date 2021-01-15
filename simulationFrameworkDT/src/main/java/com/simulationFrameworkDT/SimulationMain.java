@@ -111,11 +111,46 @@ public class SimulationMain {
 		SimController sm = sm();
 		saveProject(sm);
 		
+		int busesFloraInd = 0;
+		int busesSalomia = 0;
+		double busesImpact = 0;
+		int busesRoad = 0;
+		double ewt= 0;
+		double hcv= 0;
+		double passengerSatisfaction=0;
+		int usersFloraInd = 0;
+		int userSalomia = 0;
+		
 		for (int i = 0; i < x; i++) {
 			sm.startSimulation("test.dat",hd);
 			sm.getSimulationThread().join();
 			sm.getSimulationThread().getOperation();
+			busesFloraInd+=sm.getSimulationThread().getOperation().getBusesFloraInd();
+			busesSalomia+=sm.getSimulationThread().getOperation().getBusesSalomia();
+			busesImpact+=sm.getSimulationThread().getOperation().getBusesImpact();
+			busesRoad+=sm.getSimulationThread().getOperation().getBusesRoad();
+			ewt+=sm.getSimulationThread().getOperation().getExcessWaitingTime();
+			hcv+=sm.getSimulationThread().getOperation().getHeadwayCoefficientOfVariation();
+			passengerSatisfaction+=sm.getSimulationThread().getOperation().getPassengerSatisfaction();
+			usersFloraInd+=sm.getSimulationThread().getOperation().getUsersFloraInd();
+			userSalomia+=sm.getSimulationThread().getOperation().getUsersSalomia();
 		}
+		
+		double promBusesFloraInd= (busesFloraInd/x);
+		double promBusesSalomia= (busesSalomia/x);
+		
+		double promBusesRoad= (busesRoad/x);
+		
+		double promUsersFloraInd= (usersFloraInd/x);
+		double promUsersSalomia= (userSalomia/x);
+		
+		double promBusesImpact= (busesImpact/x);
+		double promPassengerSatisfaction = (passengerSatisfaction/x);
+		
+		double promEwt= (ewt/x);
+		double promHcv= (hcv/x);
+		
+		
 	}
 	
 
