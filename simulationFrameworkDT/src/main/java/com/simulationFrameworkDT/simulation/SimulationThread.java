@@ -42,7 +42,7 @@ public class SimulationThread extends Thread {
 		this.stations = stations;
 		this.headwayDesigned = headwayDesigned;
 		this.eventGenerator = new EventGenerator();
-		this.operation = new Operation();
+		this.operation = new Operation(headwayDesigned);
 		initializeStructures(this.stations);
 	}
 
@@ -66,12 +66,6 @@ public class SimulationThread extends Thread {
 		int busesFloraInd = 0;
 		int busesRoad  = 0;
 		
-		int maxUsersSalomia = 0;
-		int maxUsersFloraInd = 0;
-		
-		int maxbusSalomia = 0;
-		int maxbusFloraInd = 0;
-		
 		long minute = 1000*60;
 		
 		Date lastDate = events.get(0).getDate();
@@ -87,16 +81,10 @@ public class SimulationThread extends Thread {
 				
 				if(item.getStopId()==stations[0].getStopId()) {
 					usersSalomia++;
-					if(usersSalomia>maxUsersSalomia) {
-						maxUsersSalomia = usersSalomia;
-					}
 				}
 				
 				if(item.getStopId()==stations[1].getStopId()) {
 					usersFloraInd++;
-					if(usersFloraInd>maxUsersFloraInd) {	
-						maxUsersFloraInd = usersFloraInd;
-					}
 				}	
 			}
 
@@ -107,9 +95,6 @@ public class SimulationThread extends Thread {
 				if(item.getStopId()==stations[0].getStopId()) {
 					if(item.isArrive()) {
 						busesSalomia++;
-						if(busesSalomia>maxbusSalomia) {
-							maxbusSalomia = busesSalomia;
-						}
 					}else {
 						usersSalomia-=160;
 						if (usersSalomia<0) {
@@ -124,9 +109,6 @@ public class SimulationThread extends Thread {
 					if(item.isArrive()) {
 						busesFloraInd++;
 						busesRoad--;
-						if(busesFloraInd>maxbusFloraInd) {
-							maxbusFloraInd = busesFloraInd;
-						}
 					}else {
 						usersFloraInd-=160;
 						if (usersFloraInd<0) {
@@ -211,7 +193,6 @@ public class SimulationThread extends Thread {
 			station.offer(arrive);
 			events.add(arrive);
 		}
-		System.out.println(" ");
 		return station;
 	}
 
@@ -236,7 +217,6 @@ public class SimulationThread extends Thread {
 			events.add(arrive);
 		}
 
-		System.out.println(" ");
 		return station;
 	}
 
@@ -264,7 +244,6 @@ public class SimulationThread extends Thread {
 			events.add(simulationLeaveEvent);
 		}
 
-		System.out.println(" ");
 		return middle;
 	}
 
@@ -336,9 +315,11 @@ public class SimulationThread extends Thread {
 	public void evaluationMetrics(Operation operation) {
 		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
 		analytics.means();
-		analytics.headwayCoefficientOfVariation();
-		analytics.excessWaitingTime();
-		analytics.fitness();
+		operation.setHeadwayCoefficientOfVariation(analytics.headwayCoefficientOfVariation());
+		operation.setExcessWaitingTime(analytics.excessWaitingTime());
+		operation.setBusesImpact(analytics.fitnessOperation());
+		operation.setPassengerSatisfaction(analytics.fitnessUsers());
+//		System.out.println(operation);
 	}
 
 

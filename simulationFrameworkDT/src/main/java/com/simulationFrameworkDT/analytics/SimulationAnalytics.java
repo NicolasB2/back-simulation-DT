@@ -52,23 +52,22 @@ public class SimulationAnalytics {
 			
 			System.out.println("meanHobsp: "+meanHobsp);
 			System.out.println("meanHobss: "+meanHobss);
-			System.out.println("");
 		}
 	}
 	
-	public void headwayCoefficientOfVariation() {
+	public double headwayCoefficientOfVariation() {
 		
 		double meanHobss = mean(hobssLine);
 		double variance = variance(hobssLine);
 		double standardDeviation = Math.sqrt(variance);
-		double headwayCoefficientOfVariation = standardDeviation / meanHobss;
+		double HCV = standardDeviation / meanHobss;
 
-		System.out.println("HCV: " + headwayCoefficientOfVariation);
-		System.out.println("");
+		System.out.println("HCV: " + HCV);
+		return HCV;
 		
 	}
 
-	public void excessWaitingTime() {
+	public double excessWaitingTime() {
 
 		ArrayList<Double> hrs = new ArrayList<Double>();
 
@@ -80,26 +79,26 @@ public class SimulationAnalytics {
 		double meanHobsp = mean(hobspLine);
 		double meanHr = mean(hrs);
 		double varianceHr = variance(hrs);
-		double EWTaBS = (varianceHr / (2 * meanHr * 100)) * meanHobsp;
-
-//		System.out.println("Mean Hr : " + meanHr);
-//		System.out.println("variance Hr : " + varianceHr);
-		System.out.println("EWTaBS : " + EWTaBS);
-		System.out.println("");
+		double EWT = (varianceHr / (2 * meanHr * 100)) * meanHobsp;
+		System.out.println("EWTaBS : " + EWT);
+		return(EWT);
 	}
 
-	public void fitness() {
+	public double fitnessUsers() {
 		double meanHobsp = mean(hobspLine);
-		
-		final CubicFitnessFunction cubicFitness = new CubicFitnessFunction(MIN_NUMBER_OF_BUSES, PLANED_NUMBER_OF_BUSES, MAX_NUMBER_OF_BUSES);
-		double fitnessBuses =  cubicFitness.evaluateNormalized(numberOfBuses);
-		System.out.println("Impacto por cantidad de buses: "+fitnessBuses);
-		
 		final NormalizedFitnessFunction normalizedFitness = new NormalizedFitnessFunction(MIN_WAITING_TIME_PASSENGER, MAX_WAITING_TIME_PASSENGER);
 		double fitnessPassengers = normalizedFitness.evaluateNormalized(meanHobsp);
 		System.out.println("Satisfacción de usuarios: "+fitnessPassengers);
+		return fitnessPassengers;
 	}
 
+	public double fitnessOperation() {
+		final CubicFitnessFunction cubicFitness = new CubicFitnessFunction(MIN_NUMBER_OF_BUSES, PLANED_NUMBER_OF_BUSES, MAX_NUMBER_OF_BUSES);
+		double fitnessBuses =  cubicFitness.evaluateNormalized(numberOfBuses);
+		System.out.println("Impacto por cantidad de buses: "+fitnessBuses);
+		return fitnessBuses;
+	}
+	
 	public ArrayList<Double> margeStations(HashMap<Long, ArrayList<Double>> v) {
 
 		ArrayList<Double> line = new ArrayList<Double>();
