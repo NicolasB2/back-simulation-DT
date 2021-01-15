@@ -20,7 +20,7 @@ public class SimulationAnalytics {
 	private ArrayList<Double> hobssLine;// buses-stop
 	
 	public static double MIN_WAITING_TIME_PASSENGER = 1.0;
-	public static double MAX_WAITING_TIME_PASSENGER = 1800.0;
+	public static double MAX_WAITING_TIME_PASSENGER = 2400.0;
 	
 	public static double MIN_NUMBER_OF_BUSES = 1.0;
 	public static double MAX_NUMBER_OF_BUSES = 34.0;

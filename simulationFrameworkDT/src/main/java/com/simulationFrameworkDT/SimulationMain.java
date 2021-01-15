@@ -3,7 +3,6 @@ package com.simulationFrameworkDT;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -11,8 +10,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.model.Operation;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
@@ -22,7 +21,6 @@ import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessor
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
-import com.simulationFrameworkDT.analytics.*;
 
 public class SimulationMain {
 
@@ -30,7 +28,12 @@ public class SimulationMain {
 		
 //		dataTest();
 //		visualizationTest();
-		simulationTest(80,330);
+		int[] x = {210,240,270,300,330,360,390,600,900,1200};
+		
+		for (int i = 0; i < x.length; i++) {
+			simulationTest(100,x[i]);
+		}
+		
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		reader.readLine();
@@ -185,6 +188,7 @@ public class SimulationMain {
 		
 		Timestamp dateTimeFlora= new Timestamp(promMaxUsersFloraIndDate);
 		Timestamp dateTimeSalomia= new Timestamp(promMaxUsersSalomiaDate);
+		
 		/*
 		System.out.println("Headway: "+hd);
 		System.out.println("Cantidad buses: "+sm.getSimulationThread().getOperation().getNumberOfBuses());
@@ -228,8 +232,7 @@ public class SimulationMain {
 		
 		System.out.println(promEwt);
 		System.out.println(promHcv);
-		
-		
+		System.out.println("");
 	}
 	
 
