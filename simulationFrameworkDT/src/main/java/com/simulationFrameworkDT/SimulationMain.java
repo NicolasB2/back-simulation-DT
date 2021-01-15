@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.Operation;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
@@ -27,7 +28,7 @@ public class SimulationMain {
 		
 //		dataTest();
 //		visualizationTest();
-		simulationTest(1,120);
+		simulationTest(10,120);
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		reader.readLine();
@@ -111,56 +112,77 @@ public class SimulationMain {
 		SimController sm = sm();
 		saveProject(sm);
 		
-		int busesFloraInd = 0;
-		int busesSalomia = 0;
 		double busesImpact = 0;
-		int busesRoad = 0;
+		double passengerSatisfaction=0;
+		
 		double ewt= 0;
 		double hcv= 0;
-		double passengerSatisfaction=0;
-		int usersFloraInd = 0;
-		int userSalomia = 0;
+
 		int maxBusFloraInd= 0;
 		int maxBusSalomia = 0;
+		double meanHOBusSalomia= 0;
+		double meanHOBusFloraInd= 0;
+		
+		
 		int maxUsersFloraInd = 0;
 		int maxUsersSalomia = 0;
+	    double meanHOUsersSalomia= 0;
+		double meanHOUsersFloraInd= 0;
 		
 		for (int i = 0; i < x; i++) {
 			sm.startSimulation("test.dat",hd);
 			sm.getSimulationThread().join();
 			sm.getSimulationThread().getOperation();
-			busesFloraInd+=sm.getSimulationThread().getOperation().getBusesFloraInd();
-			busesSalomia+=sm.getSimulationThread().getOperation().getBusesSalomia();
 			busesImpact+=sm.getSimulationThread().getOperation().getBusesImpact();
-			busesRoad+=sm.getSimulationThread().getOperation().getBusesRoad();
 			ewt+=sm.getSimulationThread().getOperation().getExcessWaitingTime();
 			hcv+=sm.getSimulationThread().getOperation().getHeadwayCoefficientOfVariation();
 			passengerSatisfaction+=sm.getSimulationThread().getOperation().getPassengerSatisfaction();
-			usersFloraInd+=sm.getSimulationThread().getOperation().getUsersFloraInd();
-			userSalomia+=sm.getSimulationThread().getOperation().getUsersSalomia();
 			maxBusFloraInd+=sm.getSimulationThread().getOperation().getMaxbusFloraInd();
 			maxBusSalomia+=sm.getSimulationThread().getOperation().getMaxbusSalomia();
 			maxUsersFloraInd+=sm.getSimulationThread().getOperation().getMaxUsersFloraInd();
 			maxUsersSalomia+=sm.getSimulationThread().getOperation().getMaxUsersSalomia();
+			meanHOBusSalomia+=sm.getSimulationThread().getOperation().getMeanHOBusSalomia();
+			meanHOBusFloraInd+=sm.getSimulationThread().getOperation().getMeanHOBusFloraInd();
+			meanHOUsersSalomia+=sm.getSimulationThread().getOperation().getMeanHOUsersSalomia();
+			meanHOUsersFloraInd+=sm.getSimulationThread().getOperation().getMeanHOUsersFloraInd();
+			
 		}
 		
-		double promBusesFloraInd= (busesFloraInd/x);
-		double promBusesSalomia= (busesSalomia/x);
+		
 		double promMaxBusFloraInd = (maxBusFloraInd/x);
 		double promMaxBusSalomia = (maxBusSalomia/x);
+		double promMeanHOBusSalomia = (meanHOBusSalomia/x);
+		double promMeanHOBusFloraInd = (meanHOBusFloraInd/x);
 		
-		double promBusesRoad= (busesRoad/x);
-		
-		double promUsersFloraInd= (usersFloraInd/x);
-		double promUsersSalomia= (userSalomia/x);
 		double promMaxUsersFloraInd= (maxUsersFloraInd/x);
 		double promMaxUsersSalomia= (maxUsersSalomia/x);
+		double promMeanHOUsersSalomia= (meanHOUsersSalomia/x);
+		double promMeanHOUsersFloraInd= (meanHOUsersFloraInd/x);
+		
 		
 		double promBusesImpact= (busesImpact/x);
 		double promPassengerSatisfaction = (passengerSatisfaction/x);
 		
 		double promEwt= (ewt/x);
 		double promHcv= (hcv/x);
+		
+		
+		System.out.println("promMaxBusSalomia: "+promMaxBusSalomia);
+		System.out.println("promMaxUsersSalomia: "+promMaxUsersSalomia);
+		System.out.println("promMeanHOBusSalomia: "+promMeanHOBusSalomia);
+		System.out.println("promMeanHOUsersSalomia: "+promMeanHOUsersSalomia);
+
+		System.out.println("promMaxBusFloraInd: "+promMaxBusFloraInd);
+		System.out.println("promMaxUsersFloraInd: "+promMaxUsersFloraInd);
+		System.out.println("promMeanHOBusFloraInd: "+promMeanHOBusFloraInd);
+		System.out.println("promMeanHOUsersFloraInd: "+promMeanHOUsersFloraInd);
+		
+		
+		System.out.println("promBusesImpact: "+promBusesImpact);
+		System.out.println("promPassengerSatisfaction: "+promPassengerSatisfaction);
+		
+		System.out.println("promEwt: "+promEwt);
+		System.out.println("promHcv: "+promHcv);
 		
 		
 	}
