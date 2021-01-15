@@ -1,7 +1,6 @@
 package com.simulationFrameworkDT.simulation;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -113,8 +112,7 @@ public class SimulationThread extends Thread {
 				}
 			}
 			
-			Timestamp dateTime= new Timestamp(events.get(i).getDate().getTime());
-			this.operation.update(dateTime.toString(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
+			this.operation.update(events.get(i).getDate(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
 			
 			if(currentDate.getTime()-lastDate.getTime()>minute) {
 				try {

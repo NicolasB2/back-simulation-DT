@@ -1,5 +1,7 @@
 package com.simulationFrameworkDT.model;
 
+import java.sql.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +9,7 @@ import lombok.Setter;
 public class Operation {
 	
 	//Simulation
-	private String date;
+	private Date date;
 	private int usersSalomia;
 	private int usersFloraInd;
 	private int busesSalomia;
@@ -18,11 +20,14 @@ public class Operation {
 	private int headwayDesigned;
 	private int numberOfBuses;
 	
+	private int maxbusSalomia;
+	private int maxbusFloraInd;
+	
 	private int maxUsersSalomia;
 	private int maxUsersFloraInd;
 	
-	private int maxbusSalomia;
-	private int maxbusFloraInd;
+	private Date maxUsersSalomiaDate;
+	private Date maxUsersFloraIndDate;
 	
 	//Analytics
 	private double headwayCoefficientOfVariation;
@@ -37,14 +42,12 @@ public class Operation {
 	private double meanHOBusFloraInd;
 	
 	public Operation(int headwayDesigned) {
+		long timeOfTravel = 2 * 60 * 60;
 		this.headwayDesigned = headwayDesigned;
+		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;
 	}
 	
-	public void update(String date, int usersSalomia, int busesSalomia, int busesRoad, int usersFloraInd,int busesFloraInd) {
-		
-		long timeOfTravel = 2 * 60 * 60;
-		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;
-		
+	public void update(Date date, int usersSalomia, int busesSalomia, int busesRoad, int usersFloraInd,int busesFloraInd) {
 		this.date = date;
 		this.usersSalomia = usersSalomia;
 		this.busesSalomia = busesSalomia;
@@ -52,26 +55,29 @@ public class Operation {
 		this.usersFloraInd = usersFloraInd;
 		this.busesFloraInd = busesFloraInd;
 		
-		if(usersSalomia>maxUsersSalomia) {
-			maxUsersSalomia = usersSalomia;
-		}
-		
-		if(usersFloraInd>maxUsersFloraInd) {	
-			maxUsersFloraInd = usersFloraInd;
-		}
-		
 		if(busesSalomia>maxbusSalomia) {
 			maxbusSalomia = busesSalomia;
 		}
-		
 		if(busesFloraInd>maxbusFloraInd) {
 			maxbusFloraInd = busesFloraInd;
 		}
+		
+		if(usersSalomia>maxUsersSalomia) {
+			maxUsersSalomia = usersSalomia;
+			maxUsersSalomiaDate = date;
+		}
+		if(usersFloraInd>maxUsersFloraInd) {	
+			maxUsersFloraInd = usersFloraInd;
+			maxUsersFloraIndDate = date;
+		}
+		
+
 	}
 
 //	@Override
 //	public String toString() {
-//		return date + ", usersSalomia=" + usersSalomia + ", busesSalomia=" + busesSalomia
+//		Timestamp dateTime= new Timestamp(date.getTime());
+//		return dateTime + ", usersSalomia=" + usersSalomia + ", busesSalomia=" + busesSalomia
 //				+ ", busesRoad=" + busesRoad + 
 //				", usersFloraInd=" + usersFloraInd + ", busesFloraInd=" + busesFloraInd;
 //	}
