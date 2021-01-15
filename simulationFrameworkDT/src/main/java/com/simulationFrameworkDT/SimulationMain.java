@@ -138,13 +138,18 @@ public class SimulationMain {
 		
 		double promBusesFloraInd= (busesFloraInd/x);
 		double promBusesSalomia= (busesSalomia/x);
-		double promBusesImpact= (busesImpact/x);
+		
 		double promBusesRoad= (busesRoad/x);
-		double promEwt= (ewt/x);
-		double promHcv= (hcv/x);
-		double promPassengerSatisfaction = (passengerSatisfaction/x);
+		
 		double promUsersFloraInd= (usersFloraInd/x);
 		double promUsersSalomia= (userSalomia/x);
+		
+		double promBusesImpact= (busesImpact/x);
+		double promPassengerSatisfaction = (passengerSatisfaction/x);
+		
+		double promEwt= (ewt/x);
+		double promHcv= (hcv/x);
+		
 		
 	}
 	

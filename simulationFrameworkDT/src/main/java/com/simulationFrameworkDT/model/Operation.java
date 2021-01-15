@@ -22,11 +22,11 @@ public class Operation {
 	private double busesImpact;
 	private double passengerSatisfaction;
 	
-	int maxUsersSalomia = 0;
-	int maxUsersFloraInd = 0;
+	private int maxUsersSalomia = 0;
+	private int maxUsersFloraInd = 0;
 	
-	int maxbusSalomia = 0;
-	int maxbusFloraInd = 0;
+	private int maxbusSalomia = 0;
+	private int maxbusFloraInd = 0;
 	
 	
 	public void update(String date, int usersSalomia, int busesSalomia, int busesRoad, int usersFloraInd,int busesFloraInd) {
