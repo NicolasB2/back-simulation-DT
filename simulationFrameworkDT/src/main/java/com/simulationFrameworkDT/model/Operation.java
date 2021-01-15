@@ -7,14 +7,15 @@ public class Operation {
 
 	private double headwayCoefficientOfVariation;
 	private double excessWaitingTime;
+	private double busesImpact;
+	private double passengerSatisfaction;
 	
 	private String date;
 	
 	private int usersSalomia;
 	private int busesSalomia;
 	
-	private int busesRoad;
-	
+	private int busesRoad;	
 	private int usersFloraInd;
 	private int busesFloraInd;
 	

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.simulationFrameworkDT.analytics.fitness.CompositeFitnessFunction;
 import com.simulationFrameworkDT.analytics.fitness.CubicFitnessFunction;
 import com.simulationFrameworkDT.analytics.fitness.NormalizedFitnessFunction;
 
@@ -21,21 +20,42 @@ public class SimulationAnalytics {
 	private ArrayList<Double> hobssLine;// buses-stop
 	
 	public static double MIN_WAITING_TIME_PASSENGER = 1.0;
-	public static double MAX_WAITING_TIME_PASSENGER = 600.0;
+	public static double MAX_WAITING_TIME_PASSENGER = 1800.0;
 	
 	public static double MIN_NUMBER_OF_BUSES = 1.0;
-	public static double MAX_NUMBER_OF_BUSES = 30.0;
-	public static double PLANED_NUMBER_OF_BUSES = 25.0;
+	public static double MAX_NUMBER_OF_BUSES = 32.0;
+	public static double PLANED_NUMBER_OF_BUSES = 26.0;
 	
-	public SimulationAnalytics(int numberOfBuses, int headwayDesigned, HashMap<Long, ArrayList<Double>> hobspList, HashMap<Long, ArrayList<Double>> hobssList) {
-		this.numberOfBuses=numberOfBuses;
+	public SimulationAnalytics(int headwayDesigned, HashMap<Long, ArrayList<Double>> hobspList, HashMap<Long, ArrayList<Double>> hobssList) {
+		long timeOfTravel = 2 * 60 * 60; //time a bus takes to make the journey
 		this.headwayDesigned = headwayDesigned;
 		this.hobspList = hobspList;
 		this.hobssList = hobssList;
 		this.hobspLine = margeStations(hobspList);
 		this.hobssLine = margeStations(hobssList);
+		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;
 	}
 
+	public void means() {
+
+		Set<Long> stopIds = hobspList.keySet();
+		
+		System.out.println("number of buses: "+numberOfBuses);
+		System.out.println("");
+		
+		for (Long id: stopIds) {
+			
+			System.out.println("Stop Id "+id);
+			
+			double meanHobsp = mean(hobspList.get(id));
+			double meanHobss = mean(hobssList.get(id));
+			
+			System.out.println("meanHobsp: "+meanHobsp);
+			System.out.println("meanHobss: "+meanHobss);
+			System.out.println("");
+		}
+	}
+	
 	public void headwayCoefficientOfVariation() {
 		
 		double meanHobss = mean(hobssLine);
@@ -43,7 +63,7 @@ public class SimulationAnalytics {
 		double standardDeviation = Math.sqrt(variance);
 		double headwayCoefficientOfVariation = standardDeviation / meanHobss;
 
-		System.out.println("Headway Coefficient Of Variation " + headwayCoefficientOfVariation);
+		System.out.println("HCV: " + headwayCoefficientOfVariation);
 		System.out.println("");
 		
 	}
@@ -58,15 +78,12 @@ public class SimulationAnalytics {
 		}
 
 		double meanHobsp = mean(hobspLine);
-		double meanHobss = mean(hobssLine);
 		double meanHr = mean(hrs);
 		double varianceHr = variance(hrs);
 		double EWTaBS = (varianceHr / (2 * meanHr * 100)) * meanHobsp;
 
-		System.out.println("MeanHobsp : " + meanHobsp);
-		System.out.println("MeanHobss : " + meanHobss);
-		System.out.println("Mean Hr : " + meanHr);
-		System.out.println("variance Hr : " + varianceHr);
+//		System.out.println("Mean Hr : " + meanHr);
+//		System.out.println("variance Hr : " + varianceHr);
 		System.out.println("EWTaBS : " + EWTaBS);
 		System.out.println("");
 	}
@@ -76,19 +93,11 @@ public class SimulationAnalytics {
 		
 		final CubicFitnessFunction cubicFitness = new CubicFitnessFunction(MIN_NUMBER_OF_BUSES, PLANED_NUMBER_OF_BUSES, MAX_NUMBER_OF_BUSES);
 		double fitnessBuses =  cubicFitness.evaluateNormalized(numberOfBuses);
-		System.out.println(fitnessBuses);
+		System.out.println("Impacto por cantidad de buses: "+fitnessBuses);
 		
 		final NormalizedFitnessFunction normalizedFitness = new NormalizedFitnessFunction(MIN_WAITING_TIME_PASSENGER, MAX_WAITING_TIME_PASSENGER);
 		double fitnessPassengers = normalizedFitness.evaluateNormalized(meanHobsp);
-		System.out.println(fitnessPassengers);
-		
-		final CompositeFitnessFunction function = new CompositeFitnessFunction()
-				.withFunction(new CubicFitnessFunction(MIN_NUMBER_OF_BUSES, PLANED_NUMBER_OF_BUSES, MAX_NUMBER_OF_BUSES), 0.4)
-				.withFunction(new NormalizedFitnessFunction(MIN_WAITING_TIME_PASSENGER, MAX_WAITING_TIME_PASSENGER), 0.6).validate();
-
-		double fitness = function.evaluateNormalized(new CubicFitnessFunction.CubicFunctionArgument(numberOfBuses),
-				new NormalizedFitnessFunction.NormalizedFunctionArgument(meanHobsp));
-		System.out.println(fitness);
+		System.out.println("Satisfacción de usuarios: "+fitnessPassengers);
 	}
 
 	public ArrayList<Double> margeStations(HashMap<Long, ArrayList<Double>> v) {

@@ -23,11 +23,11 @@ import com.simulationFrameworkDT.analytics.*;
 
 public class SimulationMain {
 
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) throws IOException, ParseException, InterruptedException {
 		
 //		dataTest();
 //		visualizationTest();
-		simulationTest();
+		simulationTest(1,120);
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		reader.readLine();
@@ -67,7 +67,7 @@ public class SimulationMain {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		Date init = new Date(dateFormat.parse("2019-06-20 05:00:00").getTime());
-		Date last = new Date(dateFormat.parse("2019-06-20 07:00:00").getTime());
+		Date last = new Date(dateFormat.parse("2019-06-20 11:00:00").getTime());
 		
 		StateController pc = sm.getProjectController();
 		Project project = new Project();
@@ -95,7 +95,7 @@ public class SimulationMain {
 		sm.start("test.dat");
 	}
 	
-	public static void simulationTest() throws ParseException {
+	public static SimController sm() {
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
 		sm.setAnalytics(new VisualizationAnalytics());
@@ -104,7 +104,21 @@ public class SimulationMain {
 		sm.setEventProcessorController(new EventProcessorController());
 		sm.setEventProvirderController(new EventProviderController());
 		sm.getEventProvirderController().getEventFecher().setDataSource(sm.getDataSource());
-		saveProject(sm);
-		sm.startSimulation("test.dat",360);
+		return sm;
 	}
+	public static void simulationTest(int x,int hd) throws ParseException, InterruptedException {
+		
+		SimController sm = sm();
+		saveProject(sm);
+		
+		for (int i = 0; i < x; i++) {
+			sm.startSimulation("test.dat",hd);
+			sm.getSimulationThread().join();
+			sm.getSimulationThread().getOperation();
+		}
+	}
+	
+
+	
+	
 }

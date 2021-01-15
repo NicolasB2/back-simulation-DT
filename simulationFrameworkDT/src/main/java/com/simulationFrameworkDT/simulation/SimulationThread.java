@@ -25,7 +25,6 @@ import lombok.Getter;
 public class SimulationThread extends Thread {
 
 	private int headwayDesigned;
-	private int numberOfBuses;
 	private Operation operation;
 	private StopDistribution[] stations;
 	private Project project;
@@ -52,12 +51,13 @@ public class SimulationThread extends Thread {
 			hobspList.put(stations[i].getStopId(), new ArrayList<>());
 			hobssList.put(stations[i].getStopId(), new ArrayList<>());
 		}
+		
+		simulation(); // generate the simulation
 	}
 
 	@Override
 	public void run() {
-		
-		simulation(); // generate the simulation
+	
 		allEvents(); // all events order by time
 		
 		int usersSalomia = 0;
@@ -65,6 +65,12 @@ public class SimulationThread extends Thread {
 		int busesSalomia = 0;
 		int busesFloraInd = 0;
 		int busesRoad  = 0;
+		
+		int maxUsersSalomia = 0;
+		int maxUsersFloraInd = 0;
+		
+		int maxbusSalomia = 0;
+		int maxbusFloraInd = 0;
 		
 		long minute = 1000*60;
 		
@@ -81,10 +87,16 @@ public class SimulationThread extends Thread {
 				
 				if(item.getStopId()==stations[0].getStopId()) {
 					usersSalomia++;
+					if(usersSalomia>maxUsersSalomia) {
+						maxUsersSalomia = usersSalomia;
+					}
 				}
 				
 				if(item.getStopId()==stations[1].getStopId()) {
 					usersFloraInd++;
+					if(usersFloraInd>maxUsersFloraInd) {	
+						maxUsersFloraInd = usersFloraInd;
+					}
 				}	
 			}
 
@@ -95,8 +107,14 @@ public class SimulationThread extends Thread {
 				if(item.getStopId()==stations[0].getStopId()) {
 					if(item.isArrive()) {
 						busesSalomia++;
+						if(busesSalomia>maxbusSalomia) {
+							maxbusSalomia = busesSalomia;
+						}
 					}else {
-						usersSalomia-=item.getPassengers();
+						usersSalomia-=160;
+						if (usersSalomia<0) {
+							usersSalomia=0;
+						}
 						busesSalomia--;
 						busesRoad++;
 					}
@@ -106,32 +124,32 @@ public class SimulationThread extends Thread {
 					if(item.isArrive()) {
 						busesFloraInd++;
 						busesRoad--;
+						if(busesFloraInd>maxbusFloraInd) {
+							maxbusFloraInd = busesFloraInd;
+						}
 					}else {
-						usersFloraInd-=item.getPassengers();
+						usersFloraInd-=160;
+						if (usersFloraInd<0) {
+							usersFloraInd=0;
+						}
 						busesFloraInd--;
 					}
 				}
-				
-				Timestamp dateTime= new Timestamp(events.get(i).getDate().getTime());
-				this.operation.update(dateTime.toString(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
-				System.out.println(this.operation.toString());
 			}
 			
 			if(currentDate.getTime()-lastDate.getTime()>minute) {
 				try {
 					Timestamp dateTime= new Timestamp(events.get(i).getDate().getTime());
 					this.operation.update(dateTime.toString(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
-					System.out.println(this.operation.toString());
-					sleep(100);
+					sleep(0);
 					lastDate=currentDate;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} 
-			}
+			}	
 		}
 		
-		System.out.println();
-		evaluationMetrics(); // calculating Excess Waiting Time at Bus Stops
+		evaluationMetrics(this.operation); // calculating Excess Waiting Time at Bus Stops
 	}
 	
 	public void simulation() {
@@ -188,13 +206,11 @@ public class SimulationThread extends Thread {
 			}
 			
 			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(new Date(currentDate), this.headwayDesigned, id, stopId);
-			System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
+//			System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
 			currentDate = arrive.getDate().getTime();
 			station.offer(arrive);
 			events.add(arrive);
 		}
-
-		numberOfBuses=idsAux.size();
 		System.out.println(" ");
 		return station;
 	}
@@ -214,7 +230,7 @@ public class SimulationThread extends Thread {
 			}
 
 			SimulationEvent arrive = (SimulationEvent) eventGenerator.generateAi(currently, pd, leave.getBusId(),stopId);
-			System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId());
+//			System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId());
 			station.offer(arrive);
 			lastArrive = arrive.getDate();
 			events.add(arrive);
@@ -242,7 +258,7 @@ public class SimulationThread extends Thread {
 			int numPassengersPerBus = passengersPerBus(simulationLeaveEvent, stopId);
 			simulationLeaveEvent.setPassengers(numPassengersPerBus);
 
-			System.out.println("Leave: " + simulationLeaveEvent.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
+//			System.out.println("Leave: " + simulationLeaveEvent.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
 			lastLeave = simulationLeaveEvent.getDate();
 			middle.offer(simulationLeaveEvent);
 			events.add(simulationLeaveEvent);
@@ -317,8 +333,9 @@ public class SimulationThread extends Thread {
 		});
 	}
 
-	public void evaluationMetrics() {
-		SimulationAnalytics analytics = new SimulationAnalytics(numberOfBuses,headwayDesigned, hobspList, hobssList);
+	public void evaluationMetrics(Operation operation) {
+		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
+		analytics.means();
 		analytics.headwayCoefficientOfVariation();
 		analytics.excessWaitingTime();
 		analytics.fitness();
