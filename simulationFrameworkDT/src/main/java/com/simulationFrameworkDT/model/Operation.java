@@ -81,7 +81,5 @@ public class Operation {
 				+ passengerSatisfaction + ", maxUsersSalomia=" + maxUsersSalomia + ", maxUsersFloraInd="
 				+ maxUsersFloraInd + ", maxbusSalomia=" + maxbusSalomia + ", maxbusFloraInd=" + maxbusFloraInd + "]";
 	}
-	
-	
 
 }

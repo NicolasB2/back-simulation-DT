@@ -78,14 +78,8 @@ public class SimulationThread extends Thread {
 			if (events.get(i) instanceof PassangerEvent) {
 				
 				PassangerEvent item = (PassangerEvent) events.get(i);
-				
-				if(item.getStopId()==stations[0].getStopId()) {
-					usersSalomia++;
-				}
-				
-				if(item.getStopId()==stations[1].getStopId()) {
-					usersFloraInd++;
-				}	
+				if(item.getStopId()==stations[0].getStopId()) {usersSalomia++;}
+				if(item.getStopId()==stations[1].getStopId()) {usersFloraInd++;}	
 			}
 
 			if (events.get(i) instanceof SimulationEvent) {
@@ -119,10 +113,11 @@ public class SimulationThread extends Thread {
 				}
 			}
 			
+			Timestamp dateTime= new Timestamp(events.get(i).getDate().getTime());
+			this.operation.update(dateTime.toString(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
+			
 			if(currentDate.getTime()-lastDate.getTime()>minute) {
 				try {
-					Timestamp dateTime= new Timestamp(events.get(i).getDate().getTime());
-					this.operation.update(dateTime.toString(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
 					sleep(0);
 					lastDate=currentDate;
 				} catch (InterruptedException e) {
@@ -130,7 +125,6 @@ public class SimulationThread extends Thread {
 				} 
 			}	
 		}
-		
 		evaluationMetrics(this.operation); // calculating Excess Waiting Time at Bus Stops
 	}
 	
@@ -314,12 +308,11 @@ public class SimulationThread extends Thread {
 
 	public void evaluationMetrics(Operation operation) {
 		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
-		analytics.means();
 		operation.setHeadwayCoefficientOfVariation(analytics.headwayCoefficientOfVariation());
 		operation.setExcessWaitingTime(analytics.excessWaitingTime());
 		operation.setBusesImpact(analytics.fitnessOperation());
 		operation.setPassengerSatisfaction(analytics.fitnessUsers());
-//		System.out.println(operation);
+		System.out.println(operation);
 	}
 
 

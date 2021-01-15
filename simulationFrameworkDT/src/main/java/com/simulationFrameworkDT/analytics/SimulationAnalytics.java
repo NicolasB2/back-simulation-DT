@@ -36,23 +36,34 @@ public class SimulationAnalytics {
 		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;
 	}
 
-	public void means() {
+	public HashMap<Long, Double> meansHOPassengers() {
 
 		Set<Long> stopIds = hobspList.keySet();
-		
-		System.out.println("number of buses: "+numberOfBuses);
-		System.out.println("");
+		HashMap<Long, Double> hs = new HashMap<Long, Double>();
 		
 		for (Long id: stopIds) {
 			
 			System.out.println("Stop Id "+id);
-			
-			double meanHobsp = mean(hobspList.get(id));
-			double meanHobss = mean(hobssList.get(id));
-			
+			double meanHobsp = mean(hobspList.get(id));;	
 			System.out.println("meanHobsp: "+meanHobsp);
-			System.out.println("meanHobss: "+meanHobss);
+			hs.put(id, meanHobsp);
 		}
+		return hs;
+	}
+	
+	public HashMap<Long, Double> meansHOBus() {
+
+		Set<Long> stopIds = hobspList.keySet();
+		HashMap<Long, Double> hs = new HashMap<Long, Double>();
+		
+		for (Long id: stopIds) {
+			
+			System.out.println("Stop Id "+id);
+			double meanHobss = mean(hobssList.get(id));
+			System.out.println("meanHobss: "+meanHobss);
+			hs.put(id, meanHobss);
+		}
+		return hs;
 	}
 	
 	public double headwayCoefficientOfVariation() {
