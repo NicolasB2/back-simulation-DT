@@ -3,7 +3,9 @@ package com.simulationFrameworkDT;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,7 +30,7 @@ public class SimulationMain {
 		
 //		dataTest();
 //		visualizationTest();
-		simulationTest(10,120);
+		simulationTest(80,330);
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		reader.readLine();
@@ -129,9 +131,18 @@ public class SimulationMain {
 	    double meanHOUsersSalomia= 0;
 		double meanHOUsersFloraInd= 0;
 		
+		long maxUsersSalomiaDate = 0;
+		long maxUsersFloraIndDate = 0;
+		
 		for (int i = 0; i < x; i++) {
-			sm.startSimulation("test.dat",hd);
-			sm.getSimulationThread().join();
+			try {
+				sm.startSimulation("test.dat",hd);
+				sm.getSimulationThread().join();
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			
 			sm.getSimulationThread().getOperation();
 			busesImpact+=sm.getSimulationThread().getOperation().getBusesImpact();
 			ewt+=sm.getSimulationThread().getOperation().getExcessWaitingTime();
@@ -145,6 +156,9 @@ public class SimulationMain {
 			meanHOBusFloraInd+=sm.getSimulationThread().getOperation().getMeanHOBusFloraInd();
 			meanHOUsersSalomia+=sm.getSimulationThread().getOperation().getMeanHOUsersSalomia();
 			meanHOUsersFloraInd+=sm.getSimulationThread().getOperation().getMeanHOUsersFloraInd();
+			maxUsersFloraIndDate+=sm.getSimulationThread().getOperation().getMaxUsersFloraIndDate().getTime();
+			maxUsersSalomiaDate+=sm.getSimulationThread().getOperation().getMaxUsersSalomiaDate().getTime();
+			
 			
 		}
 		
@@ -166,23 +180,54 @@ public class SimulationMain {
 		double promEwt= (ewt/x);
 		double promHcv= (hcv/x);
 		
+		long promMaxUsersFloraIndDate = (maxUsersFloraIndDate/x);
+		long promMaxUsersSalomiaDate = (maxUsersSalomiaDate/x);
+		
+		Timestamp dateTimeFlora= new Timestamp(promMaxUsersFloraIndDate);
+		Timestamp dateTimeSalomia= new Timestamp(promMaxUsersSalomiaDate);
+		/*
+		System.out.println("Headway: "+hd);
+		System.out.println("Cantidad buses: "+sm.getSimulationThread().getOperation().getNumberOfBuses());
 		
 		System.out.println("promMaxBusSalomia: "+promMaxBusSalomia);
+		System.out.println("dateTimeSalomia: "+dateTimeSalomia);
 		System.out.println("promMaxUsersSalomia: "+promMaxUsersSalomia);
 		System.out.println("promMeanHOBusSalomia: "+promMeanHOBusSalomia);
 		System.out.println("promMeanHOUsersSalomia: "+promMeanHOUsersSalomia);
 
 		System.out.println("promMaxBusFloraInd: "+promMaxBusFloraInd);
+		System.out.println("dateTimeFlora: "+dateTimeFlora);
 		System.out.println("promMaxUsersFloraInd: "+promMaxUsersFloraInd);
 		System.out.println("promMeanHOBusFloraInd: "+promMeanHOBusFloraInd);
 		System.out.println("promMeanHOUsersFloraInd: "+promMeanHOUsersFloraInd);
-		
 		
 		System.out.println("promBusesImpact: "+promBusesImpact);
 		System.out.println("promPassengerSatisfaction: "+promPassengerSatisfaction);
 		
 		System.out.println("promEwt: "+promEwt);
 		System.out.println("promHcv: "+promHcv);
+		*/
+		
+		System.out.println(hd);
+		System.out.println(sm.getSimulationThread().getOperation().getNumberOfBuses());
+		
+		System.out.println(promMaxBusSalomia);
+		System.out.println(dateTimeSalomia);
+		System.out.println(promMaxUsersSalomia);
+		System.out.println(promMeanHOBusSalomia);
+		System.out.println(promMeanHOUsersSalomia);
+
+		System.out.println(promMaxBusFloraInd);
+		System.out.println(dateTimeFlora);
+		System.out.println(promMaxUsersFloraInd);
+		System.out.println(promMeanHOBusFloraInd);
+		System.out.println(promMeanHOUsersFloraInd);
+		
+		System.out.println(promBusesImpact);
+		System.out.println(promPassengerSatisfaction);
+		
+		System.out.println(promEwt);
+		System.out.println(promHcv);
 		
 		
 	}

@@ -23,7 +23,7 @@ public class SimulationAnalytics {
 	public static double MAX_WAITING_TIME_PASSENGER = 1800.0;
 	
 	public static double MIN_NUMBER_OF_BUSES = 1.0;
-	public static double MAX_NUMBER_OF_BUSES = 32.0;
+	public static double MAX_NUMBER_OF_BUSES = 34.0;
 	public static double PLANED_NUMBER_OF_BUSES = 26.0;
 	
 	public SimulationAnalytics(int headwayDesigned, HashMap<Long, ArrayList<Double>> hobspList, HashMap<Long, ArrayList<Double>> hobssList) {
@@ -82,7 +82,6 @@ public class SimulationAnalytics {
 		double meanHr = mean(hrs);
 		double varianceHr = variance(hrs);
 		double EWT = (varianceHr / (2 * meanHr * 100)) * meanHobsp;
-		System.out.println("EWTaBS : " + EWT);
 		return(EWT);
 	}
 

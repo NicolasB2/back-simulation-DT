@@ -296,12 +296,13 @@ public class SimulationThread extends Thread {
 	}
 
 	public void allEvents() {
-
-		Collections.sort(events, new Comparator<Event>() {
-			public int compare(Event o1, Event o2) {
-				return o1.getDate().compareTo(o2.getDate());
-			}
-		});
+		if(!events.isEmpty()) {
+			Collections.sort(events, new Comparator<Event>() {
+				public int compare(Event o1, Event o2) {
+					return o1.getDate().compareTo(o2.getDate());
+				}
+			});			
+		}
 	}
 
 	public void evaluationMetrics(Operation operation) {
@@ -324,7 +325,6 @@ public class SimulationThread extends Thread {
 		operation.setMeanHOUsersFloraInd(meansHOPassengers.get(flora));
 		operation.setMeanHOUsersSalomia(meansHOPassengers.get(salomia));
 		
-		System.out.println(operation);
 	}
 
 
