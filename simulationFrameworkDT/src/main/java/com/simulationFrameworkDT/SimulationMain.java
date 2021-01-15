@@ -120,6 +120,10 @@ public class SimulationMain {
 		double passengerSatisfaction=0;
 		int usersFloraInd = 0;
 		int userSalomia = 0;
+		int maxBusFloraInd= 0;
+		int maxBusSalomia = 0;
+		int maxUsersFloraInd = 0;
+		int maxUsersSalomia = 0;
 		
 		for (int i = 0; i < x; i++) {
 			sm.startSimulation("test.dat",hd);
@@ -134,15 +138,23 @@ public class SimulationMain {
 			passengerSatisfaction+=sm.getSimulationThread().getOperation().getPassengerSatisfaction();
 			usersFloraInd+=sm.getSimulationThread().getOperation().getUsersFloraInd();
 			userSalomia+=sm.getSimulationThread().getOperation().getUsersSalomia();
+			maxBusFloraInd+=sm.getSimulationThread().getOperation().getMaxbusFloraInd();
+			maxBusSalomia+=sm.getSimulationThread().getOperation().getMaxbusSalomia();
+			maxUsersFloraInd+=sm.getSimulationThread().getOperation().getMaxUsersFloraInd();
+			maxUsersSalomia+=sm.getSimulationThread().getOperation().getMaxUsersSalomia();
 		}
 		
 		double promBusesFloraInd= (busesFloraInd/x);
 		double promBusesSalomia= (busesSalomia/x);
+		double promMaxBusFloraInd = (maxBusFloraInd/x);
+		double promMaxBusSalomia = (maxBusSalomia/x);
 		
 		double promBusesRoad= (busesRoad/x);
 		
 		double promUsersFloraInd= (usersFloraInd/x);
 		double promUsersSalomia= (userSalomia/x);
+		double promMaxUsersFloraInd= (maxUsersFloraInd/x);
+		double promMaxUsersSalomia= (maxUsersSalomia/x);
 		
 		double promBusesImpact= (busesImpact/x);
 		double promPassengerSatisfaction = (passengerSatisfaction/x);
