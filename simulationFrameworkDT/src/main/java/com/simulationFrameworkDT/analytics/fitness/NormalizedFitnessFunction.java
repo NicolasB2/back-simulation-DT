@@ -76,9 +76,9 @@ public final class NormalizedFitnessFunction
      */
     private void checkArguments(final double... args) {
         if (args[0] > this.max || args[0] < 0.0) {
-            throw new IllegalArgumentException(
-                String.format("Value %f is out of bounds", args[0])
-            );
+//            throw new IllegalArgumentException(
+//                String.format("Value %f is out of bounds", args[0])
+//            );
         }
     }
 

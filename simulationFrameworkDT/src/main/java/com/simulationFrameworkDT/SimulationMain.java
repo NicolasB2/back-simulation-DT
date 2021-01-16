@@ -31,7 +31,7 @@ public class SimulationMain {
 		int[] x = {210,240,270,300,330,360,390,600,900,1200};
 		
 		for (int i = 0; i < x.length; i++) {
-			simulationTest(100,x[i]);
+			simulationTest(1000,x[i]);
 		}
 		
 		
