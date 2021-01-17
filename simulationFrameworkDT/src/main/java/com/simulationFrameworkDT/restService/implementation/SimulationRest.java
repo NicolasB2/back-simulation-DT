@@ -30,7 +30,7 @@ public class SimulationRest implements ISimulationRest {
 	
 	@PutMapping("/operation/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public Operation getOperation(String projectName) {
+	public Operation getOperation(@PathVariable("id") String projectName) {
 		return SimController.getSimulationThread().getOperation();
 	}
 	
