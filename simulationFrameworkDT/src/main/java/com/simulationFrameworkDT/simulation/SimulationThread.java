@@ -123,6 +123,7 @@ public class SimulationThread extends Thread {
 				} 
 			}	
 		}
+		this.operation.setFinished(false);
 		evaluationMetrics(this.operation); // calculating Excess Waiting Time at Bus Stops
 	}
 	

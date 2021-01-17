@@ -15,6 +15,7 @@ public class Operation {
 	private int busesSalomia;
 	private int busesRoad;	
 	private int busesFloraInd;
+	private boolean finished = true;
 	
 	//Important Variables
 	private int headwayDesigned;
