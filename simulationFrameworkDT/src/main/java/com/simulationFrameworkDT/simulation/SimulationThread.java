@@ -88,6 +88,13 @@ public class SimulationThread extends Thread {
 				if(item.getStopId()==stations[0].getStopId()) {
 					if(item.isArrive()) {
 						busesSalomia++;
+						
+						try {
+							sleep(1000);
+							lastDate=currentDate;
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}else {
 						usersSalomia-=160;
 						if (usersSalomia<0) {
@@ -102,6 +109,13 @@ public class SimulationThread extends Thread {
 					if(item.isArrive()) {
 						busesFloraInd++;
 						busesRoad--;
+						
+						try {
+							sleep(1000);
+							lastDate=currentDate;
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}else {
 						usersFloraInd-=160;
 						if (usersFloraInd<0) {
@@ -122,6 +136,8 @@ public class SimulationThread extends Thread {
 					e.printStackTrace();
 				} 
 			}	
+			
+			System.out.println(this.operation);
 		}
 		this.operation.setFinished(false);
 		evaluationMetrics(this.operation); // calculating Excess Waiting Time at Bus Stops
