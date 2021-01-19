@@ -116,7 +116,7 @@ public class SimulationThread extends Thread {
 			
 			if(currentDate.getTime()-lastDate.getTime()>minute) {
 				try {
-					sleep(0);
+					sleep(1000);
 					lastDate=currentDate;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
