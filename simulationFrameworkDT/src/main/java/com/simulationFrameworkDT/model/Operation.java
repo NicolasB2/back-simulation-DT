@@ -1,6 +1,7 @@
 package com.simulationFrameworkDT.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ public class Operation {
 	
 	//Simulation
 	private Date date;
+	private Timestamp date2;
 	private int usersSalomia;
 	private int usersFloraInd;
 	private int busesSalomia;
@@ -56,6 +58,8 @@ public class Operation {
 		this.usersFloraInd = usersFloraInd;
 		this.busesFloraInd = busesFloraInd;
 		
+		this.date2 = new Timestamp(date.getTime());
+		
 		if(busesSalomia>maxbusSalomia) {
 			maxbusSalomia = busesSalomia;
 		}
@@ -85,7 +89,7 @@ public class Operation {
 
 	@Override
 	public String toString() {
-		return "Operation [date=" + date + ", headwayDesigned=" + headwayDesigned + ", numberOfBuses=" + numberOfBuses
+		return "Operation [date=" + date2 + ", headwayDesigned=" + headwayDesigned + ", numberOfBuses=" + numberOfBuses
 				+ ", usersSalomia=" + usersSalomia + ", busesSalomia=" + busesSalomia + ", busesRoad=" + busesRoad
 				+ ", usersFloraInd=" + usersFloraInd + ", busesFloraInd=" + busesFloraInd
 				+ ", headwayCoefficientOfVariation=" + headwayCoefficientOfVariation + ", excessWaitingTime="
