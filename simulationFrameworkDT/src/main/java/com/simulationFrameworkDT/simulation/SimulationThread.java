@@ -88,7 +88,7 @@ public class SimulationThread extends Thread {
 				if(item.getStopId()==stations[0].getStopId()) {
 					if(item.isArrive()) {
 						busesSalomia++;
-						
+						this.operation.update(events.get(i).getDate(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
 						try {
 							sleep(1000);
 							lastDate=currentDate;
@@ -109,7 +109,7 @@ public class SimulationThread extends Thread {
 					if(item.isArrive()) {
 						busesFloraInd++;
 						busesRoad--;
-						
+						this.operation.update(events.get(i).getDate(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
 						try {
 							sleep(1000);
 							lastDate=currentDate;
