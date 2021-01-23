@@ -14,7 +14,6 @@ import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessor
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
-import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +41,8 @@ public class SimController{
 	private ExecutionThread executionThread;
 	
 	private SimulationThread simulationThread;
+	
+	ArrayList<StopDistribution> stations = new ArrayList<StopDistribution>();
 
 	public HashMap<String,String> getLastRow(Project project){
 		return dataSource.getLastRow(project);
@@ -86,41 +87,20 @@ public class SimController{
 		System.out.println("=======> simulation finished");
 	}
 	
-	public void startSimulation(String projectName, int headwayDesigned) {
-		
-		StopDistribution[] stations = new StopDistribution[2];
-		
-		ProbabilisticDistribution ai = new ProbabilisticDistribution();
-		ai.LogLaplaceDistribution(0.0 ,467.00000);
-		
-		ProbabilisticDistribution si = new ProbabilisticDistribution();
-		si.LogLaplaceDistribution(0.0, 31.6666);
-		
-		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
-		passenger.ExponentialDistribution(6.54763);
-		
-		StopDistribution stop1 = new StopDistribution(500250, passenger, ai, si);
-		
-		//***************************************************************************
-		
-		ProbabilisticDistribution ai2 = new ProbabilisticDistribution();
-		ai2.WeibullDistribution(1.52116, 599.809135);
-		
-		ProbabilisticDistribution si2 = new ProbabilisticDistribution();
-		si2.LogLogisticDistribution(37.832223, 5.204677);
-		
-		ProbabilisticDistribution passenger2 = new ProbabilisticDistribution();
-		passenger2.ExponentialDistribution(7.41318);
-		
-		StopDistribution stop2 = new StopDistribution(500300, passenger2, ai2, si2);
-		
-		stations[0]=stop1;
-		stations[1]=stop2;
-		
-		startSimulation(stations, projectName, headwayDesigned);
+	
+	public void addStationToSimulation(StopDistribution stopDistribution) {
+		if(stopDistribution.getInterArrivalDistribution()!=null && stopDistribution.getServiceDistribution()!=null &&stopDistribution.getPassengersDistribution()!=null) {
+			stations.add(stopDistribution);
+		}else {
+			
+		}
 	}
 	
-	private void startSimulation(StopDistribution[] stations, String projectName, int headwayDesigned) {
+	public void startSimulation(String projectName, int headwayDesigned) {
+		startSimulation(this.stations, projectName, headwayDesigned);
+	}
+	
+	private void startSimulation(ArrayList<StopDistribution> stations, String projectName, int headwayDesigned) {
 		
 		Project pro = projectController.getProject();
 		
@@ -130,6 +110,7 @@ public class SimController{
 		}
 		
 		simulationThread = new SimulationThread(projectController.getProject(), stations ,headwayDesigned);
+		simulationThread.setSleepTime(0);
 		simulationThread.start();
 	}
 	

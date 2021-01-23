@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.StopDistribution;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
@@ -21,6 +22,7 @@ import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessor
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
+import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 public class SimulationMain {
 
@@ -30,8 +32,8 @@ public class SimulationMain {
 //		visualizationTest();
 		int[] x = {210,240,270,300,330,360,390,600,900,1200};
 		
-		for (int i = 0; i < x.length; i++) {
-			simulationTest(1000,x[i]);
+		for (int i = 0; i < 1; i++) {
+			simulationTest(1,x[i]);
 		}
 		
 		
@@ -73,7 +75,7 @@ public class SimulationMain {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		Date init = new Date(dateFormat.parse("2019-06-20 05:00:00").getTime());
-		Date last = new Date(dateFormat.parse("2019-06-20 11:00:00").getTime());
+		Date last = new Date(dateFormat.parse("2019-06-20 05:30:00").getTime());
 		
 		StateController pc = sm.getProjectController();
 		Project project = new Project();
@@ -112,7 +114,7 @@ public class SimulationMain {
 		sm.getEventProvirderController().getEventFecher().setDataSource(sm.getDataSource());
 		return sm;
 	}
-	public static void simulationTest(int x,int hd) throws ParseException, InterruptedException {
+	public static void simulationTest(int x,int hd) throws ParseException, InterruptedException { 	
 		
 		SimController sm = sm();
 		saveProject(sm);
@@ -139,6 +141,30 @@ public class SimulationMain {
 		
 		for (int i = 0; i < x; i++) {
 			try {
+				ProbabilisticDistribution ai = new ProbabilisticDistribution();
+				ai.LogLaplaceDistribution(0.0 ,467.00000);
+				
+				ProbabilisticDistribution si = new ProbabilisticDistribution();
+				si.LogLaplaceDistribution(0.0, 31.6666);
+				
+				ProbabilisticDistribution passenger = new ProbabilisticDistribution();
+				passenger.ExponentialDistribution(6.54763);
+				
+				StopDistribution stop1 = new StopDistribution(500250, passenger, ai, si);
+				sm.addStationToSimulation(stop1);
+				
+				ProbabilisticDistribution ai2 = new ProbabilisticDistribution();
+				ai2.WeibullDistribution(1.52116, 599.809135);
+				
+				ProbabilisticDistribution si2 = new ProbabilisticDistribution();
+				si2.LogLogisticDistribution(37.832223, 5.204677);
+				
+				ProbabilisticDistribution passenger2 = new ProbabilisticDistribution();
+				passenger2.ExponentialDistribution(7.41318);
+				
+				StopDistribution stop2 = new StopDistribution(500300, passenger2, ai2, si2);
+				sm.addStationToSimulation(stop2);
+				
 				sm.startSimulation("test.dat",hd);
 				sm.getSimulationThread().join();
 				
@@ -234,8 +260,4 @@ public class SimulationMain {
 		System.out.println(promHcv);
 		System.out.println("");
 	}
-	
-
-	
-	
 }

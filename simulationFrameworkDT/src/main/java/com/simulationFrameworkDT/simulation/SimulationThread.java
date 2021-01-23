@@ -19,13 +19,15 @@ import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.tools.IDistribution;
 
 import lombok.Getter;
+import lombok.Setter;
 
-@Getter
+@Getter @Setter
 public class SimulationThread extends Thread {
 
 	private int headwayDesigned;
+	private int sleepTime;
 	private Operation operation;
-	private StopDistribution[] stations;
+	private ArrayList<StopDistribution> stations;
 	private Project project;
 	private EventGenerator eventGenerator;
 
@@ -36,7 +38,7 @@ public class SimulationThread extends Thread {
 	private HashMap<Long, ArrayList<Double>> hobspList = new HashMap<Long, ArrayList<Double>>();// passengers
 	private HashMap<Long, ArrayList<Double>> hobssList = new HashMap<Long, ArrayList<Double>>();// buses-stop
 	
-	public SimulationThread(Project project, StopDistribution[] stations, int headwayDesigned) {
+	public SimulationThread(Project project, ArrayList<StopDistribution> stations, int headwayDesigned) {
 		this.project = project;
 		this.stations = stations;
 		this.headwayDesigned = headwayDesigned;
@@ -45,10 +47,10 @@ public class SimulationThread extends Thread {
 		initializeStructures(this.stations);
 	}
 
-	public void initializeStructures(StopDistribution[] stations) {
-		for (int i = 0; i < stations.length; i++) {
-			hobspList.put(stations[i].getStopId(), new ArrayList<>());
-			hobssList.put(stations[i].getStopId(), new ArrayList<>());
+	public void initializeStructures(ArrayList<StopDistribution> stations) {
+		for (int i = 0; i < stations.size(); i++) {
+			hobspList.put(stations.get(i).getStopId(), new ArrayList<>());
+			hobssList.put(stations.get(i).getStopId(), new ArrayList<>());
 		}
 		
 		simulation(); // generate the simulation
@@ -77,49 +79,55 @@ public class SimulationThread extends Thread {
 			if (events.get(i) instanceof PassangerEvent) {
 				
 				PassangerEvent item = (PassangerEvent) events.get(i);
-				if(item.getStopId()==stations[0].getStopId()) {usersSalomia++;}
-				if(item.getStopId()==stations[1].getStopId()) {usersFloraInd++;}	
+				if(item.getStopId()==stations.get(0).getStopId()) {usersSalomia++;}
+				if(item.getStopId()==stations.get(1).getStopId()) {usersFloraInd++;}	
 			}
 
 			if (events.get(i) instanceof SimulationEvent) {
 				
 				SimulationEvent item = (SimulationEvent) events.get(i);
 				
-				if(item.getStopId()==stations[0].getStopId()) {
+				if(item.getStopId()==stations.get(0).getStopId()) {
 					if(item.isArrive()) {
 						busesSalomia++;
 						this.operation.update(events.get(i).getDate(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
 						try {
-							sleep(1000);
+							sleep(sleepTime);
 							lastDate=currentDate;
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 					}else {
-						usersSalomia-=160;
-						if (usersSalomia<0) {
+						if(usersSalomia<=160) {
+							item.setPassengers(usersSalomia);
 							usersSalomia=0;
+						}else {
+							item.setPassengers(160);
+							usersSalomia-=160;
 						}
 						busesSalomia--;
 						busesRoad++;
 					}
 				}
 				
-				if(item.getStopId()==stations[1].getStopId()) {
+				if(item.getStopId()==stations.get(1).getStopId()) {
 					if(item.isArrive()) {
 						busesFloraInd++;
 						busesRoad--;
 						this.operation.update(events.get(i).getDate(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
 						try {
-							sleep(1000);
+							sleep(sleepTime);
 							lastDate=currentDate;
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 					}else {
-						usersFloraInd-=160;
-						if (usersFloraInd<0) {
+						if(usersFloraInd<=160) {
+							item.setPassengers(usersFloraInd);
 							usersFloraInd=0;
+						}else {
+							item.setPassengers(160);
+							usersFloraInd-=160;
 						}
 						busesFloraInd--;
 					}
@@ -130,14 +138,14 @@ public class SimulationThread extends Thread {
 			
 			if(currentDate.getTime()-lastDate.getTime()>minute) {
 				try {
-					sleep(1000);
+					sleep(sleepTime);
 					lastDate=currentDate;
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} 
 			}	
 			
-			System.out.println(this.operation);
+			System.out.println(events.get(i));
 		}
 		this.operation.setFinished(false);
 		evaluationMetrics(this.operation); // calculating Excess Waiting Time at Bus Stops
@@ -151,22 +159,22 @@ public class SimulationThread extends Thread {
 		LinkedList<SimulationEvent> stationQueue = new LinkedList<SimulationEvent>();
 		LinkedList<SimulationEvent> middleQueue = new LinkedList<SimulationEvent>();
 
-		for (int i = 0; i < stations.length; i++) { // iterate between stations
+		for (int i = 0; i < stations.size(); i++) { // iterate between stations
 
-			Queue<PassangerEvent> pt = eventGenerator.generateUsers(initialDate, lastDate, stations[i].getPassengersDistribution(),stations[i].getStopId());
+			Queue<PassangerEvent> pt = eventGenerator.generateUsers(initialDate, lastDate, stations.get(i).getPassengersDistribution(),stations.get(i).getStopId());
 			addPassengersToEvents(pt);
-			passengersTime.put(stations[i].getStopId(),  pt);
+			passengersTime.put(stations.get(i).getStopId(),  pt);
 
 			if (i == 0) { // arrive the first station
-				stationQueue = arriveFirstStation(initialDate, lastDate, stations[i].getStopId());
+				stationQueue = arriveFirstStation(initialDate, lastDate, stations.get(i).getStopId());
 
 			} else { // arrive the next stations 
-				stationQueue = arriveNextStation(lastDate,middleQueue, stations[i].getInterArrivalDistribution(),stations[i].getStopId());
+				stationQueue = arriveNextStation(lastDate,middleQueue, stations.get(i).getInterArrivalDistribution(),stations.get(i).getStopId());
 			}
 
 			// leave the station
-			hobss(stationQueue, stations[i].getStopId());
-			middleQueue = leaveStation(lastDate, stationQueue,stations[i].getServiceDistribution(), stations[i].getStopId());
+			hobss(stationQueue, stations.get(i).getStopId());
+			middleQueue = leaveStation(lastDate, stationQueue,stations.get(i).getServiceDistribution(), stations.get(i).getStopId());
 		}
 	}
 
@@ -325,7 +333,6 @@ public class SimulationThread extends Thread {
 	}
 
 	public void evaluationMetrics(Operation operation) {
-		
 		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
 		operation.setHeadwayCoefficientOfVariation(analytics.headwayCoefficientOfVariation());
 		operation.setExcessWaitingTime(analytics.excessWaitingTime());
