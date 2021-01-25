@@ -14,7 +14,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 
-import com.simulationFrameworkDT.model.DatagramEvent;
+import com.simulationFrameworkDT.model.events.DatagramEvent;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMLineStop;

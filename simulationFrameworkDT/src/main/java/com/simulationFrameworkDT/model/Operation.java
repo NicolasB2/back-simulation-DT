@@ -75,21 +75,11 @@ public class Operation {
 			maxUsersFloraInd = usersFloraInd;
 			maxUsersFloraIndDate = date;
 		}
-		
-
 	}
-
-//	@Override
-//	public String toString() {
-//		Timestamp dateTime= new Timestamp(date.getTime());
-//		return dateTime + ", usersSalomia=" + usersSalomia + ", busesSalomia=" + busesSalomia
-//				+ ", busesRoad=" + busesRoad + 
-//				", usersFloraInd=" + usersFloraInd + ", busesFloraInd=" + busesFloraInd;
-//	}
 
 	@Override
 	public String toString() {
-		return "Operation [date=" + date2 + ", headwayDesigned=" + headwayDesigned + ", numberOfBuses=" + numberOfBuses
+		return  date2 + ", headwayDesigned=" + headwayDesigned + ", numberOfBuses=" + numberOfBuses
 				+ ", usersSalomia=" + usersSalomia + ", busesSalomia=" + busesSalomia + ", busesRoad=" + busesRoad
 				+ ", usersFloraInd=" + usersFloraInd + ", busesFloraInd=" + busesFloraInd
 				+ ", headwayCoefficientOfVariation=" + headwayCoefficientOfVariation + ", excessWaitingTime="

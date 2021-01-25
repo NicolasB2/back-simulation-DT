@@ -1,4 +1,4 @@
-package com.simulationFrameworkDT.model;
+package com.simulationFrameworkDT.model.events;
 
 import java.sql.Date;
 

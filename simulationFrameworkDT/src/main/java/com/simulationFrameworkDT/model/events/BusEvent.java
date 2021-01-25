@@ -1,4 +1,4 @@
-package com.simulationFrameworkDT.model;
+package com.simulationFrameworkDT.model.events;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -10,14 +10,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SimulationEvent extends Event {
+public class BusEvent extends Event {
 
 	private boolean arrive;
 	private long busId;
 	private long stopId;
 	private int passengers;
 	
-	public SimulationEvent(boolean arrive, long busId, long stopId, int passengers, Date date) {
+	public BusEvent(boolean arrive, long busId, long stopId, int passengers, Date date) {
 		super(null,date);
 		this.arrive = arrive;
 		this.busId = busId;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.model.StopDistribution;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
@@ -21,55 +21,54 @@ import lombok.Setter;
 @Getter
 @Setter
 @Service
-public class SimController{
+public class SimController {
 
-	@Autowired 
+	@Autowired
 	private DataSourceSystem dataSource;
-	
+
 	@Autowired
 	private VisualizationAnalytics analytics;
-	
-	@Autowired 
+
+	@Autowired
 	private StateController projectController;
 
-	@Autowired 
+	@Autowired
 	private EventProviderController eventProvirderController;
-	
-	@Autowired 
+
+	@Autowired
 	private EventProcessorController eventProcessorController;
 
 	private ExecutionThread executionThread;
-	
-	private SimulationThread simulationThread;
-	
-	ArrayList<StopDistribution> stations = new ArrayList<StopDistribution>();
 
-	public HashMap<String,String> getLastRow(Project project){
+	private SimulationThread simulationThread;
+
+	ArrayList<SITMStop> stations = new ArrayList<SITMStop>();
+
+	public HashMap<String, String> getLastRow(Project project) {
 		return dataSource.getLastRow(project);
 	}
-	
-	public ArrayList<Event> getNextEvent(Project project){
+
+	public ArrayList<Event> getNextEvent(Project project) {
 		return eventProvirderController.getNextEvent(project);
 	}
-	
+
 	public void start(String projectName) {
-		
+
 		Project pro = projectController.getProject();
-		
-		if(pro == null) {
+
+		if (pro == null) {
 			projectController.loadProject(projectName);
 			pro = projectController.getProject();
 		}
-		executionThread = new ExecutionThread(this,pro,analytics);
-		
-		
-		if(executionThread.isPause()) {
+		executionThread = new ExecutionThread(this, pro, analytics);
+
+		if (executionThread.isPause()) {
 			executionThread.setPause(false);
 			System.out.println("=======> simulation resumed");
-		}else {
+		} else {
 			executionThread.start();
 			System.out.println("=======> simulation started");
-		}	
+		}
 	}
 
 	public void pause() {
@@ -86,35 +85,26 @@ public class SimController{
 		executionThread.kill();
 		System.out.println("=======> simulation finished");
 	}
-	
-	
-	public void addStationToSimulation(StopDistribution stopDistribution) {
-		if(stopDistribution.getInterArrivalDistribution()!=null && stopDistribution.getServiceDistribution()!=null &&stopDistribution.getPassengersDistribution()!=null) {
-			stations.add(stopDistribution);
-		}else {
-			
-		}
+
+	public void addStationToSimulation(SITMStop stopDistribution) {
+		stations.add(stopDistribution);
 	}
-	
-	public void startSimulation(String projectName, int headwayDesigned) {
-		startSimulation(this.stations, projectName, headwayDesigned);
+
+	public void startSimulation(String projectName, long lineId, int headwayDesigned) {
+		startSimulation(this.stations, projectName, lineId, headwayDesigned);
 	}
-	
-	private void startSimulation(ArrayList<StopDistribution> stations, String projectName, int headwayDesigned) {
-		
+
+	private void startSimulation(ArrayList<SITMStop> stations, String projectName, long lineId, int headwayDesigned) {
+
 		Project pro = projectController.getProject();
-		
-		if(pro == null) {
+
+		if (pro == null) {
 			projectController.loadProject(projectName);
 			pro = projectController.getProject();
 		}
-		
-		simulationThread = new SimulationThread(projectController.getProject(), stations ,headwayDesigned);
+
+		simulationThread = new SimulationThread(projectController.getProject(), stations, lineId, headwayDesigned);
 		simulationThread.setSleepTime(0);
 		simulationThread.start();
-	}
-	
-	public String simulationResults() {
-		return "";
 	}
 }

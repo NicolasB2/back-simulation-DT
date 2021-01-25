@@ -1,6 +1,6 @@
 package com.simulationFrameworkDT.simulation.event.eventProccessor;
 
-import com.simulationFrameworkDT.model.DatagramEvent;
+import com.simulationFrameworkDT.model.events.DatagramEvent;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.TargetSystem;
 

@@ -1,6 +1,7 @@
 package com.simulationFrameworkDT.model.factorySITM;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -53,6 +54,8 @@ public class SITMStop implements IStop,Serializable  {
 		super();
 	}
 
+	private HashMap<Long, SITMLine> lines;
+	
 	public SITMStop(long stopId, String shortName, String longName, double gPSX, double gPSY, double decimalLongitude, double decimalLatitude, long planVersionId) {
 		this.stopId = stopId;
 		this.shortName = shortName;
@@ -62,7 +65,18 @@ public class SITMStop implements IStop,Serializable  {
 		this.decimalLongitude = decimalLongitude;
 		this.decimalLatitude = decimalLatitude;
 		this.planVersionId = planVersionId;
+		lines= new HashMap<Long, SITMLine>();
 	}
 	
+	public SITMStop(long stopId) {
+		this.stopId = stopId;
+		lines= new HashMap<Long, SITMLine>();
+	}
+	
+	public void addLine(SITMLine line) {
+		if(line.isSimulated()) {
+			lines.put(line.getLineId(), line);
+		}
+	}
 	
 }

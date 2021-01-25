@@ -24,7 +24,7 @@ public class SimulationRest implements ISimulationRest {
 	@PutMapping("/simulation/{id}/{headway}")
 	@ResponseStatus(HttpStatus.OK)
 	public String simulation(@PathVariable("id") String projectName, @PathVariable("headway") int headwayDesigned) {
-		SimController.startSimulation(projectName,headwayDesigned*60);
+		SimController.startSimulation(projectName,131,headwayDesigned*60);
 		return projectName;
 	}
 	
