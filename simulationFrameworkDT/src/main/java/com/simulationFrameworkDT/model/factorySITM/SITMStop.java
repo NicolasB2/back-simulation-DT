@@ -12,6 +12,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
 
+import com.simulationFrameworkDT.model.ModelDataGenerator;
 import com.simulationFrameworkDT.model.factoryInterfaces.IStop;
 
 import lombok.Getter;
@@ -51,14 +52,14 @@ public class SITMStop implements IStop,Serializable  {
 	
 	@Column(name="PLANVERSIONID")
 	private long planVersionId;
+
+	private HashMap<Long, ModelDataGenerator> modelDataGenerators;
+	private int passengerQueue;
+	private Queue<SITMBus> busQueue = new LinkedList<SITMBus>();
 	
 	public SITMStop () {
 		super();
 	}
-
-	private HashMap<Long, SITMLine> lines;
-	private int passengerQueue;
-	private Queue<SITMBus> busQueue = new LinkedList<SITMBus>();
 	
 	public SITMStop(long stopId, String shortName, String longName, double gPSX, double gPSY, double decimalLongitude, double decimalLatitude, long planVersionId) {
 		this.stopId = stopId;
@@ -69,17 +70,17 @@ public class SITMStop implements IStop,Serializable  {
 		this.decimalLongitude = decimalLongitude;
 		this.decimalLatitude = decimalLatitude;
 		this.planVersionId = planVersionId;
-		lines= new HashMap<Long, SITMLine>();
+		modelDataGenerators= new HashMap<Long, ModelDataGenerator>();
 	}
 	
 	public SITMStop(long stopId) {
 		this.stopId = stopId;
-		lines= new HashMap<Long, SITMLine>();
+		modelDataGenerators= new HashMap<Long, ModelDataGenerator>();
 	}
 	
-	public void addLine(SITMLine line) {
-		if(line.isSimulated()) {
-			lines.put(line.getLineId(), line);
+	public void addModelDataGenerator(ModelDataGenerator modelDataGenerator, long lineId) {
+		if(modelDataGenerator.isSimulated()) {
+			modelDataGenerators.put(lineId, modelDataGenerator);
 		}
 	}
 	

@@ -11,11 +11,9 @@ public class Operation {
 	
 	//Simulation
 	private Date date;
-	private Timestamp date2;
 	private int usersSalomia;
 	private int usersFloraInd;
 	private int busesSalomia;
-	private int busesRoad;	
 	private int busesFloraInd;
 	private boolean finished = true;
 	
@@ -50,15 +48,12 @@ public class Operation {
 		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;
 	}
 	
-	public void update(Date date, int usersSalomia, int busesSalomia, int busesRoad, int usersFloraInd,int busesFloraInd) {
+	public void update(Date date, int usersSalomia, int busesSalomia,int usersFloraInd,int busesFloraInd) {
 		this.date = date;
 		this.usersSalomia = usersSalomia;
 		this.busesSalomia = busesSalomia;
-		this.busesRoad = busesRoad;
 		this.usersFloraInd = usersFloraInd;
 		this.busesFloraInd = busesFloraInd;
-		
-		this.date2 = new Timestamp(date.getTime());
 		
 		if(busesSalomia>maxbusSalomia) {
 			maxbusSalomia = busesSalomia;
@@ -79,8 +74,9 @@ public class Operation {
 
 	@Override
 	public String toString() {
-		return  date2 + ", headwayDesigned=" + headwayDesigned + ", numberOfBuses=" + numberOfBuses
-				+ ", usersSalomia=" + usersSalomia + ", busesSalomia=" + busesSalomia + ", busesRoad=" + busesRoad
+		Timestamp datePrint = new Timestamp(date.getTime());
+		return  datePrint + ", headwayDesigned=" + headwayDesigned + ", numberOfBuses=" + numberOfBuses
+				+ ", usersSalomia=" + usersSalomia + ", busesSalomia=" + busesSalomia 
 				+ ", usersFloraInd=" + usersFloraInd + ", busesFloraInd=" + busesFloraInd
 				+ ", headwayCoefficientOfVariation=" + headwayCoefficientOfVariation + ", excessWaitingTime="
 				+ excessWaitingTime + ", busesImpact=" + busesImpact + ", passengerSatisfaction="

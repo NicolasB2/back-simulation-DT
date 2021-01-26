@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.ModelDataGenerator;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
 import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
@@ -126,9 +127,9 @@ public class SimulationMain {
 		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
 		passenger.ExponentialDistribution(6.54763);
 
-		SITMLine line1 = new SITMLine(131, "T31", passenger, ai, si);
+		ModelDataGenerator mdg = new ModelDataGenerator(passenger, ai, si);
 		SITMStop stop1 = new SITMStop(500250);
-		stop1.addLine(line1);
+		stop1.addModelDataGenerator(mdg,131);
 		sm.addStationToSimulation(stop1);
 
 		ProbabilisticDistribution ai2 = new ProbabilisticDistribution();
@@ -140,9 +141,9 @@ public class SimulationMain {
 		ProbabilisticDistribution passenger2 = new ProbabilisticDistribution();
 		passenger2.ExponentialDistribution(7.41318);
 
-		SITMLine line2 = new SITMLine(131, "T31", passenger2, ai2, si2);
+		ModelDataGenerator mdg2 = new ModelDataGenerator(passenger2, ai2, si2);
 		SITMStop stop2 = new SITMStop(500300);
-		stop2.addLine(line2);
+		stop2.addModelDataGenerator(mdg2, 131);
 		sm.addStationToSimulation(stop2);
 		
 		sm.startSimulationManyExecutions(x, "test.dat", 131, hd);

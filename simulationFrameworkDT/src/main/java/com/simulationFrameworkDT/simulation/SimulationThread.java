@@ -81,7 +81,6 @@ public class SimulationThread extends Thread {
 						stations.get(j).addPassenger();
 						j=stations.size();
 					}
-					
 				}
 			}
 
@@ -92,29 +91,20 @@ public class SimulationThread extends Thread {
 				if(item.isArrive()) {
 					for (int j = 0; j < stations.size(); j++) {
 						if(item.getStopId()==stations.get(j).getStopId()) {
-							if(j==0) {
-								stations.get(j).addBus(new SITMBus());
-							}else {
-								stations.get(j).addBus(new SITMBus());
-							}
+							stations.get(j).addBus(new SITMBus());
 						}
 					}
 				}else {
 					for (int j = 0; j < stations.size(); j++) {
 						if(item.getStopId()==stations.get(j).getStopId()) {
-							if(j==0) {
-								stations.get(j).removeBus();
-								stations.get(j).removePassenger(160);
-							}else {
-								stations.get(j).removeBus();
-								stations.get(j).removePassenger(160);
-							}
+							stations.get(j).removeBus();
+							stations.get(j).removePassenger(160);
 						}
 					}
 				}
 			}
 			
-			this.operation.update(events.get(i).getDate(), stations.get(0).getPassengerQueue(), stations.get(0).getBusQueue().size(), 0, stations.get(1).getPassengerQueue(), stations.get(1).getBusQueue().size());
+			this.operation.update(events.get(i).getDate(), stations.get(0).getPassengerQueue(), stations.get(0).getBusQueue().size(), stations.get(1).getPassengerQueue(), stations.get(1).getBusQueue().size());
 			
 			if(currentDate.getTime()-lastDate.getTime()>minute) {
 				try {
@@ -141,7 +131,7 @@ public class SimulationThread extends Thread {
 
 		for (int i = 0; i < stations.size(); i++) {// iterate between stations
 
-			Queue<PassangerEvent> pt = eventGenerator.generateUsers(initialDate, lastDate, stations.get(i).getLines().get(this.lineId).getPassengersDistribution(),stations.get(i).getStopId());
+			Queue<PassangerEvent> pt = eventGenerator.generateUsers(initialDate, lastDate, stations.get(i).getModelDataGenerators().get(this.lineId).getPassengersDistribution(),stations.get(i).getStopId());
 			
 			for (PassangerEvent item: pt) {
 				events.add(item);// added user event to events
@@ -153,12 +143,12 @@ public class SimulationThread extends Thread {
 				stationQueue = arriveFirstStation(initialDate, lastDate, stations.get(i).getStopId());
 
 			} else { // arrive the next stations 
-				stationQueue = arriveNextStation(lastDate,middleQueue, stations.get(i).getLines().get(this.lineId).getInterArrivalDistribution(),stations.get(i).getStopId());
+				stationQueue = arriveNextStation(lastDate,middleQueue, stations.get(i).getModelDataGenerators().get(this.lineId).getInterArrivalDistribution(),stations.get(i).getStopId());
 			}
 
 			// leave the station
 			hobss(stationQueue, stations.get(i).getStopId());
-			middleQueue = leaveStation(lastDate, stationQueue,stations.get(i).getLines().get(this.lineId).getServiceDistribution(), stations.get(i).getStopId());
+			middleQueue = leaveStation(lastDate, stationQueue,stations.get(i).getModelDataGenerators().get(this.lineId).getServiceDistribution(), stations.get(i).getStopId());
 		}
 	}
 
