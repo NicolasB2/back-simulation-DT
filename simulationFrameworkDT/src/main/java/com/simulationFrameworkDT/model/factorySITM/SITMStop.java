@@ -2,6 +2,8 @@ package com.simulationFrameworkDT.model.factorySITM;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -55,6 +57,8 @@ public class SITMStop implements IStop,Serializable  {
 	}
 
 	private HashMap<Long, SITMLine> lines;
+	private int PassengerQueue;
+	private Queue<SITMBus> passengersTime = new LinkedList<SITMBus>();
 	
 	public SITMStop(long stopId, String shortName, String longName, double gPSX, double gPSY, double decimalLongitude, double decimalLatitude, long planVersionId) {
 		this.stopId = stopId;

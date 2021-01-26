@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.simulationFrameworkDT.analytics.fitness.CubicFitnessFunction;
 import com.simulationFrameworkDT.analytics.fitness.NormalizedFitnessFunction;
+import com.simulationFrameworkDT.model.Operation;
 
 import lombok.Getter;
 
@@ -34,6 +35,25 @@ public class SimulationAnalytics {
 		this.hobspLine = margeStations(hobspList);
 		this.hobssLine = margeStations(hobssList);
 		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;
+	}
+	
+	public void evaluationMetrics(Operation operation) {
+		operation.setHeadwayCoefficientOfVariation(headwayCoefficientOfVariation());
+		operation.setExcessWaitingTime(excessWaitingTime());
+		operation.setBusesImpact(fitnessOperation());
+		operation.setPassengerSatisfaction(fitnessUsers());
+		
+		HashMap<Long, Double> meansHOBus = meansHOBus();
+		HashMap<Long, Double> meansHOPassengers = meansHOPassengers();
+		
+		long flora = 500300;
+		long salomia = 500250;
+		
+		operation.setMeanHOBusFloraInd(meansHOBus.get(flora));
+		operation.setMeanHOBusSalomia(meansHOBus.get(salomia));
+		
+		operation.setMeanHOUsersFloraInd(meansHOPassengers.get(flora));
+		operation.setMeanHOUsersSalomia(meansHOPassengers.get(salomia));
 	}
 
 	public HashMap<Long, Double> meansHOPassengers() {
@@ -65,8 +85,7 @@ public class SimulationAnalytics {
 		double variance = variance(hobssLine);
 		double standardDeviation = Math.sqrt(variance);
 		double HCV = standardDeviation / meanHobss;
-		return HCV;
-		
+		return HCV;	
 	}
 
 	public double excessWaitingTime() {

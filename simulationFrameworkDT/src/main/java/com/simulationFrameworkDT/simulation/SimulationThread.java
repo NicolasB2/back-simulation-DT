@@ -55,14 +55,14 @@ public class SimulationThread extends Thread {
 			hobspList.put(stations.get(i).getStopId(), new ArrayList<>());
 			hobssList.put(stations.get(i).getStopId(), new ArrayList<>());
 		}
-		
-		simulation(); // generate the simulation
 	}
 
 	@Override
 	public void run() {
 	
+		simulation(); // generate the simulation
 		allEvents(); // all events order by time
+		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
 		
 		int usersSalomia = 0;
 		int usersFloraInd = 0;
@@ -151,7 +151,7 @@ public class SimulationThread extends Thread {
 			System.out.println(events.get(i));
 		}
 		this.operation.setFinished(false);
-		evaluationMetrics(this.operation); // calculating Excess Waiting Time at Bus Stops
+		analytics.evaluationMetrics(this.operation); // calculating Excess Waiting Time at Bus Stops
 	}
 	
 	public void simulation() {
@@ -333,27 +333,6 @@ public class SimulationThread extends Thread {
 				}
 			});			
 		}
-	}
-
-	public void evaluationMetrics(Operation operation) {
-		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
-		operation.setHeadwayCoefficientOfVariation(analytics.headwayCoefficientOfVariation());
-		operation.setExcessWaitingTime(analytics.excessWaitingTime());
-		operation.setBusesImpact(analytics.fitnessOperation());
-		operation.setPassengerSatisfaction(analytics.fitnessUsers());
-		
-		HashMap<Long, Double> meansHOBus = analytics.meansHOBus();
-		HashMap<Long, Double> meansHOPassengers = analytics.meansHOPassengers();
-		
-		long flora = 500300;
-		long salomia = 500250;
-		
-		operation.setMeanHOBusFloraInd(meansHOBus.get(flora));
-		operation.setMeanHOBusSalomia(meansHOBus.get(salomia));
-		
-		operation.setMeanHOUsersFloraInd(meansHOPassengers.get(flora));
-		operation.setMeanHOUsersSalomia(meansHOPassengers.get(salomia));
-		
 	}
 
 
