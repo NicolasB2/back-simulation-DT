@@ -9,14 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.model.factorySITM.SITMLine;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
-import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -96,136 +94,116 @@ public class SimController {
 	public void startSimulation(String projectName, long lineId, int headwayDesigned) {
 		startSimulation(this.stations, projectName, lineId, headwayDesigned);
 	}
-	
-	public HashMap<String, Object> calculateAverages(int x, int hd) {
-		
-		
-		double busesImpact = 0;
-		double passengerSatisfaction=0;
-		
-		double ewt= 0;
-		double hcv= 0;
 
-		int maxBusFloraInd= 0;
+	private void startSimulation(ArrayList<SITMStop> stations, String projectName, long lineId, int headwayDesigned) {
+
+		Project pro = projectController.getProject();
+
+		if (pro == null) {
+			projectController.loadProject(projectName);
+			pro = projectController.getProject();
+		}
+
+		simulationThread = new SimulationThread(projectController.getProject(), stations, lineId, headwayDesigned);
+		simulationThread.setSleepTime(0);
+		simulationThread.start();
+	}
+
+	public HashMap<String, Object> calculateAverages(int x, int hd) {
+
+		double busesImpact = 0;
+		double passengerSatisfaction = 0;
+
+		double ewt = 0;
+		double hcv = 0;
+
+		int maxBusFloraInd = 0;
 		int maxBusSalomia = 0;
-		double meanHOBusSalomia= 0;
-		double meanHOBusFloraInd= 0;
-		
-		
+		double meanHOBusSalomia = 0;
+		double meanHOBusFloraInd = 0;
+
 		int maxUsersFloraInd = 0;
 		int maxUsersSalomia = 0;
-	    double meanHOUsersSalomia= 0;
-		double meanHOUsersFloraInd= 0;
-		
+		double meanHOUsersSalomia = 0;
+		double meanHOUsersFloraInd = 0;
+
 		long maxUsersSalomiaDate = 0;
 		long maxUsersFloraIndDate = 0;
-		
+
 		for (int i = 0; i < x; i++) {
 			try {
-				ProbabilisticDistribution ai = new ProbabilisticDistribution();
-				ai.LogLaplaceDistribution(0.0 ,467.00000);
-				
-				ProbabilisticDistribution si = new ProbabilisticDistribution();
-				si.LogLaplaceDistribution(0.0, 31.6666);
-				
-				ProbabilisticDistribution passenger = new ProbabilisticDistribution();
-				passenger.ExponentialDistribution(6.54763);
-				
-				SITMLine line1 = new SITMLine(131, "T31", passenger, ai, si);
-				SITMStop stop1 = new SITMStop(500250);
-				stop1.addLine(line1);
-				addStationToSimulation(stop1);
-				
-				ProbabilisticDistribution ai2 = new ProbabilisticDistribution();
-				ai2.WeibullDistribution(1.52116, 599.809135);
-				
-				ProbabilisticDistribution si2 = new ProbabilisticDistribution();
-				si2.LogLogisticDistribution(37.832223, 5.204677);
-				
-				ProbabilisticDistribution passenger2 = new ProbabilisticDistribution();
-				passenger2.ExponentialDistribution(7.41318);
-				
-				SITMLine line2 = new SITMLine(131, "T31", passenger2, ai2, si2);
-				SITMStop stop2 = new SITMStop(500300);
-				stop2.addLine(line2);
-				addStationToSimulation(stop2);
-				
-				startSimulation("test.dat",131,hd);
+				startSimulation("test.dat", 131, hd);
 				getSimulationThread().join();
-				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			getSimulationThread().getOperation();
-			busesImpact+=getSimulationThread().getOperation().getBusesImpact();
-			ewt+=getSimulationThread().getOperation().getExcessWaitingTime();
-			hcv+=getSimulationThread().getOperation().getHeadwayCoefficientOfVariation();
-			passengerSatisfaction+=getSimulationThread().getOperation().getPassengerSatisfaction();
-			maxBusFloraInd+=getSimulationThread().getOperation().getMaxbusFloraInd();
-			maxBusSalomia+=getSimulationThread().getOperation().getMaxbusSalomia();
-			maxUsersFloraInd+=getSimulationThread().getOperation().getMaxUsersFloraInd();
-			maxUsersSalomia+=getSimulationThread().getOperation().getMaxUsersSalomia();
-			meanHOBusSalomia+=getSimulationThread().getOperation().getMeanHOBusSalomia();
-			meanHOBusFloraInd+=getSimulationThread().getOperation().getMeanHOBusFloraInd();
-			meanHOUsersSalomia+=getSimulationThread().getOperation().getMeanHOUsersSalomia();
-			meanHOUsersFloraInd+=getSimulationThread().getOperation().getMeanHOUsersFloraInd();
-			maxUsersFloraIndDate+=getSimulationThread().getOperation().getMaxUsersFloraIndDate().getTime();
-			maxUsersSalomiaDate+=getSimulationThread().getOperation().getMaxUsersSalomiaDate().getTime();
-			
-			
-		}
-		
-		
-		double promMaxBusFloraInd = (maxBusFloraInd/x);
-		double promMaxBusSalomia = (maxBusSalomia/x);
-		double promMeanHOBusSalomia = (meanHOBusSalomia/x);
-		double promMeanHOBusFloraInd = (meanHOBusFloraInd/x);
-		
-		double promMaxUsersFloraInd= (maxUsersFloraInd/x);
-		double promMaxUsersSalomia= (maxUsersSalomia/x);
-		double promMeanHOUsersSalomia= (meanHOUsersSalomia/x);
-		double promMeanHOUsersFloraInd= (meanHOUsersFloraInd/x);
-		
-		
-		double promBusesImpact= (busesImpact/x);
-		double promPassengerSatisfaction = (passengerSatisfaction/x);
-		
-		double promEwt= (ewt/x);
-		double promHcv= (hcv/x);
-		
-		long promMaxUsersFloraIndDate = (maxUsersFloraIndDate/x);
-		long promMaxUsersSalomiaDate = (maxUsersSalomiaDate/x);
-		
-		Timestamp dateTimeFlora= new Timestamp(promMaxUsersFloraIndDate);
-		Timestamp dateTimeSalomia= new Timestamp(promMaxUsersSalomiaDate);
-		
-		/*
-		System.out.println("Headway: "+hd);
-		System.out.println("Cantidad buses: "+sm.getSimulationThread().getOperation().getNumberOfBuses());
-		
-		System.out.println("promMaxBusSalomia: "+promMaxBusSalomia);
-		System.out.println("dateTimeSalomia: "+dateTimeSalomia);
-		System.out.println("promMaxUsersSalomia: "+promMaxUsersSalomia);
-		System.out.println("promMeanHOBusSalomia: "+promMeanHOBusSalomia);
-		System.out.println("promMeanHOUsersSalomia: "+promMeanHOUsersSalomia);
 
-		System.out.println("promMaxBusFloraInd: "+promMaxBusFloraInd);
-		System.out.println("dateTimeFlora: "+dateTimeFlora);
-		System.out.println("promMaxUsersFloraInd: "+promMaxUsersFloraInd);
-		System.out.println("promMeanHOBusFloraInd: "+promMeanHOBusFloraInd);
-		System.out.println("promMeanHOUsersFloraInd: "+promMeanHOUsersFloraInd);
-		
-		System.out.println("promBusesImpact: "+promBusesImpact);
-		System.out.println("promPassengerSatisfaction: "+promPassengerSatisfaction);
-		
-		System.out.println("promEwt: "+promEwt);
-		System.out.println("promHcv: "+promHcv);
-		*/
-		
+			getSimulationThread().getOperation();
+			busesImpact += getSimulationThread().getOperation().getBusesImpact();
+			ewt += getSimulationThread().getOperation().getExcessWaitingTime();
+			hcv += getSimulationThread().getOperation().getHeadwayCoefficientOfVariation();
+			passengerSatisfaction += getSimulationThread().getOperation().getPassengerSatisfaction();
+			maxBusFloraInd += getSimulationThread().getOperation().getMaxbusFloraInd();
+			maxBusSalomia += getSimulationThread().getOperation().getMaxbusSalomia();
+			maxUsersFloraInd += getSimulationThread().getOperation().getMaxUsersFloraInd();
+			maxUsersSalomia += getSimulationThread().getOperation().getMaxUsersSalomia();
+			meanHOBusSalomia += getSimulationThread().getOperation().getMeanHOBusSalomia();
+			meanHOBusFloraInd += getSimulationThread().getOperation().getMeanHOBusFloraInd();
+			meanHOUsersSalomia += getSimulationThread().getOperation().getMeanHOUsersSalomia();
+			meanHOUsersFloraInd += getSimulationThread().getOperation().getMeanHOUsersFloraInd();
+			maxUsersFloraIndDate += getSimulationThread().getOperation().getMaxUsersFloraIndDate().getTime();
+			maxUsersSalomiaDate += getSimulationThread().getOperation().getMaxUsersSalomiaDate().getTime();
+		}
+
+		double promMaxBusFloraInd = (maxBusFloraInd / x);
+		double promMaxBusSalomia = (maxBusSalomia / x);
+		double promMeanHOBusSalomia = (meanHOBusSalomia / x);
+		double promMeanHOBusFloraInd = (meanHOBusFloraInd / x);
+
+		double promMaxUsersFloraInd = (maxUsersFloraInd / x);
+		double promMaxUsersSalomia = (maxUsersSalomia / x);
+		double promMeanHOUsersSalomia = (meanHOUsersSalomia / x);
+		double promMeanHOUsersFloraInd = (meanHOUsersFloraInd / x);
+
+		double promBusesImpact = (busesImpact / x);
+		double promPassengerSatisfaction = (passengerSatisfaction / x);
+
+		double promEwt = (ewt / x);
+		double promHcv = (hcv / x);
+
+		long promMaxUsersFloraIndDate = (maxUsersFloraIndDate / x);
+		long promMaxUsersSalomiaDate = (maxUsersSalomiaDate / x);
+
+		Timestamp dateTimeFlora = new Timestamp(promMaxUsersFloraIndDate);
+		Timestamp dateTimeSalomia = new Timestamp(promMaxUsersSalomiaDate);
+
+		/*
+		 * System.out.println("Headway: "+hd);
+		 * System.out.println("Cantidad buses: "+sm.getSimulationThread().getOperation()
+		 * .getNumberOfBuses());
+		 * 
+		 * System.out.println("promMaxBusSalomia: "+promMaxBusSalomia);
+		 * System.out.println("dateTimeSalomia: "+dateTimeSalomia);
+		 * System.out.println("promMaxUsersSalomia: "+promMaxUsersSalomia);
+		 * System.out.println("promMeanHOBusSalomia: "+promMeanHOBusSalomia);
+		 * System.out.println("promMeanHOUsersSalomia: "+promMeanHOUsersSalomia);
+		 * 
+		 * System.out.println("promMaxBusFloraInd: "+promMaxBusFloraInd);
+		 * System.out.println("dateTimeFlora: "+dateTimeFlora);
+		 * System.out.println("promMaxUsersFloraInd: "+promMaxUsersFloraInd);
+		 * System.out.println("promMeanHOBusFloraInd: "+promMeanHOBusFloraInd);
+		 * System.out.println("promMeanHOUsersFloraInd: "+promMeanHOUsersFloraInd);
+		 * 
+		 * System.out.println("promBusesImpact: "+promBusesImpact);
+		 * System.out.println("promPassengerSatisfaction: "+promPassengerSatisfaction);
+		 * 
+		 * System.out.println("promEwt: "+promEwt);
+		 * System.out.println("promHcv: "+promHcv);
+		 */
+
 		System.out.println(hd);
 		System.out.println(getSimulationThread().getOperation().getNumberOfBuses());
-		
+
 		System.out.println(promMaxBusSalomia);
 		System.out.println(dateTimeSalomia);
 		System.out.println(promMaxUsersSalomia);
@@ -237,14 +215,14 @@ public class SimController {
 		System.out.println(promMaxUsersFloraInd);
 		System.out.println(promMeanHOBusFloraInd);
 		System.out.println(promMeanHOUsersFloraInd);
-		
+
 		System.out.println(promBusesImpact);
 		System.out.println(promPassengerSatisfaction);
-		
+
 		System.out.println(promEwt);
 		System.out.println(promHcv);
 		System.out.println("");
-		
+
 		HashMap<String, Object> averages = new HashMap<String, Object>();
 		averages.put("promMaxBusSalomia", promMaxBusSalomia);
 		averages.put("dateTimeSalomia", dateTimeSalomia);
@@ -260,24 +238,6 @@ public class SimController {
 		averages.put("promPassengerSatisfaction", promPassengerSatisfaction);
 		averages.put("promEwt", promEwt);
 		averages.put("promHcv", promHcv);
-		
-		
 		return averages;
-
-	}
-	
-
-	private void startSimulation(ArrayList<SITMStop> stations, String projectName, long lineId, int headwayDesigned) {
-
-		Project pro = projectController.getProject();
-
-		if (pro == null) {
-			projectController.loadProject(projectName);
-			pro = projectController.getProject();
-		}
-
-		simulationThread = new SimulationThread(projectController.getProject(), stations, lineId, headwayDesigned);
-		simulationThread.setSleepTime(0);
-		simulationThread.start();
 	}
 }

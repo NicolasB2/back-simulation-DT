@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -117,6 +116,35 @@ public class SimulationMain {
 		
 		SimController sm = sm();
 		saveProject(sm);
+		
+		ProbabilisticDistribution ai = new ProbabilisticDistribution();
+		ai.LogLaplaceDistribution(0.0, 467.00000);
+
+		ProbabilisticDistribution si = new ProbabilisticDistribution();
+		si.LogLaplaceDistribution(0.0, 31.6666);
+
+		ProbabilisticDistribution passenger = new ProbabilisticDistribution();
+		passenger.ExponentialDistribution(6.54763);
+
+		SITMLine line1 = new SITMLine(131, "T31", passenger, ai, si);
+		SITMStop stop1 = new SITMStop(500250);
+		stop1.addLine(line1);
+		sm.addStationToSimulation(stop1);
+
+		ProbabilisticDistribution ai2 = new ProbabilisticDistribution();
+		ai2.WeibullDistribution(1.52116, 599.809135);
+
+		ProbabilisticDistribution si2 = new ProbabilisticDistribution();
+		si2.LogLogisticDistribution(37.832223, 5.204677);
+
+		ProbabilisticDistribution passenger2 = new ProbabilisticDistribution();
+		passenger2.ExponentialDistribution(7.41318);
+
+		SITMLine line2 = new SITMLine(131, "T31", passenger2, ai2, si2);
+		SITMStop stop2 = new SITMStop(500300);
+		stop2.addLine(line2);
+		sm.addStationToSimulation(stop2);
+		
 		sm.calculateAverages(x, hd);
 	}
 }
