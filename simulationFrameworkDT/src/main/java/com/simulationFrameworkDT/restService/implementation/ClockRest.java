@@ -60,11 +60,11 @@ public class ClockRest implements IClockRest{
 	public Clock setOneToOneSpeed(@PathVariable("id") String projectName) {
 		Clock clock = null;
 		try {
-			simController.pause();
+			simController.pauseVisualization();
 			Thread.sleep(500);
 			stateController.setOneToOneSpeed(projectName+".dat");
 			Thread.sleep(500);
-			simController.resume();
+			simController.resumeVisualization();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,11 +77,11 @@ public class ClockRest implements IClockRest{
 	public Clock setOneToFiveSpeed(@PathVariable("id") String projectName) {
 		Clock clock = null;
 		try {
-			simController.pause();
+			simController.pauseVisualization();
 			Thread.sleep(500);
 			stateController.setOneToFiveSpeed(projectName+".dat");
 			Thread.sleep(500);
-			simController.resume();
+			simController.resumeVisualization();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -95,11 +95,11 @@ public class ClockRest implements IClockRest{
 	public Clock setOneToTenSpeed(@PathVariable("id") String projectName) {
 		Clock clock = null;
 		try {
-			simController.pause();
+			simController.pauseVisualization();
 			Thread.sleep(500);
 			stateController.setOneToTenSpeed(projectName+".dat");
 			Thread.sleep(500);
-			simController.resume();
+			simController.resumeVisualization();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,11 +114,11 @@ public class ClockRest implements IClockRest{
 	public Clock setOneToThirtySpeed(@PathVariable("id") String projectName) {
 		Clock clock = null;
 		try {
-			simController.pause();
+			simController.pauseVisualization();
 			Thread.sleep(500);
 			stateController.setOneToThirtySpeed(projectName+".dat");
 			Thread.sleep(500);
-			simController.resume();
+			simController.resumeVisualization();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -131,11 +131,11 @@ public class ClockRest implements IClockRest{
 	public Clock setOneToSixtySpeed(@PathVariable("id") String projectName) {
 		Clock clock = null;
 		try {
-			simController.pause();
+			simController.pauseVisualization();
 			Thread.sleep(500);
 			stateController.setOneToSixtySpeed(projectName+".dat");
 			Thread.sleep(500);
-			simController.resume();
+			simController.resumeVisualization();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

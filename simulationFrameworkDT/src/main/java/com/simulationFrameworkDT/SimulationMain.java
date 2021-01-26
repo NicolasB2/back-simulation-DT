@@ -98,7 +98,7 @@ public class SimulationMain {
 		sm.setEventProvirderController(new EventProviderController());
 		sm.getEventProvirderController().getEventFecher().setDataSource(sm.getDataSource());
 		saveProject(sm);
-		sm.start("test.dat");
+		sm.startVisualization("test.dat");
 	}
 	
 	public static SimController sm() {
@@ -145,6 +145,6 @@ public class SimulationMain {
 		stop2.addLine(line2);
 		sm.addStationToSimulation(stop2);
 		
-		sm.calculateAverages(x, hd);
+		sm.startSimulationManyExecutions(x, "test.dat", 131, hd);
 	}
 }

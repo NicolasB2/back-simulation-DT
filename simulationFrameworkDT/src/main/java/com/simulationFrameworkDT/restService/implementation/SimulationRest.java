@@ -37,25 +37,25 @@ public class SimulationRest implements ISimulationRest {
 	@PutMapping("/start/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void start(@PathVariable("id") String projectName) {
-		SimController.start(projectName+".dat");
+		SimController.startVisualization(projectName+".dat");
 	}
 
 	@PutMapping("/pause/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void pause(@PathVariable("id") String projectName) {
-		SimController.pause();
+		SimController.pauseVisualization();
 	}
 
 	@PutMapping("/resume/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void resume(@PathVariable("id") String projectName) {
-		SimController.resume();
+		SimController.resumeVisualization();
 	}
 
 	@PutMapping("/finish/{id}")
 	@ResponseStatus(HttpStatus.OK)
 	public void stop(@PathVariable("id") String projectName) {
-		SimController.finish();
+		SimController.finishVisualization();
 	}
 
 }

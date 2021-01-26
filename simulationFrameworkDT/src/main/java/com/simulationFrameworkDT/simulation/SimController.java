@@ -53,7 +53,7 @@ public class SimController {
 		return eventProvirderController.getNextEvent(project);
 	}
 
-	public void start(String projectName) {
+	public void startVisualization(String projectName) {
 
 		Project pro = projectController.getProject();
 
@@ -72,17 +72,17 @@ public class SimController {
 		}
 	}
 
-	public void pause() {
+	public void pauseVisualization() {
 		executionThread.setPause(true);
 		System.out.println("=======> simulation paused");
 	}
 
-	public void resume() {
+	public void resumeVisualization() {
 		executionThread.setPause(false);
 		System.out.println("=======> simulation resumed");
 	}
 
-	public void finish() {
+	public void finishVisualization() {
 		executionThread.kill();
 		System.out.println("=======> simulation finished");
 	}
@@ -92,11 +92,7 @@ public class SimController {
 	}
 
 	public void startSimulation(String projectName, long lineId, int headwayDesigned) {
-		startSimulation(this.stations, projectName, lineId, headwayDesigned);
-	}
-
-	private void startSimulation(ArrayList<SITMStop> stations, String projectName, long lineId, int headwayDesigned) {
-
+		
 		Project pro = projectController.getProject();
 
 		if (pro == null) {
@@ -109,9 +105,9 @@ public class SimController {
 		simulationThread.start();
 	}
 
-	public HashMap<String, Object> calculateAverages(int x, int hd) {
+	public HashMap<String, Object> startSimulationManyExecutions(int x, String projectName, long lineId, int headwayDesigned) {
 
-		double busesImpact = 0;
+		double busesImpact = 0; 
 		double passengerSatisfaction = 0;
 
 		double ewt = 0;
@@ -132,7 +128,7 @@ public class SimController {
 
 		for (int i = 0; i < x; i++) {
 			try {
-				startSimulation("test.dat", 131, hd);
+				startSimulation(projectName, lineId, headwayDesigned);
 				getSimulationThread().join();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -201,7 +197,7 @@ public class SimController {
 		 * System.out.println("promHcv: "+promHcv);
 		 */
 
-		System.out.println(hd);
+		System.out.println(headwayDesigned);
 		System.out.println(getSimulationThread().getOperation().getNumberOfBuses());
 
 		System.out.println(promMaxBusSalomia);
