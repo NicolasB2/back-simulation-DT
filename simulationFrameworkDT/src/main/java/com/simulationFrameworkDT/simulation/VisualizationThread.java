@@ -14,7 +14,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-class ExecutionThread extends Thread {
+class VisualizationThread extends Thread {
 
 	private Project project;
 	private SimController simController;
@@ -30,7 +30,7 @@ class ExecutionThread extends Thread {
 		killed = true;
 	}
 	
-	public ExecutionThread(SimController simController, Project project, VisualizationAnalytics analytics) {
+	public VisualizationThread(SimController simController, Project project, VisualizationAnalytics analytics) {
 		this.simController = simController;
 		this.analytics = analytics;
 		this.project = project;

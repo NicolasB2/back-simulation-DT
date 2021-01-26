@@ -12,6 +12,7 @@ import com.simulationFrameworkDT.analytics.SimulationAnalytics;
 import com.simulationFrameworkDT.model.Operation;
 import com.simulationFrameworkDT.model.events.BusEvent;
 import com.simulationFrameworkDT.model.events.PassangerEvent;
+import com.simulationFrameworkDT.model.factorySITM.SITMBus;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventGenerator;
@@ -64,12 +65,6 @@ public class SimulationThread extends Thread {
 		allEvents(); // all events order by time
 		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
 		
-		int usersSalomia = 0;
-		int usersFloraInd = 0;
-		int busesSalomia = 0;
-		int busesFloraInd = 0;
-		int busesRoad  = 0;
-		
 		long minute = 1000*60;
 		
 		Date lastDate = events.get(0).getDate();
@@ -80,64 +75,46 @@ public class SimulationThread extends Thread {
 			currentDate = events.get(i).getDate();
 			
 			if (events.get(i) instanceof PassangerEvent) {
-				
 				PassangerEvent item = (PassangerEvent) events.get(i);
-				if(item.getStopId()==stations.get(0).getStopId()) {usersSalomia++;}
-				if(item.getStopId()==stations.get(1).getStopId()) {usersFloraInd++;}	
+				for (int j = 0; j < stations.size(); j++) {
+					if(item.getStopId()==stations.get(j).getStopId()) {
+						stations.get(j).addPassenger();
+						j=stations.size();
+					}
+					
+				}
 			}
 
 			if (events.get(i) instanceof BusEvent) {
 				
 				BusEvent item = (BusEvent) events.get(i);
 				
-				if(item.getStopId()==stations.get(0).getStopId()) {
-					if(item.isArrive()) {
-						busesSalomia++;
-						this.operation.update(events.get(i).getDate(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
-						try {
-							sleep(sleepTime);
-							lastDate=currentDate;
-						} catch (InterruptedException e) {
-							e.printStackTrace();
+				if(item.isArrive()) {
+					for (int j = 0; j < stations.size(); j++) {
+						if(item.getStopId()==stations.get(j).getStopId()) {
+							if(j==0) {
+								stations.get(j).addBus(new SITMBus());
+							}else {
+								stations.get(j).addBus(new SITMBus());
+							}
 						}
-					}else {
-						if(usersSalomia<=160) {
-							item.setPassengers(usersSalomia);
-							usersSalomia=0;
-						}else {
-							item.setPassengers(160);
-							usersSalomia-=160;
-						}
-						busesSalomia--;
-						busesRoad++;
 					}
-				}
-				
-				if(item.getStopId()==stations.get(1).getStopId()) {
-					if(item.isArrive()) {
-						busesFloraInd++;
-						busesRoad--;
-						this.operation.update(events.get(i).getDate(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
-						try {
-							sleep(sleepTime);
-							lastDate=currentDate;
-						} catch (InterruptedException e) {
-							e.printStackTrace();
+				}else {
+					for (int j = 0; j < stations.size(); j++) {
+						if(item.getStopId()==stations.get(j).getStopId()) {
+							if(j==0) {
+								stations.get(j).removeBus();
+								stations.get(j).removePassenger(160);
+							}else {
+								stations.get(j).removeBus();
+								stations.get(j).removePassenger(160);
+							}
 						}
-					}else {
-						if(usersFloraInd<=160) {
-							item.setPassengers(usersFloraInd);
-							usersFloraInd=0;
-						}else {
-							item.setPassengers(160);
-							usersFloraInd-=160;
-						}
-						busesFloraInd--;
 					}
 				}
 			}
 			
-			this.operation.update(events.get(i).getDate(), usersSalomia, busesSalomia, busesRoad, usersFloraInd, busesFloraInd);
+			this.operation.update(events.get(i).getDate(), stations.get(0).getPassengerQueue(), stations.get(0).getBusQueue().size(), 0, stations.get(1).getPassengerQueue(), stations.get(1).getBusQueue().size());
 			
 			if(currentDate.getTime()-lastDate.getTime()>minute) {
 				try {
@@ -154,7 +131,7 @@ public class SimulationThread extends Thread {
 		analytics.evaluationMetrics(this.operation); // calculating Excess Waiting Time at Bus Stops
 	}
 	
-	public void simulation() {
+	private void simulation() {
 
 		Date initialDate = project.getInitialDate();
 		Date lastDate = project.getFinalDate();
@@ -162,11 +139,15 @@ public class SimulationThread extends Thread {
 		LinkedList<BusEvent> stationQueue = new LinkedList<BusEvent>();
 		LinkedList<BusEvent> middleQueue = new LinkedList<BusEvent>();
 
-		for (int i = 0; i < stations.size(); i++) { // iterate between stations
+		for (int i = 0; i < stations.size(); i++) {// iterate between stations
 
 			Queue<PassangerEvent> pt = eventGenerator.generateUsers(initialDate, lastDate, stations.get(i).getLines().get(this.lineId).getPassengersDistribution(),stations.get(i).getStopId());
-			addPassengersToEvents(pt);
-			passengersTime.put(stations.get(i).getStopId(),  pt);
+			
+			for (PassangerEvent item: pt) {
+				events.add(item);// added user event to events
+	        }
+			
+			passengersTime.put(stations.get(i).getStopId(),pt);
 
 			if (i == 0) { // arrive the first station
 				stationQueue = arriveFirstStation(initialDate, lastDate, stations.get(i).getStopId());
@@ -181,7 +162,7 @@ public class SimulationThread extends Thread {
 		}
 	}
 
-	public LinkedList<BusEvent> arriveFirstStation(Date initialDate, Date lastDate, long stopId) {
+	private LinkedList<BusEvent> arriveFirstStation(Date initialDate, Date lastDate, long stopId) {
 
 		long timeOfTravel = 2 * 60 * 60 * 1000; //time a bus takes to make the journey
 		LinkedList<BusEvent> station = new LinkedList<BusEvent>();
@@ -208,7 +189,7 @@ public class SimulationThread extends Thread {
 			}
 			
 			BusEvent arrive = (BusEvent) eventGenerator.generateAi(new Date(currentDate), this.headwayDesigned, id, stopId);
-//			System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
+			//System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
 			currentDate = arrive.getDate().getTime();
 			station.offer(arrive);
 			if(arrive!=null)
@@ -217,7 +198,7 @@ public class SimulationThread extends Thread {
 		return station;
 	}
 
-	public LinkedList<BusEvent> arriveNextStation(Date lastDate, Queue<BusEvent> middleQueue,IDistribution pd, long stopId) {
+	private LinkedList<BusEvent> arriveNextStation(Date lastDate, Queue<BusEvent> middleQueue,IDistribution pd, long stopId) {
 
 		Date lastArrive = middleQueue.peek().getDate(); // initialize auxiliary variable which represent the last time that a bus arrive the station
 		LinkedList<BusEvent> station = new LinkedList<BusEvent>();
@@ -232,7 +213,7 @@ public class SimulationThread extends Thread {
 			}
 
 			BusEvent arrive = (BusEvent) eventGenerator.generateAi(currently, pd, leave.getBusId(),stopId);
-//			System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId());
+			//System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId());
 			station.offer(arrive);
 			lastArrive = arrive.getDate();
 			if(arrive!=null)
@@ -242,7 +223,7 @@ public class SimulationThread extends Thread {
 		return station;
 	}
 
-	public LinkedList<BusEvent> leaveStation(Date lastDate, Queue<BusEvent> stationQueue, IDistribution pd, long stopId) {
+	private LinkedList<BusEvent> leaveStation(Date lastDate, Queue<BusEvent> stationQueue, IDistribution pd, long stopId) {
 
 		Date lastLeave = stationQueue.peek().getDate(); // initialize auxiliary variable which represent the last time that a bus leave the station
 		LinkedList<BusEvent> middle = new LinkedList<BusEvent>();
@@ -260,7 +241,7 @@ public class SimulationThread extends Thread {
 			int numPassengersPerBus = passengersPerBus(simulationLeaveEvent, stopId);
 			simulationLeaveEvent.setPassengers(numPassengersPerBus);
 
-//			System.out.println("Leave: " + simulationLeaveEvent.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
+			//system.out.println("Leave: " + simulationLeaveEvent.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
 			lastLeave = simulationLeaveEvent.getDate();
 			middle.offer(simulationLeaveEvent);
 			if(simulationLeaveEvent!=null)
@@ -271,7 +252,7 @@ public class SimulationThread extends Thread {
 	}
 
 	// headway observed per bus
-	public void hobss(LinkedList<BusEvent> stationQueue, long stopId) {
+	private void hobss(LinkedList<BusEvent> stationQueue, long stopId) {
 
 		BusEvent lastArrive = null;
 		for (BusEvent item: stationQueue) {
@@ -287,7 +268,7 @@ public class SimulationThread extends Thread {
 	}
 
 	//number of passengers and headway observed per passengers
-	public int passengersPerBus(BusEvent leave, long stopId) {
+	private int passengersPerBus(BusEvent leave, long stopId) {
 
 		PassangerEvent passangerEvent = passengersTime.get(stopId).poll();
 		Date passengerArrivetime = passangerEvent!=null?passangerEvent.getDate():null;
@@ -303,18 +284,11 @@ public class SimulationThread extends Thread {
 				double headway = (leave.getDate().getTime()-passengerArrivetime.getTime())/1000; //headway observed per passenger
 				hobspList.get(stopId).add(headway);// added headway
 				passengerArrivetime = passangerEvent.getDate(); //update actual time
-			}
-			
+			}	
 		}
-
 		return numPassengersPerBus;
 	}
 	
-	private void addPassengersToEvents(Queue<PassangerEvent>passengers) {
-		for (PassangerEvent item: passengers) {
-			events.add(item);//added user event
-        }
-	}
 	private long generateId() {
 
 		long id = (long) (Math.random() * (9999 - 1000 + 1) + 1000);
@@ -325,7 +299,7 @@ public class SimulationThread extends Thread {
 		return id;
 	}
 
-	public void allEvents() {
+	private void allEvents() {
 		if(!events.isEmpty()) {
 			Collections.sort(events, new Comparator<Event>() {
 				public int compare(Event o1, Event o2) {

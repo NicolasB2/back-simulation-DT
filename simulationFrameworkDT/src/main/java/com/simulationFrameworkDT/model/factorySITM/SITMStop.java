@@ -57,8 +57,8 @@ public class SITMStop implements IStop,Serializable  {
 	}
 
 	private HashMap<Long, SITMLine> lines;
-	private int PassengerQueue;
-	private Queue<SITMBus> passengersTime = new LinkedList<SITMBus>();
+	private int passengerQueue;
+	private Queue<SITMBus> busQueue = new LinkedList<SITMBus>();
 	
 	public SITMStop(long stopId, String shortName, String longName, double gPSX, double gPSY, double decimalLongitude, double decimalLatitude, long planVersionId) {
 		this.stopId = stopId;
@@ -81,6 +81,29 @@ public class SITMStop implements IStop,Serializable  {
 		if(line.isSimulated()) {
 			lines.put(line.getLineId(), line);
 		}
+	}
+	
+	public void addPassenger() {
+		passengerQueue ++;
+	}
+	
+	public int removePassenger(int busSpace) {
+		
+		if(busSpace>=passengerQueue) {
+			passengerQueue = 0;
+		}else {
+			passengerQueue -= busSpace;
+		}
+		
+		return passengerQueue;
+	}
+	
+	public void addBus(SITMBus bus) {
+		busQueue.add(bus);
+	}
+	
+	public SITMBus removeBus() {
+		return busQueue.poll();
 	}
 	
 }

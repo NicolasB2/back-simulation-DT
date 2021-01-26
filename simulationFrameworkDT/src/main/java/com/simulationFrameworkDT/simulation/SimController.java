@@ -39,7 +39,7 @@ public class SimController {
 	@Autowired
 	private EventProcessorController eventProcessorController;
 
-	private ExecutionThread executionThread;
+	private VisualizationThread executionThread;
 
 	private SimulationThread simulationThread;
 
@@ -61,7 +61,7 @@ public class SimController {
 			projectController.loadProject(projectName);
 			pro = projectController.getProject();
 		}
-		executionThread = new ExecutionThread(this, pro, analytics);
+		executionThread = new VisualizationThread(this, pro, analytics);
 
 		if (executionThread.isPause()) {
 			executionThread.setPause(false);
