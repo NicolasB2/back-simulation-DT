@@ -78,7 +78,7 @@ public class SimulationThread extends Thread {
 				PassangerEvent item = (PassangerEvent) events.get(i);
 				for (int j = 0; j < stations.size(); j++) {
 					if(item.getStopId()==stations.get(j).getStopId()) {
-						stations.get(j).addPassenger();
+						stations.get(j).addPassenger(currentDate);
 						j=stations.size();
 					}
 				}

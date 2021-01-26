@@ -66,26 +66,26 @@ public class SimController {
 
 		if (executionThread.isPause()) {
 			executionThread.setPause(false);
-			System.out.println("=======> simulation resumed");
+			System.out.println("=======> Visualization resumed");
 		} else {
 			executionThread.start();
-			System.out.println("=======> simulation started");
+			System.out.println("=======> Visualization started");
 		}
 	}
 
 	public void pauseVisualization() {
 		executionThread.setPause(true);
-		System.out.println("=======> simulation paused");
+		System.out.println("=======> Visualization paused");
 	}
 
 	public void resumeVisualization() {
 		executionThread.setPause(false);
-		System.out.println("=======> simulation resumed");
+		System.out.println("=======> Visualization resumed");
 	}
 
 	public void finishVisualization() {
 		executionThread.kill();
-		System.out.println("=======> simulation finished");
+		System.out.println("=======> Visualization finished");
 	}
 
 	public void addStationToSimulation(SITMStop stopDistribution) {

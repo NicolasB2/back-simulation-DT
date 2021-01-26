@@ -54,22 +54,6 @@ public class Operation {
 		this.busesSalomia = busesSalomia;
 		this.usersFloraInd = usersFloraInd;
 		this.busesFloraInd = busesFloraInd;
-		
-		if(busesSalomia>maxbusSalomia) {
-			maxbusSalomia = busesSalomia;
-		}
-		if(busesFloraInd>maxbusFloraInd) {
-			maxbusFloraInd = busesFloraInd;
-		}
-		
-		if(usersSalomia>maxUsersSalomia) {
-			maxUsersSalomia = usersSalomia;
-			maxUsersSalomiaDate = date;
-		}
-		if(usersFloraInd>maxUsersFloraInd) {	
-			maxUsersFloraInd = usersFloraInd;
-			maxUsersFloraIndDate = date;
-		}
 	}
 
 	@Override

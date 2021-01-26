@@ -1,6 +1,7 @@
 package com.simulationFrameworkDT.model.factorySITM;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -54,8 +55,12 @@ public class SITMStop implements IStop,Serializable  {
 	private long planVersionId;
 
 	private HashMap<Long, ModelDataGenerator> modelDataGenerators;
-	private int passengerQueue;
 	private Queue<SITMBus> busQueue = new LinkedList<SITMBus>();
+	private int passengerQueue;
+	
+	private Date maxUsersDate;
+	private int maxUsers;
+	private int maxBuses;
 	
 	public SITMStop () {
 		super();
@@ -84,8 +89,13 @@ public class SITMStop implements IStop,Serializable  {
 		}
 	}
 	
-	public void addPassenger() {
+	public void addPassenger(Date eventDate) {
 		passengerQueue ++;
+		
+		if(passengerQueue>=maxUsers) {
+			maxUsers=passengerQueue;
+			maxUsersDate = eventDate;
+		}
 	}
 	
 	public int removePassenger(int busSpace) {
