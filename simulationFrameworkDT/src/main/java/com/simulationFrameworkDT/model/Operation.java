@@ -11,24 +11,11 @@ public class Operation {
 	
 	//Simulation
 	private Date date;
-	private int usersSalomia;
-	private int usersFloraInd;
-	private int busesSalomia;
-	private int busesFloraInd;
 	private boolean finished = true;
 	
 	//Important Variables
 	private int headwayDesigned;
 	private int numberOfBuses;
-	
-	private int maxbusSalomia;
-	private int maxbusFloraInd;
-	
-	private int maxUsersSalomia;
-	private int maxUsersFloraInd;
-	
-	private Date maxUsersSalomiaDate;
-	private Date maxUsersFloraIndDate;
 	
 	//Analytics
 	private double headwayCoefficientOfVariation;
@@ -52,12 +39,9 @@ public class Operation {
 	public String toString() {
 		Timestamp datePrint = new Timestamp(date.getTime());
 		return  datePrint + ", headwayDesigned=" + headwayDesigned + ", numberOfBuses=" + numberOfBuses
-				+ ", usersSalomia=" + usersSalomia + ", busesSalomia=" + busesSalomia 
-				+ ", usersFloraInd=" + usersFloraInd + ", busesFloraInd=" + busesFloraInd
 				+ ", headwayCoefficientOfVariation=" + headwayCoefficientOfVariation + ", excessWaitingTime="
 				+ excessWaitingTime + ", busesImpact=" + busesImpact + ", passengerSatisfaction="
-				+ passengerSatisfaction + ", maxUsersSalomia=" + maxUsersSalomia + ", maxUsersFloraInd="
-				+ maxUsersFloraInd + ", maxbusSalomia=" + maxbusSalomia + ", maxbusFloraInd=" + maxbusFloraInd + "]";
+				+ passengerSatisfaction;
 	}
 
 }
