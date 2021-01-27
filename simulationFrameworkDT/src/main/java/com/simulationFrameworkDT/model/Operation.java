@@ -47,14 +47,6 @@ public class Operation {
 		this.headwayDesigned = headwayDesigned;
 		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;
 	}
-	
-	public void update(Date date, int usersSalomia, int busesSalomia,int usersFloraInd,int busesFloraInd) {
-		this.date = date;
-		this.usersSalomia = usersSalomia;
-		this.busesSalomia = busesSalomia;
-		this.usersFloraInd = usersFloraInd;
-		this.busesFloraInd = busesFloraInd;
-	}
 
 	@Override
 	public String toString() {

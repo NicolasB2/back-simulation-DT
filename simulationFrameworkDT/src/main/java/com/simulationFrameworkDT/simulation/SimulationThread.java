@@ -65,8 +65,6 @@ public class SimulationThread extends Thread {
 		allEvents(); // all events order by time
 		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
 		
-		long minute = 1000*60;
-		
 		Date lastDate = events.get(0).getDate();
 		Date currentDate = null;
 		
@@ -99,14 +97,15 @@ public class SimulationThread extends Thread {
 						if(item.getStopId()==stations.get(j).getStopId()) {
 							stations.get(j).removeBus();
 							stations.get(j).removePassenger(160);
+							if(j==0) {
+								
+							}
 						}
 					}
 				}
 			}
 			
-			this.operation.update(events.get(i).getDate(), stations.get(0).getPassengerQueue(), stations.get(0).getBusQueue().size(), stations.get(1).getPassengerQueue(), stations.get(1).getBusQueue().size());
-			
-			if(currentDate.getTime()-lastDate.getTime()>minute) {
+			if(currentDate.getTime()-lastDate.getTime()>60000) {
 				try {
 					sleep(sleepTime);
 					lastDate=currentDate;

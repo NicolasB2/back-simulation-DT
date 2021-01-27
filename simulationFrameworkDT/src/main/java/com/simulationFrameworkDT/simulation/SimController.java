@@ -114,18 +114,18 @@ public class SimController {
 		double ewt = 0;
 		double hcv = 0;
 
-		int maxBusFloraInd = 0;
-		int maxBusSalomia = 0;
+//		int maxBusFloraInd = 0;
+//		int maxBusSalomia = 0;
 		double meanHOBusSalomia = 0;
 		double meanHOBusFloraInd = 0;
 
-		int maxUsersFloraInd = 0;
-		int maxUsersSalomia = 0;
+//		int maxUsersFloraInd = 0;
+//		int maxUsersSalomia = 0;
 		double meanHOUsersSalomia = 0;
 		double meanHOUsersFloraInd = 0;
 
-		long maxUsersSalomiaDate = 0;
-		long maxUsersFloraIndDate = 0;
+//		long maxUsersSalomiaDate = 0;
+//		long maxUsersFloraIndDate = 0;
 
 		for (int i = 0; i < x; i++) {
 			try {
@@ -140,34 +140,34 @@ public class SimController {
 			ewt += op.getExcessWaitingTime();
 			hcv += op.getHeadwayCoefficientOfVariation();
 			passengerSatisfaction += op.getPassengerSatisfaction();
-			maxBusFloraInd += op.getMaxbusFloraInd();
-			maxBusSalomia += op.getMaxbusSalomia();
-			maxUsersFloraInd += op.getMaxUsersFloraInd();
-			maxUsersSalomia += op.getMaxUsersSalomia();
+//			maxBusFloraInd += op.getMaxbusFloraInd();
+//			maxBusSalomia += op.getMaxbusSalomia();
+//			maxUsersFloraInd += op.getMaxUsersFloraInd();
+//			maxUsersSalomia += op.getMaxUsersSalomia();
 			meanHOBusSalomia += op.getMeanHOBusSalomia();
 			meanHOBusFloraInd += op.getMeanHOBusFloraInd();
 			meanHOUsersSalomia += op.getMeanHOUsersSalomia();
 			meanHOUsersFloraInd += op.getMeanHOUsersFloraInd();
-			maxUsersFloraIndDate += op.getMaxUsersFloraIndDate().getTime();
-			maxUsersSalomiaDate += op.getMaxUsersSalomiaDate().getTime();
+//			maxUsersFloraIndDate += op.getMaxUsersFloraIndDate().getTime();
+//			maxUsersSalomiaDate += op.getMaxUsersSalomiaDate().getTime();
 		}
 
 
-		long promMaxUsersFloraIndDate = (maxUsersFloraIndDate / x);
-		long promMaxUsersSalomiaDate = (maxUsersSalomiaDate / x);
+//		long promMaxUsersFloraIndDate = (maxUsersFloraIndDate / x);
+//		long promMaxUsersSalomiaDate = (maxUsersSalomiaDate / x);
 
-		Timestamp dateTimeFlora = new Timestamp(promMaxUsersFloraIndDate);
-		Timestamp dateTimeSalomia = new Timestamp(promMaxUsersSalomiaDate);
+//		Timestamp dateTimeFlora = new Timestamp(promMaxUsersFloraIndDate);
+//		Timestamp dateTimeSalomia = new Timestamp(promMaxUsersSalomiaDate);
 
 		HashMap<String, Object> averages = new HashMap<String, Object>();
-		averages.put("promMaxBusSalomia", (maxBusSalomia / x));
-		averages.put("dateTimeSalomia", dateTimeSalomia);
-		averages.put("promMaxUsersSalomia", (maxUsersSalomia / x));
+//		averages.put("promMaxBusSalomia", (maxBusSalomia / x));
+//		averages.put("dateTimeSalomia", dateTimeSalomia);
+//		averages.put("promMaxUsersSalomia", (maxUsersSalomia / x));
 		averages.put("promMeanHOBusSalomia", (meanHOBusSalomia / x));
 		averages.put("promMeanHOUsersSalomia", (meanHOUsersSalomia / x));
-		averages.put("promMaxBusFloraInd", (maxBusFloraInd / x));
-		averages.put("dateTimeFlora", dateTimeFlora);
-		averages.put("promMaxUsersFloraInd", (maxUsersFloraInd / x));
+//		averages.put("promMaxBusFloraInd", (maxBusFloraInd / x));
+//		averages.put("dateTimeFlora", dateTimeFlora);
+//		averages.put("promMaxUsersFloraInd", (maxUsersFloraInd / x));
 		averages.put("promMeanHOBusFloraInd", (meanHOBusFloraInd / x));
 		averages.put("promMeanHOUsersFloraInd", (meanHOUsersFloraInd / x));
 		averages.put("promBusesImpact", (busesImpact / x));

@@ -66,6 +66,11 @@ public class SITMStop implements IStop,Serializable  {
 		super();
 	}
 	
+	public SITMStop(long stopId) {
+		this.stopId = stopId;
+		modelDataGenerators= new HashMap<Long, ModelDataGenerator>();
+	}
+	
 	public SITMStop(long stopId, String shortName, String longName, double gPSX, double gPSY, double decimalLongitude, double decimalLatitude, long planVersionId) {
 		this.stopId = stopId;
 		this.shortName = shortName;
@@ -75,11 +80,6 @@ public class SITMStop implements IStop,Serializable  {
 		this.decimalLongitude = decimalLongitude;
 		this.decimalLatitude = decimalLatitude;
 		this.planVersionId = planVersionId;
-		modelDataGenerators= new HashMap<Long, ModelDataGenerator>();
-	}
-	
-	public SITMStop(long stopId) {
-		this.stopId = stopId;
 		modelDataGenerators= new HashMap<Long, ModelDataGenerator>();
 	}
 	
@@ -99,18 +99,20 @@ public class SITMStop implements IStop,Serializable  {
 	}
 	
 	public int removePassenger(int busSpace) {
-		
 		if(busSpace>=passengerQueue) {
 			passengerQueue = 0;
 		}else {
 			passengerQueue -= busSpace;
 		}
-		
 		return passengerQueue;
 	}
 	
 	public void addBus(SITMBus bus) {
 		busQueue.add(bus);
+		
+		if(busQueue.size()>=maxBuses) {
+			maxBuses=busQueue.size();
+		}
 	}
 	
 	public SITMBus removeBus() {
