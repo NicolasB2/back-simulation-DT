@@ -2,6 +2,10 @@ package com.simulationFrameworkDT.model;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,10 +33,14 @@ public class Operation {
 	private double meanHOBusSalomia;
 	private double meanHOBusFloraInd;
 	
-	public Operation(int headwayDesigned) {
+	private ArrayList<SITMStop> stops;
+	
+	
+	public Operation(int headwayDesigned, ArrayList<SITMStop> stops) {
 		long timeOfTravel = 2 * 60 * 60;
 		this.headwayDesigned = headwayDesigned;
 		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;
+		this.stops = stops;
 	}
 
 	@Override

@@ -3,8 +3,10 @@ package com.simulationFrameworkDT.simulation;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.convert.SimpleTypeInformationMapper;
 import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
@@ -93,7 +95,7 @@ public class SimController {
 	}
 
 	public void startSimulation(String projectName, long lineId, int headwayDesigned) {
-		
+
 		Project pro = projectController.getProject();
 
 		if (pro == null) {
@@ -106,26 +108,31 @@ public class SimController {
 		simulationThread.start();
 	}
 
-	public HashMap<String, Object> startSimulationManyExecutions(int x, String projectName, long lineId, int headwayDesigned) {
+	public HashMap<String, Object> startSimulationManyExecutions(int x, String projectName, long lineId,
+			int headwayDesigned) {
 
-		double busesImpact = 0; 
+		double busesImpact = 0;
 		double passengerSatisfaction = 0;
 
 		double ewt = 0;
 		double hcv = 0;
 
-//		int maxBusFloraInd = 0;
-//		int maxBusSalomia = 0;
 		double meanHOBusSalomia = 0;
 		double meanHOBusFloraInd = 0;
 
-//		int maxUsersFloraInd = 0;
-//		int maxUsersSalomia = 0;
 		double meanHOUsersSalomia = 0;
 		double meanHOUsersFloraInd = 0;
 
-//		long maxUsersSalomiaDate = 0;
-//		long maxUsersFloraIndDate = 0;
+		HashMap<String, Object> averages = new HashMap<String, Object>();
+		Operation op = getSimulationThread().getOperation();
+
+		for (int i = 0; i < stations.size(); i++) {
+
+			averages.put(stations.get(i).getStopId() + "-MaxBuses", 0);
+			averages.put(stations.get(i).getStopId() + "-MaxUsers", 0);
+			averages.put(stations.get(i).getStopId() + "-MaxUsersDate", 0);
+
+		}
 
 		for (int i = 0; i < x; i++) {
 			try {
@@ -135,45 +142,44 @@ public class SimController {
 				e.printStackTrace();
 			}
 
-			Operation op = getSimulationThread().getOperation();
 			busesImpact += op.getBusesImpact();
 			ewt += op.getExcessWaitingTime();
 			hcv += op.getHeadwayCoefficientOfVariation();
 			passengerSatisfaction += op.getPassengerSatisfaction();
-//			maxBusFloraInd += op.getMaxbusFloraInd();
-//			maxBusSalomia += op.getMaxbusSalomia();
-//			maxUsersFloraInd += op.getMaxUsersFloraInd();
-//			maxUsersSalomia += op.getMaxUsersSalomia();
+
 			meanHOBusSalomia += op.getMeanHOBusSalomia();
 			meanHOBusFloraInd += op.getMeanHOBusFloraInd();
 			meanHOUsersSalomia += op.getMeanHOUsersSalomia();
 			meanHOUsersFloraInd += op.getMeanHOUsersFloraInd();
-//			maxUsersFloraIndDate += op.getMaxUsersFloraIndDate().getTime();
-//			maxUsersSalomiaDate += op.getMaxUsersSalomiaDate().getTime();
+
+			for (SITMStop sitmStop : stations) {
+
+				averages.put(sitmStop.getStopId() + "-MaxBuses", sitmStop.getMaxBuses()+(int)averages.get(sitmStop.getStopId()+"-MaxBuses"));
+				averages.put(sitmStop.getStopId() + "-MaxUsers", sitmStop.getMaxUsers()+(int)averages.get(sitmStop.getStopId()+"-MaxUsers"));
+				averages.put(sitmStop.getStopId() + "-MaxUsersDate", sitmStop.getMaxUsersDate().getTime()+(int)averages.get(sitmStop.getStopId()+"-MaxUsersDate"));
+
+			}
+
 		}
 
+		
+		for (SITMStop sitmStop : stations) {
 
-//		long promMaxUsersFloraIndDate = (maxUsersFloraIndDate / x);
-//		long promMaxUsersSalomiaDate = (maxUsersSalomiaDate / x);
+			averages.put(sitmStop.getStopId() + "-MaxBuses", (double)averages.get(sitmStop.getStopId()+"-MaxBuses")/x);
+			averages.put(sitmStop.getStopId() + "-MaxUsers", (double)averages.get(sitmStop.getStopId()+"-MaxUsers")/x);
+			averages.put(sitmStop.getStopId() + "-MaxUsersDate", (double)averages.get(sitmStop.getStopId()+"-MaxUsersDate")/x);
 
-//		Timestamp dateTimeFlora = new Timestamp(promMaxUsersFloraIndDate);
-//		Timestamp dateTimeSalomia = new Timestamp(promMaxUsersSalomiaDate);
+		}
 
-		HashMap<String, Object> averages = new HashMap<String, Object>();
-//		averages.put("promMaxBusSalomia", (maxBusSalomia / x));
-//		averages.put("dateTimeSalomia", dateTimeSalomia);
-//		averages.put("promMaxUsersSalomia", (maxUsersSalomia / x));
 		averages.put("promMeanHOBusSalomia", (meanHOBusSalomia / x));
 		averages.put("promMeanHOUsersSalomia", (meanHOUsersSalomia / x));
-//		averages.put("promMaxBusFloraInd", (maxBusFloraInd / x));
-//		averages.put("dateTimeFlora", dateTimeFlora);
-//		averages.put("promMaxUsersFloraInd", (maxUsersFloraInd / x));
 		averages.put("promMeanHOBusFloraInd", (meanHOBusFloraInd / x));
 		averages.put("promMeanHOUsersFloraInd", (meanHOUsersFloraInd / x));
 		averages.put("promBusesImpact", (busesImpact / x));
 		averages.put("promPassengerSatisfaction", (passengerSatisfaction / x));
 		averages.put("promEwt", (ewt / x));
 		averages.put("promHcv", (hcv / x));
+		
 		return averages;
 	}
 }

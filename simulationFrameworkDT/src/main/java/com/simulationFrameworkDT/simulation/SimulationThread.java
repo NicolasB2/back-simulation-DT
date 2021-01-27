@@ -47,7 +47,7 @@ public class SimulationThread extends Thread {
 		this.stations = stations;
 		this.headwayDesigned = headwayDesigned;
 		this.eventGenerator = new EventGenerator();
-		this.operation = new Operation(headwayDesigned);
+		this.operation = new Operation(headwayDesigned,stations);
 		initializeStructures(this.stations);
 	}
 
