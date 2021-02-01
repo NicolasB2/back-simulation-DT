@@ -46,14 +46,9 @@ public class SimulationAnalytics {
 		HashMap<Long, Double> meansHOBus = meansHOBus();
 		HashMap<Long, Double> meansHOPassengers = meansHOPassengers();
 		
-		long flora = 500300;
-		long salomia = 500250;
+		operation.setMeansHOBus(meansHOBus);
+		operation.setMeansHOPassengers(meansHOPassengers);
 		
-		operation.setMeanHOBusFloraInd(meansHOBus.get(flora));
-		operation.setMeanHOBusSalomia(meansHOBus.get(salomia));
-		
-		operation.setMeanHOUsersFloraInd(meansHOPassengers.get(flora));
-		operation.setMeanHOUsersSalomia(meansHOPassengers.get(salomia));
 	}
 
 	public HashMap<Long, Double> meansHOPassengers() {

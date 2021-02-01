@@ -13,6 +13,8 @@ import lombok.Setter;
 @Getter @Setter
 public class Operation {
 	
+	private ArrayList<SITMStop> stops;
+	
 	//Simulation
 	private Date date;
 	private boolean finished = true;
@@ -27,15 +29,10 @@ public class Operation {
 	private double busesImpact;
 	private double passengerSatisfaction;
 	
-	private double meanHOUsersSalomia;
-	private double meanHOUsersFloraInd;
-	
-	private double meanHOBusSalomia;
-	private double meanHOBusFloraInd;
-	
-	private ArrayList<SITMStop> stops;
-	
-	
+	//Hash of headway
+	private HashMap<Long, Double> meansHOBus;
+	private HashMap<Long, Double> meansHOPassengers;
+		
 	public Operation(int headwayDesigned, ArrayList<SITMStop> stops) {
 		long timeOfTravel = 2 * 60 * 60;
 		this.headwayDesigned = headwayDesigned;

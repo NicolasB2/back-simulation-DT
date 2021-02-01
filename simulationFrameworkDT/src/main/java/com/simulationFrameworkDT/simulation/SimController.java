@@ -1,12 +1,9 @@
 package com.simulationFrameworkDT.simulation;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.convert.SimpleTypeInformationMapper;
 import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
@@ -117,11 +114,15 @@ public class SimController {
 		double ewt = 0;
 		double hcv = 0;
 
-		double meanHOBusSalomia = 0;
-		double meanHOBusFloraInd = 0;
-
-		double meanHOUsersSalomia = 0;
-		double meanHOUsersFloraInd = 0;
+		//Ids
+		long flora = 500300;
+		long salomia = 500250;
+		
+//		double meanHOBusSalomia = 0;
+//		double meanHOBusFloraInd = 0;
+//
+//		double meanHOUsersSalomia = 0;
+//		double meanHOUsersFloraInd = 0;
 
 		HashMap<String, Object> averages = new HashMap<String, Object>();
 		Operation op = getSimulationThread().getOperation();
@@ -147,10 +148,10 @@ public class SimController {
 			hcv += op.getHeadwayCoefficientOfVariation();
 			passengerSatisfaction += op.getPassengerSatisfaction();
 
-			meanHOBusSalomia += op.getMeanHOBusSalomia();
-			meanHOBusFloraInd += op.getMeanHOBusFloraInd();
-			meanHOUsersSalomia += op.getMeanHOUsersSalomia();
-			meanHOUsersFloraInd += op.getMeanHOUsersFloraInd();
+//			meanHOBusSalomia += op.getMeanHOBusSalomia();
+//			meanHOBusFloraInd += op.getMeanHOBusFloraInd();
+//			meanHOUsersSalomia += op.getMeanHOUsersSalomia();
+//			meanHOUsersFloraInd += op.getMeanHOUsersFloraInd();
 
 			for (SITMStop sitmStop : stations) {
 
@@ -171,10 +172,10 @@ public class SimController {
 
 		}
 
-		averages.put("promMeanHOBusSalomia", (meanHOBusSalomia / x));
-		averages.put("promMeanHOUsersSalomia", (meanHOUsersSalomia / x));
-		averages.put("promMeanHOBusFloraInd", (meanHOBusFloraInd / x));
-		averages.put("promMeanHOUsersFloraInd", (meanHOUsersFloraInd / x));
+//		averages.put("promMeanHOBusSalomia", (meanHOBusSalomia / x));
+//		averages.put("promMeanHOUsersSalomia", (meanHOUsersSalomia / x));
+//		averages.put("promMeanHOBusFloraInd", (meanHOBusFloraInd / x));
+//		averages.put("promMeanHOUsersFloraInd", (meanHOUsersFloraInd / x));
 		averages.put("promBusesImpact", (busesImpact / x));
 		averages.put("promPassengerSatisfaction", (passengerSatisfaction / x));
 		averages.put("promEwt", (ewt / x));
