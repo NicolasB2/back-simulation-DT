@@ -17,7 +17,7 @@ public class Operation {
 	
 	//Simulation
 	private Date date;
-	private boolean finished = true;
+	private boolean execution = true;
 	
 	//Important Variables
 	private int headwayDesigned;

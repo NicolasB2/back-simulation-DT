@@ -70,6 +70,7 @@ public class SimulationThread extends Thread {
 		
 		for (int i = 0; i < events.size(); i++) {
 			
+			System.out.println(events.get(i));
 			currentDate = events.get(i).getDate();
 			
 			if (events.get(i) instanceof PassangerEvent) {
@@ -77,7 +78,7 @@ public class SimulationThread extends Thread {
 				for (int j = 0; j < stations.size(); j++) {
 					if(item.getStopId()==stations.get(j).getStopId()) {
 						stations.get(j).addPassenger(currentDate);
-						j=stations.size();
+						break;
 					}
 				}
 			}
@@ -87,19 +88,19 @@ public class SimulationThread extends Thread {
 				BusEvent item = (BusEvent) events.get(i);
 				
 				if(item.isArrive()) {
+					
 					for (int j = 0; j < stations.size(); j++) {
 						if(item.getStopId()==stations.get(j).getStopId()) {
 							stations.get(j).addBus(new SITMBus());
 						}
 					}
+					
 				}else {
+					
 					for (int j = 0; j < stations.size(); j++) {
 						if(item.getStopId()==stations.get(j).getStopId()) {
 							stations.get(j).removeBus();
-							stations.get(j).removePassenger(160);
-							if(j==0) {
-								
-							}
+							stations.get(j).removePassenger(item.getPassengers());
 						}
 					}
 				}
@@ -113,10 +114,8 @@ public class SimulationThread extends Thread {
 					e.printStackTrace();
 				} 
 			}	
-			
-			System.out.println(events.get(i));
 		}
-		this.operation.setFinished(false);
+		this.operation.setExecution(false);//change the execution attribute
 		analytics.evaluationMetrics(this.operation); // calculating Excess Waiting Time at Bus Stops
 	}
 	
@@ -178,7 +177,9 @@ public class SimulationThread extends Thread {
 			}
 			
 			BusEvent arrive = (BusEvent) eventGenerator.generateAi(new Date(currentDate), this.headwayDesigned, id, stopId);
-			System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
+			
+			//System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
+			
 			currentDate = arrive.getDate().getTime();
 			station.offer(arrive);
 			if(arrive!=null)
@@ -203,7 +204,9 @@ public class SimulationThread extends Thread {
 
 			BusEvent arrive = (BusEvent) eventGenerator.generateAi(currently, pd, leave.getBusId(),stopId);
 			arrive.setPassengers(leave.getPassengers()-(int)(leave.getPassengers()*dropPercentage));
-			System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId()+ " Passengers "+ arrive.getPassengers());
+			
+			//System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId()+ " Passengers "+ arrive.getPassengers());
+			
 			station.offer(arrive);
 			lastArrive = arrive.getDate();
 			if(arrive!=null)
@@ -228,10 +231,11 @@ public class SimulationThread extends Thread {
 			}
 
 			BusEvent simulationLeaveEvent = (BusEvent) eventGenerator.generateSi(currently, pd, arrive.getBusId(),stopId);
-			int numPassengersPerBus = passengersPerBus(simulationLeaveEvent, stopId);
+			int numPassengersPerBus = passengersPerBus(simulationLeaveEvent, stopId, simulationLeaveEvent.getPassengers());
 			simulationLeaveEvent.setPassengers(numPassengersPerBus);
 
-			System.out.println("Leave: " + simulationLeaveEvent.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
+			//System.out.println("Leave: " + simulationLeaveEvent.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
+			
 			lastLeave = simulationLeaveEvent.getDate();
 			middle.offer(simulationLeaveEvent);
 			if(simulationLeaveEvent!=null)
@@ -258,11 +262,11 @@ public class SimulationThread extends Thread {
 	}
 
 	//number of passengers and headway observed per passengers
-	private int passengersPerBus(BusEvent leave, long stopId) {
+	private int passengersPerBus(BusEvent leave, long stopId, int currentNumPassangers) {
 
 		PassangerEvent passangerEvent = passengersTime.get(stopId).poll();
 		Date passengerArrivetime = passangerEvent!=null?passangerEvent.getDate():null;
-		int numPassengersPerBus = 0;
+		int numPassengersPerBus = currentNumPassangers;
 
 		// the number of passengers exceed the bus capacity
 		while (!passengersTime.get(stopId).isEmpty() && passengerArrivetime.getTime() < leave.getDate().getTime() && numPassengersPerBus<160) {
