@@ -2,6 +2,7 @@ package com.simulationFrameworkDT.simulation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -130,6 +131,8 @@ public class SimController {
 			averages.put(stations.get(i).getStopId() + "-MaxBuses", 0);
 			averages.put(stations.get(i).getStopId() + "-MaxUsers", 0);
 			averages.put(stations.get(i).getStopId() + "-MaxUsersDate", 0);
+			averages.put(stations.get(i).getStopId() + "-MeanBus", 0);
+			averages.put(stations.get(i).getStopId() + "-MeanPassengers", 0);
 
 		}
 
@@ -152,6 +155,15 @@ public class SimController {
 //			meanHOBusFloraInd += op.getMeanHOBusFloraInd();
 //			meanHOUsersSalomia += op.getMeanHOUsersSalomia();
 //			meanHOUsersFloraInd += op.getMeanHOUsersFloraInd();
+			
+			for (Map.Entry<Long, Double> meanBus : op.getMeansHOBus().entrySet()) {
+				averages.put( meanBus.getKey()+"-MeanBus", meanBus.getValue()+(int)averages.get(meanBus.getKey()+"-MeanBus"));
+			}
+			
+			for (Map.Entry<Long, Double> meanPassengers : op.getMeansHOPassengers().entrySet()) {
+				averages.put( meanPassengers.getKey()+"-MeanPassengers", meanPassengers.getValue()+(int)averages.get(meanPassengers.getKey()+"-MeanPassengers"));
+			}
+			
 
 			for (SITMStop sitmStop : stations) {
 
@@ -169,8 +181,12 @@ public class SimController {
 			averages.put(sitmStop.getStopId() + "-MaxBuses", ((int)averages.get(sitmStop.getStopId()+"-MaxBuses"))/x);
 			averages.put(sitmStop.getStopId() + "-MaxUsers", ((int)averages.get(sitmStop.getStopId()+"-MaxUsers"))/x);
 			averages.put(sitmStop.getStopId() + "-MaxUsersDate", ((long)averages.get(sitmStop.getStopId()+"-MaxUsersDate"))/x);
-
+			averages.put(sitmStop.getStopId() + "-MeanBus", ((double)averages.get(sitmStop.getStopId()+"-MeanBus"))/x);
+			averages.put(sitmStop.getStopId() + "-MeanPassengers", ((double)averages.get(sitmStop.getStopId()+"-MeanPassengers"))/x);
+			
 		}
+		
+		
 
 //		averages.put("promMeanHOBusSalomia", (meanHOBusSalomia / x));
 //		averages.put("promMeanHOUsersSalomia", (meanHOUsersSalomia / x));
