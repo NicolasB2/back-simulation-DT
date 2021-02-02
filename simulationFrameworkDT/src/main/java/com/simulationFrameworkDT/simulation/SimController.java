@@ -105,8 +105,7 @@ public class SimController {
 		simulationThread.start();
 	}
 
-	public HashMap<String, Object> startSimulationManyExecutions(int x, String projectName, long lineId,
-			int headwayDesigned) {
+	public HashMap<String, Object> startSimulationManyExecutions(int x, String projectName, long lineId, int headwayDesigned) {
 
 		double busesImpact = 0;
 		double passengerSatisfaction = 0;
@@ -115,8 +114,8 @@ public class SimController {
 		double hcv = 0;
 
 		//Ids
-		long flora = 500300;
-		long salomia = 500250;
+//		long flora = 500300;
+//		long salomia = 500250;
 		
 //		double meanHOBusSalomia = 0;
 //		double meanHOBusFloraInd = 0;
@@ -125,7 +124,6 @@ public class SimController {
 //		double meanHOUsersFloraInd = 0;
 
 		HashMap<String, Object> averages = new HashMap<String, Object>();
-		Operation op = getSimulationThread().getOperation();
 
 		for (int i = 0; i < stations.size(); i++) {
 
@@ -143,6 +141,8 @@ public class SimController {
 				e.printStackTrace();
 			}
 
+			Operation op = getSimulationThread().getOperation();
+			
 			busesImpact += op.getBusesImpact();
 			ewt += op.getExcessWaitingTime();
 			hcv += op.getHeadwayCoefficientOfVariation();
@@ -166,9 +166,9 @@ public class SimController {
 		
 		for (SITMStop sitmStop : stations) {
 
-			averages.put(sitmStop.getStopId() + "-MaxBuses", (double)averages.get(sitmStop.getStopId()+"-MaxBuses")/x);
-			averages.put(sitmStop.getStopId() + "-MaxUsers", (double)averages.get(sitmStop.getStopId()+"-MaxUsers")/x);
-			averages.put(sitmStop.getStopId() + "-MaxUsersDate", (double)averages.get(sitmStop.getStopId()+"-MaxUsersDate")/x);
+			averages.put(sitmStop.getStopId() + "-MaxBuses", ((int)averages.get(sitmStop.getStopId()+"-MaxBuses"))/x);
+			averages.put(sitmStop.getStopId() + "-MaxUsers", ((int)averages.get(sitmStop.getStopId()+"-MaxUsers"))/x);
+			averages.put(sitmStop.getStopId() + "-MaxUsersDate", ((long)averages.get(sitmStop.getStopId()+"-MaxUsersDate"))/x);
 
 		}
 

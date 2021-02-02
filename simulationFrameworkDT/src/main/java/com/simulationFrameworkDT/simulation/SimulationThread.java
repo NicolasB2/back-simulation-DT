@@ -142,7 +142,7 @@ public class SimulationThread extends Thread {
 				stationQueue = arriveFirstStation(initialDate, lastDate, stations.get(i).getStopId());
 
 			} else { // arrive the next stations 
-				stationQueue = arriveNextStation(lastDate,middleQueue, stations.get(i).getModelDataGenerators().get(this.lineId).getInterArrivalDistribution(),stations.get(i).getStopId());
+				stationQueue = arriveNextStation(lastDate,middleQueue, stations.get(i).getModelDataGenerators().get(this.lineId).getInterArrivalDistribution(),stations.get(i).getStopId(),0.5);
 			}
 
 			// leave the station
@@ -178,7 +178,7 @@ public class SimulationThread extends Thread {
 			}
 			
 			BusEvent arrive = (BusEvent) eventGenerator.generateAi(new Date(currentDate), this.headwayDesigned, id, stopId);
-			//System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
+			System.out.println("Arrive: " + arrive.getDateFormat() + " BuseId " + arrive.getBusId());
 			currentDate = arrive.getDate().getTime();
 			station.offer(arrive);
 			if(arrive!=null)
@@ -187,7 +187,7 @@ public class SimulationThread extends Thread {
 		return station;
 	}
 
-	private LinkedList<BusEvent> arriveNextStation(Date lastDate, Queue<BusEvent> middleQueue,IDistribution pd, long stopId) {
+	private LinkedList<BusEvent> arriveNextStation(Date lastDate, Queue<BusEvent> middleQueue,IDistribution pd, long stopId, double dropPercentage) {
 
 		Date lastArrive = middleQueue.peek().getDate(); // initialize auxiliary variable which represent the last time that a bus arrive the station
 		LinkedList<BusEvent> station = new LinkedList<BusEvent>();
@@ -202,7 +202,8 @@ public class SimulationThread extends Thread {
 			}
 
 			BusEvent arrive = (BusEvent) eventGenerator.generateAi(currently, pd, leave.getBusId(),stopId);
-			//System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId());
+			arrive.setPassengers(leave.getPassengers()-(int)(leave.getPassengers()*dropPercentage));
+			System.out.println("Arrive: " + arrive.getDateFormat() + " BusId " + arrive.getBusId()+ " Passengers "+ arrive.getPassengers());
 			station.offer(arrive);
 			lastArrive = arrive.getDate();
 			if(arrive!=null)
@@ -230,7 +231,7 @@ public class SimulationThread extends Thread {
 			int numPassengersPerBus = passengersPerBus(simulationLeaveEvent, stopId);
 			simulationLeaveEvent.setPassengers(numPassengersPerBus);
 
-			//system.out.println("Leave: " + simulationLeaveEvent.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
+			System.out.println("Leave: " + simulationLeaveEvent.getDateFormat() + " Bus " + arrive.getBusId() + " Passengers "+ numPassengersPerBus);
 			lastLeave = simulationLeaveEvent.getDate();
 			middle.offer(simulationLeaveEvent);
 			if(simulationLeaveEvent!=null)

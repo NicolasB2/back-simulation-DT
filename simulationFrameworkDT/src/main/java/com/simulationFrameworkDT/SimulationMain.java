@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
@@ -147,8 +148,9 @@ public class SimulationMain {
 		stop2.addModelDataGenerator(mdg2, 131);
 		sm.addStationToSimulation(stop2);
 		
+		HashMap<String, Object> results= sm.startSimulationManyExecutions(x, "test.dat", 131, hd);
 		
-		for (Map.Entry<String, Object> entry : sm.startSimulationManyExecutions(x, "test.dat", 131, hd).entrySet()) {
+		for (Map.Entry<String, Object> entry : results.entrySet()) {
 		    System.out.println(entry.getKey() + ": " + entry.getValue());
 		}
 		
