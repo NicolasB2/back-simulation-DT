@@ -66,9 +66,9 @@ public class SimulationRest implements ISimulationRest {
 		return SimController.getSimulationThread().getSimulationResults();
 	}
 	
-	@PutMapping("/operation/{id}")
+	@PutMapping("/stops/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public ArrayList<SITMStop> getSimulatedStations(String projectName){
+	public ArrayList<SITMStop> getSimulatedStations(@PathVariable("id") String projectName){
 		return SimController.getSimulationThread().getStops();
 	}
 	
