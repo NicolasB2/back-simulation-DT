@@ -93,9 +93,9 @@ public class Source_csv implements IDateSource {
 		HashMap<String, String> variables = new HashMap<>();
 		
 		for (int i = 0; i < data.length; i++) {
-//			System.out.println("DATOS DE LA VARIABLE " + headers[i] + ", "+data[i]);
 			variables.put(headers[i], data[i]);
 		}
+		
 		return variables;
 	}
 	
@@ -106,8 +106,6 @@ public class Source_csv implements IDateSource {
 		File sourceFile = getSourceFile(file);
 		
 		try {
-
-			
 			BufferedReader br = new BufferedReader(new FileReader(sourceFile));
 			String text = br.readLine(); 
 			text = br.readLine();
@@ -132,7 +130,6 @@ public class Source_csv implements IDateSource {
 					
 					String datagramData = data[0];
 					long datagramDateTime = dateFormat.parse(datagramData).getTime()/1000;
-					//Date datagramDate = new Date(dateFormat.parse(data[0]).getTime());
 					long busId = Long.parseLong(data[1]);
 					long stopId = Long.parseLong(data[2]);
 					long odometer = Long.parseLong(data[3]);
@@ -231,7 +228,7 @@ public class Source_csv implements IDateSource {
 					
 				}		
 			}
-
+			
 			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -344,7 +341,6 @@ public class Source_csv implements IDateSource {
 						}
 					}
 				}
-
 				line = br.readLine();
 			}
 
@@ -375,7 +371,6 @@ public class Source_csv implements IDateSource {
 				columns = line.split(";");
 
 				if (!columns[0].isEmpty() && columns[3].equals(planVersionId + "")) {
-
 					long calendarId = Long.parseLong(columns[0]);
 					DateFormat dateFormat = new SimpleDateFormat("dd-MMM-yy", Locale.US);
 					Date operationDate = new Date(dateFormat.parse(columns[1]).getTime());
@@ -391,7 +386,6 @@ public class Source_csv implements IDateSource {
 			e.printStackTrace();
 		}
 
-		
 		Collections.sort(calendars,new Comparator<SITMCalendar>() {
 			public int compare(SITMCalendar o1, SITMCalendar o2) {
 		         return o1.getOperationDay().compareTo(o2.getOperationDay());
@@ -410,7 +404,6 @@ public class Source_csv implements IDateSource {
 		BufferedReader br;
 
 		try {
-
 			br = new BufferedReader(new FileReader(path));
 			String[] columns = null;
 			String line = br.readLine();
@@ -426,9 +419,7 @@ public class Source_csv implements IDateSource {
 					String description = columns[3];
 
 					lines.add(new SITMLine(lineid, shortName, description, planVersionId));
-
 				}
-
 				line = br.readLine();
 			}
 
@@ -532,7 +523,6 @@ public class Source_csv implements IDateSource {
 					
 					lineStops.add(new SITMLineStop(lineStopid, stopsequence, orientation, lineid, stopid,planVersionid, lineVariant, registerDate, lineVariantType));
 				}
-				
 				line = br.readLine();
 			}
 			

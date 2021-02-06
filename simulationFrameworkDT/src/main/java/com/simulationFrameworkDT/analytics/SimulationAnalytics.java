@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.simulationFrameworkDT.analytics.fitness.CubicFitnessFunction;
 import com.simulationFrameworkDT.analytics.fitness.NormalizedFitnessFunction;
-import com.simulationFrameworkDT.model.Operation;
 
 import lombok.Getter;
 
@@ -37,7 +36,7 @@ public class SimulationAnalytics {
 		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;
 	}
 	
-	public void evaluationMetrics(Operation operation) {
+	public void evaluationMetrics(SimulationResults operation) {
 		operation.setHeadwayCoefficientOfVariation(headwayCoefficientOfVariation());
 		operation.setExcessWaitingTime(excessWaitingTime());
 		operation.setBusesImpact(fitnessOperation());

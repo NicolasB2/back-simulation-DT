@@ -2,7 +2,10 @@ package com.simulationFrameworkDT.analytics;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,8 +68,7 @@ public class VisualizationAnalytics {
 
 		double dLat = Math.toRadians(lat2 - lat1);
 		double dLng = Math.toRadians(lng2 - lng1);
-		double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
-				* Math.cos(Math.toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+		double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
 		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
 		return c <= 0.00003 ? true : false;
@@ -145,6 +147,140 @@ public class VisualizationAnalytics {
 				times[2] = datagram.getDatagramDateTime();
 			}
 
+		}
+	}
+	
+	/*
+	 * Post analysis, print the results in console 
+	 */
+	public void postAnalysis() {
+		
+		for (Long  observerStop: stops.keySet()) {
+			
+			System.out.println("---------------------------------------------------------------------------------");
+			System.out.println("Stop Id " + observerStop);
+			
+			order_Times(observerStop);
+			time_Of_Polygon(observerStop);
+			time_Of_Arrival(observerStop); 
+			time_Of_service(observerStop);
+			delay_In_Queue(observerStop);
+			interarrival_Time_Between_Buses(observerStop);
+		}
+
+	}
+	
+	public void order_Times(long observerStop) {
+		
+		for (Map.Entry<Long, ArrayList<Long[]>> entry : busesWaitingTimes.entrySet()) {
+
+			if( entry.getKey() == observerStop) {
+					
+				Collections.sort(entry.getValue(), new Comparator<Long[]>() {
+					public int compare(Long[] o1, Long[] o2) {
+						return o1[3].compareTo(o2[3]);
+					}
+				});
+			}
+		}
+	}
+	
+	public void time_Of_Polygon(long observerStop) {
+		
+		for (Map.Entry<Long, ArrayList<Long[]>> entry : busesWaitingTimes.entrySet()) {
+
+			if( entry.getKey() == observerStop) {
+				
+				for (Long[] data : entry.getValue()) {
+					long time = data[2]-data[1];
+					System.out.print("arrive: "+data[1]);
+					System.out.print(" leave: "+data[2]);
+					System.out.println(" timeInside: "+time);
+				}
+				System.out.println();
+			}
+		}
+	}
+	
+	public void time_Of_Arrival(long observerStop) {
+		
+		for (Map.Entry<Long, ArrayList<Long[]>> entry : busesWaitingTimes.entrySet()) {
+
+			if( entry.getKey() == observerStop) {
+	
+				for (Long[] data : entry.getValue()) {
+					System.out.println(" Ti: "+data[3]);
+				}
+				
+				System.out.println();
+			}
+		}
+	}
+	
+	public void time_Of_service(long observerStop) {
+		
+		for (Map.Entry<Long, ArrayList<Long[]>> entry : busesWaitingTimes.entrySet()) {
+
+			if( entry.getKey() == observerStop) {
+	
+				for (int i = 0; i < entry.getValue().size()-1; i++) {
+					Long[] dataPrev = entry.getValue().get(i);
+					Long[] data = entry.getValue().get(i+1);
+					long Si = 0;
+					
+					if(dataPrev[2]>data[3]) {
+						Si = data[2]-dataPrev[2];
+					}else {
+						Si = data[2]-data[3];
+					}
+					
+					System.out.println(" Si: "+Si);
+				}
+				
+				System.out.println();
+			}
+		}
+	}
+	
+	public void delay_In_Queue(long observerStop) {
+	
+		for (Map.Entry<Long, ArrayList<Long[]>> entry : busesWaitingTimes.entrySet()) {
+
+			if( entry.getKey() == observerStop) {
+	
+				for (int i = 0; i < entry.getValue().size()-1; i++) {
+					Long[] dataPrev = entry.getValue().get(i);
+					Long[] data = entry.getValue().get(i+1);
+					long Di = 0;
+					
+					if(dataPrev[2]>data[3]) {
+						Di = dataPrev[2]-data[3];
+					}
+					
+					System.out.println(" Di: "+Di);
+				}
+				
+				System.out.println();
+			}
+		}
+	}
+	
+	public void interarrival_Time_Between_Buses(long observerStop) {
+		
+		for (Map.Entry<Long, ArrayList<Long[]>> entry : busesWaitingTimes.entrySet()) {
+
+			if( entry.getKey() == observerStop) {
+	
+				for (int i = 0; i < entry.getValue().size()-1; i++) {
+					Long[] dataPrev = entry.getValue().get(i);
+					Long[] data = entry.getValue().get(i+1);
+					long Ai = data[3]-dataPrev[3];
+					System.out.println(" Ai: "+Ai);
+				}
+				
+				System.out.println();
+			}
+			
 		}
 	}
 }

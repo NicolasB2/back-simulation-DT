@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.model.ModelDataGenerator;
 import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
@@ -20,7 +19,6 @@ import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
 import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.SimController;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
-import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
 import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
@@ -30,18 +28,16 @@ public class SimulationMain {
 	public static void main(String[] args) throws IOException, ParseException, InterruptedException {
 		
 //		dataTest();
-//		visualizationTest();
-		int[] x = {210,240,270,300,330,360,390,600,900,1200};
+		visualizationTest();	
 		
-		for (int i = 0; i < 1; i++) {
-			simulationTest(1,x[i]);
-		}
-		
+//		int[] x = {210,240,270,300,330,360,390,600,900,1200};
+//		for (int i = 0; i < 1; i++) {
+//			simulationTest(1,x[i]);
+//		}
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		reader.readLine();
 	}
-	
 	
 	public static void dataTest(){
 		
@@ -53,18 +49,15 @@ public class SimulationMain {
 		for (int i = 0; i < planversions.size(); i++) {System.out.println(planversions.get(i));}
 		System.out.println();
 		
-		
 		System.out.println("calendars ========================================================================================================================================\n");
 		ArrayList<SITMCalendar> calendars = ds.findAllCalendarsByPlanVersion(DataSourceSystem.FILE_CSV,261);
 		for (int i = 0; i < calendars.size(); i++) {System.out.println(calendars.get(i));}
 		System.out.println();
 		
-		
 		System.out.println("lines =========================================================================================================================================\n");
 		ArrayList<SITMLine> lines = ds.findAllLinesByPlanVersion(DataSourceSystem.FILE_CSV,261);
 		for (int i = 0; i < lines.size(); i++) {System.out.println(lines.get(i));}
 		System.out.println();
-		
 		
 		System.out.println("Stops ========================================================================================================================================\n");
 		ArrayList<SITMStop> stops = ds.findAllStopsByLine(DataSourceSystem.FILE_CSV,261, 131);
@@ -75,8 +68,8 @@ public class SimulationMain {
 	public static void saveProject(SimController sm) throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
-		Date init = new Date(dateFormat.parse("2019-06-20 05:00:00").getTime());
-		Date last = new Date(dateFormat.parse("2019-06-20 05:30:00").getTime());
+		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
+		Date last = new Date(dateFormat.parse("2019-06-20 18:30:00").getTime());
 		
 		StateController pc = sm.getProjectController();
 		Project project = new Project();
@@ -94,12 +87,8 @@ public class SimulationMain {
 	public static void visualizationTest() throws ParseException{
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
-		sm.setAnalytics(new VisualizationAnalytics());
-		sm.getAnalytics().setDataSource(sm.getDataSource());
 		sm.setProjectController(new StateController());
 		sm.setEventProcessorController(new EventProcessorController());
-		sm.setEventProvirderController(new EventProviderController());
-		sm.getEventProvirderController().getEventFecher().setDataSource(sm.getDataSource());
 		saveProject(sm);
 		sm.startVisualization("test.dat");
 	}
@@ -107,14 +96,11 @@ public class SimulationMain {
 	public static SimController sm() {
 		SimController sm =  new SimController();
 		sm.setDataSource(new DataSourceSystem());
-		sm.setAnalytics(new VisualizationAnalytics());
-		sm.getAnalytics().setDataSource(sm.getDataSource());
 		sm.setProjectController(new StateController());
 		sm.setEventProcessorController(new EventProcessorController());
-		sm.setEventProvirderController(new EventProviderController());
-		sm.getEventProvirderController().getEventFecher().setDataSource(sm.getDataSource());
 		return sm;
 	}
+	
 	public static void simulationTest(int x,int hd) throws ParseException, InterruptedException { 	
 		
 		SimController sm = sm();
@@ -152,9 +138,6 @@ public class SimulationMain {
 		
 		for (Map.Entry<String, Object> entry : results.entrySet()) {
 		    System.out.println(entry.getKey() + ": " + entry.getValue());
-		}
-		
-		
-		
+		}	
 	}
 }

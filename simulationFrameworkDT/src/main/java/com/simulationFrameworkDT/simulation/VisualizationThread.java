@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.simulationFrameworkDT.analytics.VisualizationAnalytics;
 import com.simulationFrameworkDT.simulation.event.Event;
+import com.simulationFrameworkDT.simulation.event.eventProvider.EventProviderController;
 import com.simulationFrameworkDT.simulation.state.Project;
 
 import lombok.Getter;
@@ -18,6 +19,7 @@ class VisualizationThread extends Thread {
 
 	private Project project;
 	private SimController simController;
+	private EventProviderController eventProvirderController;
 
 	@Autowired
 	private VisualizationAnalytics analytics;
@@ -30,10 +32,13 @@ class VisualizationThread extends Thread {
 		killed = true;
 	}
 	
-	public VisualizationThread(SimController simController, Project project, VisualizationAnalytics analytics) {
+	public VisualizationThread(SimController simController, Project project) {
 		this.simController = simController;
-		this.analytics = analytics;
 		this.project = project;
+		this.eventProvirderController = new EventProviderController();
+		this.eventProvirderController.setDataSource(simController.getDataSource());
+		this.analytics = new  VisualizationAnalytics();
+		this.analytics.setDataSource(simController.getDataSource());
 		analytics.init(project);
 	}
 
@@ -45,12 +50,13 @@ class VisualizationThread extends Thread {
 		if(nextDate.getTime()>project.getFinalDate().getTime()) {
 			
 			kill();
-			System.out.println("=======> simulation finished");
+			System.out.println("=======> Visualization finished");
 			System.out.println();
+			analytics.postAnalysis();
 			
 		}else {		
 			project.setNextDate(nextDate);
-			events = simController.getNextEvent(project);
+			events = eventProvirderController.getNextEvent(project);
 			project.setInitialDate(nextDate);
 			project.getClock().getNextTick(nextDate);
 		}
@@ -68,7 +74,7 @@ class VisualizationThread extends Thread {
 					if(events==null) {
 						
 						kill();
-						System.out.println("=======> simulation finished");
+						System.out.println("=======> Visualization finished");
 						
 					}else if (!events.isEmpty()) {			
 						

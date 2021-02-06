@@ -54,6 +54,7 @@ public class SITMStop implements IStop,Serializable  {
 	@Column(name="PLANVERSIONID")
 	private long planVersionId;
 
+	// hash map id => lineId
 	private HashMap<Long, ModelDataGenerator> modelDataGenerators;
 	private Queue<SITMBus> busQueue = new LinkedList<SITMBus>();
 	private int passengerQueue;

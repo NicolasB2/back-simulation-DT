@@ -1,4 +1,4 @@
-package com.simulationFrameworkDT.model;
+package com.simulationFrameworkDT.analytics;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Operation {
+public class SimulationResults {
 	
 	private ArrayList<SITMStop> stops;
 	
@@ -33,7 +33,7 @@ public class Operation {
 	private HashMap<Long, Double> meansHOBus;
 	private HashMap<Long, Double> meansHOPassengers;
 		
-	public Operation(int headwayDesigned, ArrayList<SITMStop> stops) {
+	public SimulationResults(int headwayDesigned, ArrayList<SITMStop> stops) {
 		long timeOfTravel = 2 * 60 * 60;
 		this.headwayDesigned = headwayDesigned;
 		this.numberOfBuses = (int)timeOfTravel/headwayDesigned;

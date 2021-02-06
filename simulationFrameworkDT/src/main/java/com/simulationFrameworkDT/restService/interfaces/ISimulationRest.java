@@ -1,13 +1,14 @@
 package com.simulationFrameworkDT.restService.interfaces;
 
-import com.simulationFrameworkDT.model.Operation;
+import java.util.ArrayList;
+
+import com.simulationFrameworkDT.analytics.SimulationResults;
+import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 
 public interface ISimulationRest {
 
+	//Simulation
 	public String simulation(String projectName, int headwayDesigned);
-	public Operation getOperation(String projectName);
-	public void start(String projectName);
-	public void pause(String projectName);
-	public void resume(String projectName);
-	public void stop(String projectName);
+	public SimulationResults getSimulationResults(String projectName);
+	public ArrayList<SITMStop> getSimulatedStations(String projectName);
 }
