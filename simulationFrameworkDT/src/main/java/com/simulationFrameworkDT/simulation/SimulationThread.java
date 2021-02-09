@@ -10,10 +10,10 @@ import java.util.Queue;
 
 import com.simulationFrameworkDT.analytics.SimulationAnalytics;
 import com.simulationFrameworkDT.analytics.SimulationResults;
+import com.simulationFrameworkDT.model.SITM.SITMBus;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.model.events.BusEvent;
 import com.simulationFrameworkDT.model.events.PassangerEvent;
-import com.simulationFrameworkDT.model.factorySITM.SITMBus;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.eventProvider.EventGenerator;
 import com.simulationFrameworkDT.simulation.state.Project;
@@ -62,7 +62,7 @@ public class SimulationThread extends Thread {
 	public void run() {
 	
 		simulation(); // generate the simulation
-		allEvents(); //  all events order by time
+		sortEvents(); //  all events order by time
 		SimulationAnalytics analytics = new SimulationAnalytics(headwayDesigned, hobspList, hobssList);
 		
 		Date lastDate = events.get(0).getDate();
@@ -268,6 +268,7 @@ public class SimulationThread extends Thread {
 		int numPassengersPerBus = currentNumPassangers;
 
 		// the number of passengers exceed the bus capacity
+		// WARNING: parameterize the bus capacity (160)
 		while (!passengersTime.get(stopId).isEmpty() && passengerArrivetime.getTime() < leave.getDate().getTime() && numPassengersPerBus<160) {
 			
 			numPassengersPerBus++;
@@ -292,7 +293,7 @@ public class SimulationThread extends Thread {
 		return id;
 	}
 
-	private void allEvents() {
+	private void sortEvents() {
 		if(!events.isEmpty()) {
 			Collections.sort(events, new Comparator<Event>() {
 				public int compare(Event o1, Event o2) {

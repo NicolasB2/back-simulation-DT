@@ -1,7 +1,6 @@
-package com.simulationFrameworkDT.model.factorySITM;
+package com.simulationFrameworkDT.model.SITM;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +9,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
 
-import com.simulationFrameworkDT.model.factoryInterfaces.ICalendar;
-import com.sun.istack.NotNull;
+import com.simulationFrameworkDT.model.factoryInterfaces.ITask;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,38 +17,34 @@ import lombok.ToString;
 
 
 @Entity
-@Table(name="CALENDAR")
+@Table(name="TASKS")
 @BatchSize(size=25)
 @Getter @Setter @ToString
-public class SITMCalendar implements ICalendar,Serializable  {
+public class SITMTask implements ITask,Serializable  {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@NotNull
-	@Column(name="CALENDARID")
-	private long calendarId;
+	@Column(name="TASKID")
+	private long taskId;
 	
-	@NotNull
-	@Column(name="OPERATIONDAY")
-	private Date operationDay;
-	
-	@NotNull
 	@Column(name="SCHEDULETYPEID")
 	private long scheduleTypeId;
 	
-	@NotNull
+	@Column(name="LINES_LINEID")
+	private long lineId;
+	
 	@Column(name="PLANVERSIONID")
 	private long planVersionId;
 
-	public SITMCalendar () {
+	public SITMTask () {
 		super();
 	}
 	
-	public SITMCalendar(long calendarId, Date operationDay, long scheduleTypeId, long planVersionId) {
-		this.calendarId = calendarId;
-		this.operationDay = operationDay;
+	public SITMTask(long taskId, long scheduleTypeId, long lineId, long planVersionId) {
+		this.taskId = taskId;
 		this.scheduleTypeId = scheduleTypeId;
+		this.lineId = lineId;
 		this.planVersionId = planVersionId;
 	}
 }

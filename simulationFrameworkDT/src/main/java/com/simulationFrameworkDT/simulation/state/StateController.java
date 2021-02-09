@@ -73,18 +73,18 @@ public class StateController {
     // Animation Speed
     //================================================================================
 	
-	public void setFastSpeed(String Projectname) {
-		Project project = loadProject(Projectname);
+	public void setFastSpeed(String projectname) {
+		Project project = loadProject(projectname);
 		project.getClock().setFastSpeed();
 	}
 
-	public void setNormalSpeed(String Projectname) {
-		Project project = loadProject(Projectname);
+	public void setNormalSpeed(String projectname) {
+		Project project = loadProject(projectname);
 		project.getClock().setNormalSpeed();
 	}
 
-	public void setSlowSpeed(String Projectname) {
-		Project project = loadProject(Projectname);
+	public void setSlowSpeed(String projectname) {
+		Project project = loadProject(projectname);
 		project.getClock().setSlowSpeed();
 	}
 
@@ -92,28 +92,28 @@ public class StateController {
     // Read Speed
     //================================================================================
 	
-	public void setOneToOneSpeed(String Projectname) {
-		Project project = loadProject(Projectname);
+	public void setOneToOneSpeed(String projectname) {
+		Project project = loadProject(projectname);
 		project.getClock().setOneToOneSpeed();
 	}
 
-	public void setOneToFiveSpeed(String Projectname) {
-		Project project = loadProject(Projectname);
+	public void setOneToFiveSpeed(String projectname) {
+		Project project = loadProject(projectname);
 		project.getClock().setOneToFiveSpeed();
 	}
 
-	public void setOneToTenSpeed(String Projectname) {
-		Project project = loadProject(Projectname);
+	public void setOneToTenSpeed(String projectname) {
+		Project project = loadProject(projectname);
 		project.getClock().setOneToTenSpeed();
 	}
 
-	public void setOneToThirtySpeed(String Projectname) {
-		Project project = loadProject(Projectname);
+	public void setOneToThirtySpeed(String projectname) {
+		Project project = loadProject(projectname);
 		project.getClock().setOneToThirtySpeed();
 	}
 
-	public void setOneToSixtySpeed(String Projectname) {
-		Project project = loadProject(Projectname);
+	public void setOneToSixtySpeed(String projectname) {
+		Project project = loadProject(projectname);
 		project.getClock().setOneToSixtySpeed();
 	}
 	

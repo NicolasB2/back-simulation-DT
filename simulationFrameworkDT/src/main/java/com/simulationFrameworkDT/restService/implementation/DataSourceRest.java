@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.model.factorySITM.SITMLine;
-import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.SITM.SITMCalendar;
+import com.simulationFrameworkDT.model.SITM.SITMLine;
+import com.simulationFrameworkDT.model.SITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.restService.dataTransfer.ProjectDTO;
 import com.simulationFrameworkDT.restService.interfaces.IDataSourceRest;
 import com.simulationFrameworkDT.simulation.state.Project;

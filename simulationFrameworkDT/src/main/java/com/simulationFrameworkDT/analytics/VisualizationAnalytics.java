@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.model.events.DatagramEvent;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.state.Project;
 

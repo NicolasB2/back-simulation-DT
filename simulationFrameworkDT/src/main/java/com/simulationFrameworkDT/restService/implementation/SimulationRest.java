@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.simulationFrameworkDT.analytics.SimulationResults;
 import com.simulationFrameworkDT.model.ModelDataGenerator;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.restService.interfaces.ISimulationRest;
 import com.simulationFrameworkDT.simulation.SimController;
 import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;

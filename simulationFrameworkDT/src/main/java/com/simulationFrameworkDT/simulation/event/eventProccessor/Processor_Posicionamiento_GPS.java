@@ -7,7 +7,7 @@ import com.simulationFrameworkDT.simulation.state.TargetSystem;
 public class Processor_Posicionamiento_GPS implements IEventProcessor {
 
 	@Override
-	public void processEvent(Event event, TargetSystem TargetSystem) {
+	public void processEvent(Event event, TargetSystem targetSystem) {
 
 		if (event instanceof DatagramEvent) {
 			
@@ -18,7 +18,7 @@ public class Processor_Posicionamiento_GPS implements IEventProcessor {
 			double latitude = datagram.getLatitude();
 		
 			if (longitude != -1 && latitude != -1) {
-				TargetSystem.moveBus(busId, lineId, longitude, latitude);
+				targetSystem.moveBus(busId, lineId, longitude, latitude);
 			}
 		}
 

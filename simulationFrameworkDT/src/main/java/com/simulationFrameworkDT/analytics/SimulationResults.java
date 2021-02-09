@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 
 import lombok.Getter;
 import lombok.Setter;

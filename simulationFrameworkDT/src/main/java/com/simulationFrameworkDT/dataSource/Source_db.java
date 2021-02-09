@@ -16,12 +16,12 @@ import com.simulationFrameworkDT.dataSource.persistence.LineRepository;
 import com.simulationFrameworkDT.dataSource.persistence.OperationalTravelsRepository;
 import com.simulationFrameworkDT.dataSource.persistence.PlanVersionRepository;
 import com.simulationFrameworkDT.dataSource.persistence.StopRepository;
+import com.simulationFrameworkDT.model.SITM.SITMCalendar;
+import com.simulationFrameworkDT.model.SITM.SITMLine;
+import com.simulationFrameworkDT.model.SITM.SITMOperationalTravels;
+import com.simulationFrameworkDT.model.SITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.model.events.DatagramEvent;
-import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.model.factorySITM.SITMLine;
-import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
-import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 import com.simulationFrameworkDT.simulation.event.EventType;
 

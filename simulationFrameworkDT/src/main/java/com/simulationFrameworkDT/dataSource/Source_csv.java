@@ -14,13 +14,13 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 
+import com.simulationFrameworkDT.model.SITM.SITMCalendar;
+import com.simulationFrameworkDT.model.SITM.SITMLine;
+import com.simulationFrameworkDT.model.SITM.SITMLineStop;
+import com.simulationFrameworkDT.model.SITM.SITMOperationalTravels;
+import com.simulationFrameworkDT.model.SITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.model.events.DatagramEvent;
-import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.model.factorySITM.SITMLine;
-import com.simulationFrameworkDT.model.factorySITM.SITMLineStop;
-import com.simulationFrameworkDT.model.factorySITM.SITMOperationalTravels;
-import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.Event;
 
 import lombok.Getter;

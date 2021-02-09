@@ -2,10 +2,10 @@ package com.simulationFrameworkDT.restService.interfaces;
 
 import java.util.ArrayList;
 
-import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.model.factorySITM.SITMLine;
-import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.SITM.SITMCalendar;
+import com.simulationFrameworkDT.model.SITM.SITMLine;
+import com.simulationFrameworkDT.model.SITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.restService.dataTransfer.ProjectDTO;
 
 public interface IDataSourceRest {

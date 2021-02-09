@@ -13,10 +13,10 @@ import java.util.Map;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.model.ModelDataGenerator;
-import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
-import com.simulationFrameworkDT.model.factorySITM.SITMLine;
-import com.simulationFrameworkDT.model.factorySITM.SITMPlanVersion;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.SITM.SITMCalendar;
+import com.simulationFrameworkDT.model.SITM.SITMLine;
+import com.simulationFrameworkDT.model.SITM.SITMPlanVersion;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.simulation.SimController;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
 import com.simulationFrameworkDT.simulation.state.Project;
@@ -116,6 +116,7 @@ public class SimulationMain {
 		passenger.ExponentialDistribution(6.54763);
 
 		ModelDataGenerator mdg = new ModelDataGenerator(passenger, ai, si);
+		
 		SITMStop stop1 = new SITMStop(500250);
 		stop1.addModelDataGenerator(mdg,131);
 		sm.addStationToSimulation(stop1);

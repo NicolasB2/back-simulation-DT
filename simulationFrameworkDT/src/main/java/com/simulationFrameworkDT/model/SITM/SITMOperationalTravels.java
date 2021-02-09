@@ -1,4 +1,4 @@
-package com.simulationFrameworkDT.model.factorySITM;
+package com.simulationFrameworkDT.model.SITM;
 
 import java.sql.Date;
 

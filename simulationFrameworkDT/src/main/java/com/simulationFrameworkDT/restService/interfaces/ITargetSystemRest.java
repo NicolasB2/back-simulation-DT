@@ -2,8 +2,8 @@ package com.simulationFrameworkDT.restService.interfaces;
 
 import java.util.ArrayList;
 
-import com.simulationFrameworkDT.model.factorySITM.SITMBus;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.SITM.SITMBus;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 
 public interface ITargetSystemRest {
 

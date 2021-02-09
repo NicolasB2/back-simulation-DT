@@ -3,7 +3,7 @@ package com.simulationFrameworkDT.restService.interfaces;
 import java.util.ArrayList;
 
 import com.simulationFrameworkDT.analytics.SimulationResults;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 
 public interface ISimulationRest {
 

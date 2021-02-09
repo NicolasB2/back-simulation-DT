@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.simulationFrameworkDT.analytics.SimulationResults;
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
-import com.simulationFrameworkDT.model.factorySITM.SITMStop;
+import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.simulation.event.eventProccessor.EventProcessorController;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
@@ -20,6 +20,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Service
+// Defines the SITM-MIO model to be simulated
 public class SimController {
 
 	@Autowired

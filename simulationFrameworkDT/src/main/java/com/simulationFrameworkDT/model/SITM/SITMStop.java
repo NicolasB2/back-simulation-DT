@@ -1,4 +1,4 @@
-package com.simulationFrameworkDT.model.factorySITM;
+package com.simulationFrameworkDT.model.SITM;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -87,11 +87,22 @@ public class SITMStop implements IStop,Serializable  {
 	public void addModelDataGenerator(ModelDataGenerator modelDataGenerator, long lineId) {
 		if(modelDataGenerator.isSimulated()) {
 			modelDataGenerators.put(lineId, modelDataGenerator);
+		}else {
+			System.out.println("Incomplete model, please check definition completeness");
 		}
 	}
 	
 	public void addPassenger(Date eventDate) {
 		passengerQueue ++;
+		
+		if(passengerQueue>=maxUsers) {
+			maxUsers=passengerQueue;
+			maxUsersDate = eventDate;
+		}
+	}
+	
+	public void addPassenger(Date eventDate, int UsersQuantity) {
+		passengerQueue += UsersQuantity;
 		
 		if(passengerQueue>=maxUsers) {
 			maxUsers=passengerQueue;

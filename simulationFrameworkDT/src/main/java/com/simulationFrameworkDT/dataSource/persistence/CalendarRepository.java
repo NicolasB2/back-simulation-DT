@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.simulationFrameworkDT.model.factorySITM.SITMCalendar;
+import com.simulationFrameworkDT.model.SITM.SITMCalendar;
 
 @Repository
 public interface CalendarRepository extends CrudRepository<SITMCalendar, Long> {
