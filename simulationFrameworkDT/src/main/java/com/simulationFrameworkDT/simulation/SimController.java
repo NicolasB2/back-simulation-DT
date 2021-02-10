@@ -137,7 +137,6 @@ public class SimController {
 				averages.put( meanPassengers.getKey()+"-MeanPassengers", meanPassengers.getValue()+(int)averages.get(meanPassengers.getKey()+"-MeanPassengers"));
 			}
 			
-
 			for (SITMStop sitmStop : stations) {
 				averages.put(sitmStop.getStopId() + "-MaxBuses", sitmStop.getMaxBuses()+(int)averages.get(sitmStop.getStopId()+"-MaxBuses"));
 				averages.put(sitmStop.getStopId() + "-MaxUsers", sitmStop.getMaxUsers()+(int)averages.get(sitmStop.getStopId()+"-MaxUsers"));

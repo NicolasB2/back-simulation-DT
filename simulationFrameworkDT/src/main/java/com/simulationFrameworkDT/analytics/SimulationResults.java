@@ -1,7 +1,5 @@
 package com.simulationFrameworkDT.analytics;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,7 +14,6 @@ public class SimulationResults {
 	private ArrayList<SITMStop> stops;
 	
 	//Simulation
-	private Date date;
 	private boolean execution = true;
 	
 	//Important Variables
@@ -42,10 +39,9 @@ public class SimulationResults {
 
 	@Override
 	public String toString() {
-		Timestamp datePrint = new Timestamp(date.getTime());
-		return  datePrint + ", headwayDesigned=" + headwayDesigned + ", numberOfBuses=" + numberOfBuses
-				+ ", headwayCoefficientOfVariation=" + headwayCoefficientOfVariation + ", excessWaitingTime="
-				+ excessWaitingTime + ", busesImpact=" + busesImpact + ", passengerSatisfaction="
+		return  "headwayDesigned=" + headwayDesigned + "\nnumberOfBuses=" + numberOfBuses
+				+ "\nheadwayCoefficientOfVariation=" + headwayCoefficientOfVariation + "\nexcessWaitingTime="
+				+ excessWaitingTime + "\nbusesImpact=" + busesImpact + "\npassengerSatisfaction="
 				+ passengerSatisfaction;
 	}
 

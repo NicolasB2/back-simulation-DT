@@ -158,7 +158,7 @@ public class VisualizationAnalytics {
 		for (Long  observerStop: stops.keySet()) {
 			
 			System.out.println("---------------------------------------------------------------------------------");
-			System.out.println("Stop Id " + observerStop);
+			System.out.println(" Stop Id " + observerStop);
 			
 			order_Times(observerStop);
 			time_Of_Polygon(observerStop);
@@ -193,7 +193,7 @@ public class VisualizationAnalytics {
 				
 				for (Long[] data : entry.getValue()) {
 					long time = data[2]-data[1];
-					System.out.print("arrive: "+data[1]);
+					System.out.print(" arrive: "+data[1]);
 					System.out.print(" leave: "+data[2]);
 					System.out.println(" timeInside: "+time);
 				}

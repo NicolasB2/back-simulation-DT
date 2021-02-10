@@ -8,8 +8,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.simulationFrameworkDT.dataSource.DataSourceSystem;
 import com.simulationFrameworkDT.model.ModelDataGenerator;
@@ -23,23 +21,19 @@ import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
 import com.simulationFrameworkDT.simulation.tools.ProbabilisticDistribution;
 
-public class SimulationMain {
+public class TestMain {
 
 	public static void main(String[] args) throws IOException, ParseException, InterruptedException {
 		
-//		dataTest();
-		visualizationTest();	
-		
-//		int[] x = {210,240,270,300,330,360,390,600,900,1200};
-//		for (int i = 0; i < 1; i++) {
-//			simulationTest(1,x[i]);
-//		}
+//		dataSourceQueries();
+//		visualizationTest();	
+		simulationTest(10,360);
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		reader.readLine();
 	}
 	
-	public static void dataTest(){
+	public static void dataSourceQueries(){
 		
 		DataSourceSystem ds = new DataSourceSystem();
 		ds.initializeCsv();
@@ -65,13 +59,21 @@ public class SimulationMain {
 		System.out.println();
 	}
 
-	public static void saveProject(SimController sm) throws ParseException {
+	public static SimController simController() {
+		SimController simController =  new SimController();
+		simController.setDataSource(new DataSourceSystem());
+		simController.setProjectController(new StateController());
+		simController.setEventProcessorController(new EventProcessorController());
+		return simController;
+	}
+	
+	public static void saveProjectVisualization(SimController simController) throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		Date init = new Date(dateFormat.parse("2019-06-20 18:00:00").getTime());
 		Date last = new Date(dateFormat.parse("2019-06-20 18:30:00").getTime());
 		
-		StateController pc = sm.getProjectController();
+		StateController pc = simController.getProjectController();
 		Project project = new Project();
 		project.setProjectName("test");
 		project.setInitialDate(init);
@@ -84,28 +86,34 @@ public class SimulationMain {
 		pc.saveProject(project);
 	}
 	
-	public static void visualizationTest() throws ParseException{
-		SimController sm =  new SimController();
-		sm.setDataSource(new DataSourceSystem());
-		sm.setProjectController(new StateController());
-		sm.setEventProcessorController(new EventProcessorController());
-		saveProject(sm);
-		sm.startVisualization("test.dat");
+	public static void saveProjectSimulation(SimController sm) throws ParseException {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		
+		Date init = new Date(dateFormat.parse("2019-06-20 05:00:00").getTime());
+		Date last = new Date(dateFormat.parse("2019-06-20 06:00:00").getTime());
+		
+		StateController pc = sm.getProjectController();
+		Project project = new Project();
+		project.setProjectName("test");
+		project.setInitialDate(init);
+		project.setFinalDate(last);
+		project.setPlanVersionId(261);
+		project.setLineId(131);
+		pc.saveProject(project);
 	}
 	
-	public static SimController sm() {
-		SimController sm =  new SimController();
-		sm.setDataSource(new DataSourceSystem());
-		sm.setProjectController(new StateController());
-		sm.setEventProcessorController(new EventProcessorController());
-		return sm;
+	public static void visualizationTest() throws ParseException{
+		SimController simController = simController();
+		saveProjectVisualization(simController);
+		simController.startVisualization("test.dat");
 	}
 	
 	public static void simulationTest(int x,int hd) throws ParseException, InterruptedException { 	
 		
-		SimController sm = sm();
-		saveProject(sm);
+		SimController simController = simController();
+		saveProjectSimulation(simController);
 		
+		//******************************************************************************
 		ProbabilisticDistribution ai = new ProbabilisticDistribution();
 		ai.LogLaplaceDistribution(0.0, 467.00000);
 
@@ -119,8 +127,9 @@ public class SimulationMain {
 		
 		SITMStop stop1 = new SITMStop(500250);
 		stop1.addModelDataGenerator(mdg,131);
-		sm.addStationToSimulation(stop1);
+		simController.addStationToSimulation(stop1);
 
+		//******************************************************************************
 		ProbabilisticDistribution ai2 = new ProbabilisticDistribution();
 		ai2.WeibullDistribution(1.52116, 599.809135);
 
@@ -133,12 +142,11 @@ public class SimulationMain {
 		ModelDataGenerator mdg2 = new ModelDataGenerator(passenger2, ai2, si2);
 		SITMStop stop2 = new SITMStop(500300);
 		stop2.addModelDataGenerator(mdg2, 131);
-		sm.addStationToSimulation(stop2);
+		simController.addStationToSimulation(stop2);
 		
-		HashMap<String, Object> results= sm.startSimulationManyExecutions(x, "test.dat", 131, hd);
-		
-		for (Map.Entry<String, Object> entry : results.entrySet()) {
-		    System.out.println(entry.getKey() + ": " + entry.getValue());
-		}	
+		//******************************************************************************
+		simController.startSimulation("test.dat", 131, hd);
+		simController.getSimulationThread().join();
+		System.out.println(simController.getSimulationThread().getSimulationResults().toString());
 	}
 }

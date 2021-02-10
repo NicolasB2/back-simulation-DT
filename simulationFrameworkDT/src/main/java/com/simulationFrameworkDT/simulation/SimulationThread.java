@@ -70,7 +70,6 @@ public class SimulationThread extends Thread {
 		
 		for (int i = 0; i < events.size(); i++) {
 			
-			System.out.println(events.get(i));
 			currentDate = events.get(i).getDate();
 			
 			if (events.get(i) instanceof PassangerEvent) {
