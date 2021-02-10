@@ -2,6 +2,7 @@ package com.simulationFrameworkDT.analytics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.simulationFrameworkDT.model.SITM.SITMStop;
 
@@ -39,10 +40,22 @@ public class SimulationResults {
 
 	@Override
 	public String toString() {
-		return  "headwayDesigned=" + headwayDesigned + "\nnumberOfBuses=" + numberOfBuses
+		String variables = "";
+	
+		variables = "headwayDesigned=" + headwayDesigned + "\nnumberOfBuses=" + numberOfBuses
 				+ "\nheadwayCoefficientOfVariation=" + headwayCoefficientOfVariation + "\nexcessWaitingTime="
 				+ excessWaitingTime + "\nbusesImpact=" + busesImpact + "\npassengerSatisfaction="
 				+ passengerSatisfaction;
+		
+		for (Map.Entry<Long, Double> entry : meansHOBus.entrySet()) {
+			variables+=entry.getValue();
+		}
+		
+		for (Map.Entry<Long, Double> entry : meansHOPassengers.entrySet()) {
+			variables+=entry.getValue();
+		}
+		
+		return variables;
 	}
 
 }
