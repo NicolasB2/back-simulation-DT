@@ -13,7 +13,6 @@ public class TargetSystem implements Serializable {
 
 	private HashMap<Long, SITMBus> buses ;
 
-
 	public TargetSystem() {
 		buses = new HashMap<Long, SITMBus>();
 	}

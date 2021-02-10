@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simulationFrameworkDT.model.SITM.SITMBus;
-import com.simulationFrameworkDT.model.SITM.SITMStop;
 import com.simulationFrameworkDT.restService.interfaces.ITargetSystemRest;
 import com.simulationFrameworkDT.simulation.state.Project;
 import com.simulationFrameworkDT.simulation.state.StateController;
@@ -31,11 +30,6 @@ public class TargetSystemRest implements ITargetSystemRest{
 			return project.getTargetSystem().filterBusesByLineId(project.getLineId());
 		}
 		return new ArrayList<>();
-	}
-	
-	@GetMapping("/stops")
-	public ArrayList<SITMStop> findAllStops(String projectName) {
-		return null;
 	}
 
 }
