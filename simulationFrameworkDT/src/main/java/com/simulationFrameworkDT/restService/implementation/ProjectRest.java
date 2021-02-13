@@ -148,8 +148,8 @@ public class ProjectRest implements IProjectRest {
 	}
 
 	@SuppressWarnings("deprecation")
-	@GetMapping("/load")
-	public ProjectDTO loadProject(String projectName) {
+	@GetMapping("/load/{id}")
+	public ProjectDTO loadProject(@PathVariable("id") String projectName) {
 		Project project = stateController.loadProject(projectName + ".dat");
 		ProjectDTO dto = new ProjectDTO();
 
@@ -163,6 +163,7 @@ public class ProjectRest implements IProjectRest {
 		dto.setFileType(project.getFileType());
 		dto.setFileSplit(project.getFileSplit());
 		dto.setFileName(project.getFileName());
+		dto.setPlanVersionId(project.getPlanVersionId());
 		return dto;
 	}
 
@@ -195,11 +196,11 @@ public class ProjectRest implements IProjectRest {
 		}
 		try {
 			byte[] bytes = file[0].getBytes();
-			Path path = Paths.get(file[0].getOriginalFilename());
+			Path path = Paths.get("projects"+File.separator+file[0].getOriginalFilename()+"");
 			Files.write(path, bytes);
 			System.out.println(path.getFileName());
 		} catch (IOException e) {
-			System.out.println(e.getMessage());
+			System.out.println(e.getMessage());	
 		}
 		return new ResponseEntity<>("Good Job", HttpStatus.OK);
 	}

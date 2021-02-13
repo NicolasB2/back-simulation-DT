@@ -1,5 +1,7 @@
 package com.simulationFrameworkDT.analytics;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +18,8 @@ public class SimulationResults {
 	
 	//Simulation
 	private boolean execution = true;
-	
+	private Date currentDate;
+	private Timestamp currentDateTwo;
 	//Important Variables
 	private int headwayDesigned;
 	private int numberOfBuses;

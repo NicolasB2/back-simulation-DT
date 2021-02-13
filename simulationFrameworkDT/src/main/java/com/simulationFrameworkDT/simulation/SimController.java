@@ -90,7 +90,7 @@ public class SimController {
 		}
 
 		simulationThread = new SimulationThread(projectController.getProject(), stations, lineId, headwayDesigned);
-		simulationThread.setSleepTime(0);
+		simulationThread.setSleepTime(1000);
 		simulationThread.start();
 	}
 

@@ -1,6 +1,7 @@
 package com.simulationFrameworkDT.simulation;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -30,10 +31,10 @@ public class SimulationThread extends Thread {
 	private long lineId;
 	
 	private SimulationResults simulationResults;
+	private SimulationResults simulationMain;
 	private ArrayList<SITMStop> stops;
 	private Project project;
 	private EventGenerator eventGenerator;
-
 	private ArrayList<Long> ids = new ArrayList<>();
 	private ArrayList<Event> events = new ArrayList<>();
 
@@ -112,6 +113,8 @@ public class SimulationThread extends Thread {
 					e.printStackTrace();
 				} 
 			}	
+			this.simulationResults.setCurrentDate(currentDate);
+			this.simulationResults.setCurrentDateTwo(new Timestamp(currentDate.getTime()));
 		}
 		this.simulationResults.setExecution(false);//change the execution attribute
 		analytics.evaluationMetrics(this.simulationResults); // calculating Excess Waiting Time at Bus Stops
@@ -141,7 +144,6 @@ public class SimulationThread extends Thread {
 			} else { // arrive the next stations 
 				stationQueue = arriveNextStation(lastDate,middleQueue, stops.get(i).getModelDataGenerators().get(this.lineId).getInterArrivalDistribution(),stops.get(i).getStopId(),0.5);
 			}
-
 			// leave the station
 			hobss(stationQueue, stops.get(i).getStopId());
 			middleQueue = leaveStation(lastDate, stationQueue,stops.get(i).getModelDataGenerators().get(this.lineId).getServiceDistribution(), stops.get(i).getStopId());
