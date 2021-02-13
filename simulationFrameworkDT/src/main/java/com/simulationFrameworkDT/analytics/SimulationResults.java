@@ -48,11 +48,13 @@ public class SimulationResults {
 				+ passengerSatisfaction;
 		
 		for (Map.Entry<Long, Double> entry : meansHOBus.entrySet()) {
-			variables+=entry.getValue();
+			variables+="meanHOBBus idStop: "+entry.getKey();
+			variables+="\n"+entry.getValue();
 		}
 		
 		for (Map.Entry<Long, Double> entry : meansHOPassengers.entrySet()) {
-			variables+=entry.getValue();
+			variables+="meanHOBPassangers idStop:"+entry.getKey();
+			variables+="\n"+entry.getValue();
 		}
 		
 		return variables;
